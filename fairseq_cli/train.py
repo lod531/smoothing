@@ -43,6 +43,8 @@ from fairseq.model_parallel.megatron_trainer import MegatronTrainer
 from fairseq.trainer import Trainer
 from omegaconf import DictConfig, OmegaConf
 
+from fairseq.criterions.good_turing_temp import get_good_turing_counts
+
 
 
 
@@ -123,6 +125,13 @@ def main(cfg: FairseqConfig) -> None:
         for valid_sub_split in cfg.dataset.valid_subset.split(","):
             task.load_dataset(valid_sub_split, combine=False, epoch=1)
 
+    task.load_dataset("train")
+    dataset = task.datasets["train"].tgt
+
+    good_turing_stats = get_good_turing_counts(dataset)
+
+
+
     # (optionally) Configure quantization
     if cfg.common.quantization_config_path is not None:
         quantizer = quantization_utils.Quantizer(
@@ -167,7 +176,55 @@ def main(cfg: FairseqConfig) -> None:
 
     train_meter = meters.StopwatchMeter()
     train_meter.start()
+
+    epoch_count = 0
     while epoch_itr.next_epoch_idx <= max_epoch:
+        probs = model.softmax(model.weights)
+        # sanity check
+        f_count = 0
+        for token, fq_instance in good_turing_stats["fq"].items():
+            model_count = probs[token].item()*3949114
+            if model_count > fq_instance+100 or model_count < fq_instance-100:
+                f_count += 1
+
+        print("Empirical FUCK = "+str(f_count))
+        #ff_count = 0
+        #deviant_count = 0
+        #abs_delta = 0
+        #for token, gt_prob in good_turing_stats["simple_turing_probs"].items():
+        #    model_count = probs[token].item()*3949114
+        #    gt_count = gt_prob*3949114
+        #    if model_count > gt_count+100 or model_count < gt_count-100:
+        #        deviant_count += good_turing_stats["fq"][token]
+        #        abs_delta += abs(model_count - gt_count)
+        #        ff_count += 1
+
+        #print("GT fuck = "+str(ff_count) + " with deviant count " + str(deviant_count) + " with delta " + str(abs_delta))
+        #for i in range(20, 40):
+        #    print("prob of token " + str(i) + " = " + str(probs[i].item()*3949114))
+        #print(torch.max(probs))
+        #print(torch.min(probs))
+        #epoch_count += 1
+
+        #for i in range(20, 40):
+        #    print("model count: " + str(probs[i].item()*3949114))
+        #print("Max " + str(torch.max(probs)) + " at location " + str(torch.argmax(probs)))
+
+        f_count = 0
+        abs_delta = 0
+        deviant_count = 0
+        for token, delta_prob in good_turing_stats["add_delta_probs"].items():
+            model_count = probs[token].item()*3949114
+            delta_count = delta_prob * 3949114
+            if model_count > delta_count+100 or model_count < delta_count-100:
+                deviant_count += good_turing_stats["fq"][token]
+                abs_delta += abs(model_count - delta_count)
+                f_count += 1
+        print("unigram fuck " + str(f_count) + " abs delta = " + str(abs_delta), " deviant count = " + str(deviant_count))
+
+
+
+
         if lr <= cfg.optimization.stop_min_lr:
             logger.info(
                 f"stopping training because current learning rate ({lr}) is smaller "

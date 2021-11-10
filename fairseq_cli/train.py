@@ -182,12 +182,12 @@ def main(cfg: FairseqConfig) -> None:
         probs = model.softmax(model.weights)
         # sanity check
         f_count = 0
-        for token, fq_instance in good_turing_stats["fq"].items():
+        for token, fq_instance in good_turing_stats["fqs"].items():
             model_count = probs[token].item()*3949114
             if model_count > fq_instance+100 or model_count < fq_instance-100:
                 f_count += 1
 
-        print("Empirical FUCK = "+str(f_count))
+        print("Empirical mismatch = "+str(f_count))
         #ff_count = 0
         #deviant_count = 0
         #abs_delta = 0
@@ -195,11 +195,11 @@ def main(cfg: FairseqConfig) -> None:
         #    model_count = probs[token].item()*3949114
         #    gt_count = gt_prob*3949114
         #    if model_count > gt_count+100 or model_count < gt_count-100:
-        #        deviant_count += good_turing_stats["fq"][token]
+        #        deviant_count += good_turing_stats["fqs"][token]
         #        abs_delta += abs(model_count - gt_count)
         #        ff_count += 1
 
-        #print("GT fuck = "+str(ff_count) + " with deviant count " + str(deviant_count) + " with delta " + str(abs_delta))
+        #print("GT = "+str(ff_count) + " with deviant count " + str(deviant_count) + " with delta " + str(abs_delta))
         #for i in range(20, 40):
         #    print("prob of token " + str(i) + " = " + str(probs[i].item()*3949114))
         #print(torch.max(probs))
@@ -217,10 +217,10 @@ def main(cfg: FairseqConfig) -> None:
             model_count = probs[token].item()*3949114
             delta_count = delta_prob * 3949114
             if model_count > delta_count+100 or model_count < delta_count-100:
-                deviant_count += good_turing_stats["fq"][token]
+                deviant_count += good_turing_stats["fqs"][token]
                 abs_delta += abs(model_count - delta_count)
                 f_count += 1
-        print("unigram fuck " + str(f_count) + " abs delta = " + str(abs_delta), " deviant count = " + str(deviant_count))
+        print("unigram " + str(f_count) + " abs delta = " + str(abs_delta), " deviant count = " + str(deviant_count))
 
 
 

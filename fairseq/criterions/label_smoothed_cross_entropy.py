@@ -64,6 +64,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
     ):
         super().__init__(task)
         self.sentence_avg = sentence_avg
+        import pdb; pdb.set_trace()
         self.eps = label_smoothing
         self.ignore_prefix_size = ignore_prefix_size
         self.report_accuracy = report_accuracy

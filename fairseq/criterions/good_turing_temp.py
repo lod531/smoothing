@@ -17,7 +17,6 @@ from omegaconf import II
 
 
 def get_good_turing_counts(dataset):
-
     fqs = defaultdict(int)
     print("Calculating Good-Turing stats:")
     for sentence in tqdm(dataset):
@@ -56,16 +55,12 @@ def get_good_turing_counts(dataset):
     for token, neg in r_neg.items():
         r_neg[token] = neg/lambda_neg
 
-    sanity_1 = sum(r_pos.values())
-    sanity_2 = sum(r_neg.values())
-
-    sanity_3 = min(r_pos.values())
-    sanity_4 = min(r_neg.values())
-
-    sanity_5 = sum(gt_probs.values()) + p0
-        
-
-    return {"fq":fq, "lambda_pos":lambda_pos, "lambda_neg":lambda_neg,
+    #sanity_1 = sum(r_pos.values())
+    #sanity_2 = sum(r_neg.values())
+    #sanity_3 = min(r_pos.values())
+    #sanity_4 = min(r_neg.values())
+    #sanity_5 = sum(gt_probs.values()) + p0
+    return {"fqs":fqs, "lambda_pos":lambda_pos, "lambda_neg":lambda_neg,
             "r_pos":r_pos, "r_neg":r_neg, "add_delta_probs":add_delta_probs}
 
 

@@ -60,8 +60,13 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
 
     def compute_loss(self, model, net_output, sample, reduce=True):
         lprobs = model.get_normalized_probs(net_output, log_probs=True)
+        # shape of (#tokens in batch, self.max_token+1)
+        # in other words each row gives predicted probabilities
+        # for entire vocabulary
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1)
+        # #tokens in batch, 1
+        # the 1 is there for torch.repeat
         desired_size = lprobs.shape[:-1] + torch.Size([1])
 
         # repeated_empirical = self.empirical.repeat(desired_size[-1])
@@ -81,12 +86,14 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
 
         #We want a KL loss per token
 
+        # each row is an instance of r_pos (and r_neg lol) 
+        # shape is (#tokens in batch, self.max_token+1)
         r_pos_repeated = self.r_pos.repeat(desired_size)
         r_neg_repeated = self.r_neg.repeat(desired_size)
 
-        # get KL losses per token that has occurred
+        # flatten the observed samples for indexing
         flat_samples = torch.flatten(sample["target"])
-        number_of_samples = flat_samples.shape[0]
+        #number_of_samples = flat_samples.shape[0]
         # cum_kl_loss = torch.cuda.FloatTensor([0])
         # for i in range(0, number_of_samples):
         #     # token is the actual word that occurred
@@ -113,13 +120,24 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
         # input = model distribution
 
         # empirical kl
-        #repeated_empirical = self.empirical.repeat(desired_size)
-        #kl_emp = F.kl_div(
-        #        input = lprobs,
-        #        target = repeated_empirical,
-        #        reduction="sum" if reduce else "none")
+        repeated_empirical = self.empirical.repeat(desired_size)
+        kl_emp = F.kl_div(
+                input = lprobs,
+                target = repeated_empirical,
+                reduction="none")
 
 
+        # this should just go pair by pair of tensors from
+        # lprobs and target, returning
+        # target[i]*(log(target[i]) - lprobs[i])
+        # kl_div won't apply log to lprobs[i] because it
+        # expects lprobs to be already in log space,
+        # hence lprobs instead of probs
+        # also We have reduction="none" because
+        # We need to apply different scaling factors
+        # to losses belonging to different tokens
+        # kl_pos[a, b] = 
+        # r_pos_repeated[a, b] * (torch.log(r_pos_repeated[a, b]) - lprobs[a, b])
         kl_pos = F.kl_div(
                 input = lprobs,
                 target = r_pos_repeated,
@@ -129,24 +147,47 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
                 target = r_neg_repeated,
                 reduction="none")
 
+        # the lambda_pos and lambda_neg are constants
+        # regardless of token, so We can multiply entire
+        # matrices
         kl_pos = kl_pos * self.lambda_pos
         kl_neg = kl_neg * self.lambda_neg
 
-        relevant_alphas = self.alphas[flat_samples]
-        relevant_alphas = torch.unsqueeze(relevant_alphas, 1)
-        relevant_alphas = relevant_alphas.expand(-1, kl_pos.shape[-1])
-        kl_loss = kl_pos + kl_neg
-        kl_loss = kl_loss * relevant_alphas
-        kl_loss = torch.sum(kl_loss)
 
+        # the alpha_j depends on the word w_j, 
+        # so We select from alphas using flat_samples
+        # to get alphas of tokens which have occurred
+        relevant_alphas = self.alphas[flat_samples]
+        # unsqueeze and expand so that the shape of
+        # the kl losses and relevant_alphas is the same
+        # this way relevant_alphas[i,:] = row vector of
+        # alpha[token]
+        #relevant_alphas = torch.unsqueeze(relevant_alphas, 1)
+        #relevant_alphas = relevant_alphas.expand(-1, kl_pos.shape[-1])
+        # can add kl losses since We just need to keep the per-token
+        # kl losses distinct
+
+        # sum rows across the first dimension
+        # i.e. just sum over the rows.
+        # result is a vector of size (# of tokens in batch)
+        kl_pos = torch.sum(kl_pos, dim=1)
+        kl_neg = torch.sum(kl_neg, dim=1)
+        kl_loss = kl_pos + kl_neg
+        # scale by the appropriate alphas via an element-wise multiply
+        kl_loss = kl_loss * relevant_alphas
+        # reduce everything down to a scalar
         loss = F.nll_loss(
             lprobs,
             target,
             ignore_index=self.padding_idx,
             reduction="sum" if reduce else "none",
         )
-        #loss = loss/self.N + kl_pos + kl_neg
-        loss = loss + kl_loss
+
+        loss = loss + torch.sum(kl_loss)
+        #neg_losses = torch.sum(kl_neg, dim=1)
+        #pos_losses = torch.sum(kl_neg, dim=1)
+        #loss = kl_loss + torch.sum(kl_emp)
+
         return loss, loss
 
     def get_counts(self, dataset):
@@ -157,13 +198,10 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
                 fqs[token.item()] += 1
 
         max_token = max(list(fqs.keys()))
+        voc_size = len(fqs.keys())
         N = sum(fqs.values())
 
-        delta = 10000
-        add_delta_probs = {}
-        for token, fq in fqs.items():
-            add_delta_probs[token] = (fq+delta)/(N+delta*max_token)
-
+        # for testing purposes
         empirical = torch.cuda.FloatTensor(size=[max_token+1])
         for token, fq in fqs.items():
             empirical[token] = fq
@@ -175,7 +213,8 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
         r_pos = torch.cuda.FloatTensor(size=[max_token+1])
         r_neg = torch.cuda.FloatTensor(size=[max_token+1])
 
-        C = torch.cuda.FloatTensor([1/(N+max_token*self.delta)])
+        C = torch.cuda.FloatTensor([1/(N+voc_size*self.delta)])
+
         for token, fq in fqs.items():
             h_w = (C-1/N)*fq + self.delta*C
             #print("add-delta " + str(add_delta_probs[token]))
@@ -188,73 +227,60 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
         lambda_neg = torch.sum(r_neg)
         r_pos = r_pos/lambda_pos
         r_neg = r_neg/lambda_neg
-        fqs = fqs
-        N = N
-        max_token = max_token
 
         # now We need the a_j terms lol
         alphas = torch.cuda.FloatTensor(size=[max_token+1])
-        numerator = -self.delta
         for token, fq in fqs.items():
             if fq==0:
                 alphas[token]=0
             else:
-                denominator = fq * (lambda_pos*r_pos[token] 
-                                    + lambda_neg*r_neg[token])
-                alphas[token] = numerator/denominator
+                alphas[token] = self.delta/(fq*((fq+self.delta)/(N+self.delta*voc_size)-fq/N))
 
         ## sanity check:
-        test_probs = {}
-        normalizer = max_token*self.delta + N
+        normalizer = voc_size*self.delta + N
         for token, fq in fqs.items():
-            temp = fq - fq*alphas[token]*(lambda_pos*r_pos[token]
+            temp = fq + fq*alphas[token]*(lambda_pos*r_pos[token]
                                                 +lambda_neg*r_neg[token])
             test_prob = (temp/normalizer).item()
             true_prob = (fq+self.delta)/normalizer
-            if test_prob > true_prob+0.01 or test_prob < test_prob-0.01:
+            if test_prob/true_prob>1.01 or test_prob/true_prob<0.99:
                 print(test_prob)
                 print(true_prob)
                 import pdb; pdb.set_trace()
 
         for token, fq in fqs.items():
             # must always equal self.delta
-            test = -fq*alphas[token]*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token])
-            if test > self.delta+0.01 or test < self.delta-0.01:
+            test = +fq*alphas[token]*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token])
+            if self.delta/test > 1.01 or self.delta/test < 0.99:
                 print(test.item())
                 import pdb; pdb.set_trace()
 
         lbda = 0
         for token, fq in fqs.items():
-            lbda += fq*(1-alphas[token]*(lambda_pos*r_pos[token]+lambda_neg*r_neg[token]))
+            lbda += fq*(1+alphas[token]*(lambda_pos*r_pos[token]+lambda_neg*r_neg[token]))
 
         for token, fq in fqs.items():
-            delta_prob = (fq+self.delta)/(max_token*self.delta + N)
-            test_prob = fq*(1-alphas[token]*(lambda_pos*r_pos[token]+lambda_neg*r_neg[token]))/lbda
+            delta_prob = (fq+self.delta)/(voc_size*self.delta + N)
+            test_prob = fq*(1+alphas[token]*(lambda_pos*r_pos[token]+lambda_neg*r_neg[token]))/lbda
 
-            if test_prob > delta_prob+0.001 or test_prob < delta_prob-0.001:
+            if test_prob/delta_prob >1.01 or test_prob/delta_prob<0.99:
                 import pdb; pdb.set_trace()
                 print("delta_prob")
                 print(delta_prob)
                 print("test_prob")
                 print(test_prob.item())
 
-        # eq 196
+        # eq 23
         for token, fq in fqs.items():
-            test_prob = fq*(1-alphas[token]*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token]))/lbda
-            delta_prob = (fq+self.delta)/normalizer
+            test_prob = fq*(1+alphas[token]*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token]))/lbda
+            delta_prob = (fq+self.delta)/(voc_size*self.delta + N)
             if test_prob > delta_prob+0.001 or test_prob < delta_prob-0.001:
                 print(test_prob.item())
                 print(true_prob)
                 import pdb; pdb.set_trace()
 
-        print("all passed")
+        #print("all passed")
 
-        #for token, fq in fqs.items():
-        #    dp = (fq+self.delta)/normalizer
-        #    L = fq*(-1/dp - alphas[token]*(1/dp)*(lambda_pos*r_pos[token]+lambda_neg*r_neg[token])) + lbda
-        #    print(L.item())
-        #    import pdb; pdb.set_trace()
-            
         self.alphas = alphas
         self.lambda_pos = lambda_pos
         self.lambda_neg = lambda_neg
@@ -262,6 +288,7 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
         self.r_neg = r_neg
         self.N = N
         self.max_token = max_token
+        self.voc_size = voc_size
         self.fqs = fqs
 
 

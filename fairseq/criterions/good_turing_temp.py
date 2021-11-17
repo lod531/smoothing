@@ -23,6 +23,10 @@ def get_good_turing_counts(dataset):
         for token in sentence:
             fqs[token.item()] += 1
 
+    scc = defaultdict(int)
+    for token, fq in fqs.items():
+        scc[fq] += 1
+
     max_token = max(list(fqs.keys()))
     N = sum(fqs.values())
 
@@ -36,6 +40,13 @@ def get_good_turing_counts(dataset):
     hws = {}
     for token, gt_prob in gt_probs.items():
         hws[token] = gt_prob - fqs[token]/N
+
+    yeet = 0
+    for token, fq in fqs.items():
+        gt_count = gt_probs[token]*N
+        if gt_count > fq+50 or gt_count < fq-50:
+            yeet += 1
+
 
     lambda_pos = 0
     lambda_neg = 0
@@ -55,13 +66,35 @@ def get_good_turing_counts(dataset):
     for token, neg in r_neg.items():
         r_neg[token] = neg/lambda_neg
 
+    katz_probs = {}
+    k = 5
+    katz_total = 0
+    katz_items = 0
+    for token, fq in fqs.items():
+        if fq > 5:
+            katz_probs[token] = fq/N
+        else:
+            rstar = (fq+1)*scc[fq+1]/scc[fq]
+            ls = rstar/fq - (k+1)*scc[k+1]/scc[1]
+            rs = 1/(1-(k+1)*scc[k+1]/scc[1])
+            d_r = ls*rs
+            empirical = fq/N
+            katz_probs[token] = d_r*fq/N
+            katz_total += abs(katz_probs[token]-fq/N)
+            katz_items += 1
+    print(katz_total*3949114) 
+    print(katz_items)
+    import pdb;pdb.set_trace()
+            
+
     #sanity_1 = sum(r_pos.values())
     #sanity_2 = sum(r_neg.values())
     #sanity_3 = min(r_pos.values())
     #sanity_4 = min(r_neg.values())
     #sanity_5 = sum(gt_probs.values()) + p0
     return {"fqs":fqs, "lambda_pos":lambda_pos, "lambda_neg":lambda_neg,
-            "r_pos":r_pos, "r_neg":r_neg, "add_delta_probs":add_delta_probs}
+            "r_pos":r_pos, "r_neg":r_neg, "add_delta_probs":add_delta_probs,
+            "gtp": gt_probs, "ktp": katz_probs}
 
 
 

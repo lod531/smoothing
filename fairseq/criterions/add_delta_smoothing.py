@@ -64,25 +64,27 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
         # in other words each row gives predicted probabilities
         # for entire vocabulary
         lprobs = lprobs.view(-1, lprobs.size(-1))
+        import pdb; pdb.set_trace()
         target = model.get_targets(sample, net_output).view(-1)
         # #tokens in batch, 1
         # the 1 is there for torch.repeat
         desired_size = lprobs.shape[:-1] + torch.Size([1])
 
-        # repeated_empirical = self.empirical.repeat(desired_size[-1])
-        # uniform = torch.ones(size=[self.max_token+1],
-        #                         device=torch.device("cuda")).float()
-        # uniform = uniform/torch.sum(uniform)
-        # 
+        repeated_empirical = self.empirical.repeat(desired_size[-1])
+        uniform = torch.ones(size=[self.max_token+1],
+                             device=torch.device("cuda")).float()
+        uniform = uniform/torch.sum(uniform)
 
-        # uniform_repeated = uniform.repeat(desired_size)
 
-        # kl_uniform_loss = F.kl_div(
-        #         input = lprobs,
-        #         target = uniform_repeated,
-        #         reduction="sum" if reduce else "none")
+        uniform_repeated = uniform.repeat(desired_size)
 
-        # kl_uniform_loss = kl_uniform_loss * (self.max_token * self.delta)/self.N
+        kl_uniform_loss = F.kl_div(
+             input = lprobs,
+             target = uniform_repeated,
+             reduction="sum" if reduce else "none")
+
+        kl_uniform_loss = kl_uniform_loss * (self.voc_size * self.delta)/self.N
+        #kl_uniform_loss = kl_uniform_loss * (self.delta)/self.N
 
         #We want a KL loss per token
 
@@ -167,14 +169,14 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
         # can add kl losses since We just need to keep the per-token
         # kl losses distinct
 
-        # sum rows across the first dimension
+        # sum such that the first dimension 
         # i.e. just sum over the rows.
         # result is a vector of size (# of tokens in batch)
         kl_pos = torch.sum(kl_pos, dim=1)
         kl_neg = torch.sum(kl_neg, dim=1)
         kl_loss = kl_pos + kl_neg
         # scale by the appropriate alphas via an element-wise multiply
-        kl_loss = kl_loss * relevant_alphas
+        #kl_loss = kl_loss * relevant_alphas
         # reduce everything down to a scalar
         # nll_loss literally just returns -lprobs[token] lol
         loss = F.nll_loss(
@@ -184,6 +186,7 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
             reduction="sum" if reduce else "none",
         )
 
+        #loss = torch.sum(kl_emp) + torch.sum(kl_loss)
         loss = loss + torch.sum(kl_loss)
         #neg_losses = torch.sum(kl_neg, dim=1)
         #pos_losses = torch.sum(kl_neg, dim=1)
@@ -193,11 +196,13 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
 
     def get_counts(self, dataset):
         fqs = defaultdict(int)
-        print("Calculating Good-Turing stats:")
+        print("Calculating frequency stats:")
         for sentence in tqdm(dataset):
             for token in sentence:
                 fqs[token.item()] += 1
 
+        # will need this since it's the shape of model parameters
+        # in the unigram case
         max_token = max(list(fqs.keys()))
         voc_size = len(fqs.keys())
         N = sum(fqs.values())

@@ -28,12 +28,13 @@ def get_good_turing_counts(dataset):
         scc[fq] += 1
 
     max_token = max(list(fqs.keys()))
+    voc_size = len(fqs.keys())
     N = sum(fqs.values())
 
     delta = 10000
     add_delta_probs = {}
     for token, fq in fqs.items():
-        add_delta_probs[token] = (fq+delta)/(N+delta*max_token)
+        add_delta_probs[token] = (fq+delta)/(N+delta*voc_size)
 
     gt_probs, p0 = simpleGoodTuringProbs(fqs)
 
@@ -84,7 +85,6 @@ def get_good_turing_counts(dataset):
             katz_items += 1
     print(katz_total*3949114) 
     print(katz_items)
-    import pdb;pdb.set_trace()
             
 
     #sanity_1 = sum(r_pos.values())

@@ -201,17 +201,17 @@ def main(cfg: FairseqConfig) -> None:
 
         # print("GT = "+str(ff_count) + " with deviant count " + str(deviant_count) + " with delta " + str(abs_delta))
 
-        # f_count = 0
-        # abs_delta = 0
-        # deviant_count = 0
-        # for token, delta_prob in good_turing_stats["add_delta_probs"].items():
-        #     model_count = probs[token].item()*3949114
-        #     delta_count = delta_prob * 3949114
-        #     if model_count > delta_count+100 or model_count < delta_count-100:
-        #         deviant_count += good_turing_stats["fqs"][token]
-        #         abs_delta += abs(model_count - delta_count)
-        #         f_count += 1
-        # print("unigram " + str(f_count) + " abs delta = " + str(abs_delta), " deviant count = " + str(deviant_count))
+        f_count = 0
+        abs_delta = 0
+        deviant_count = 0
+        for token, delta_prob in good_turing_stats["add_delta_probs"].items():
+            model_count = probs[token].item()*3949114
+            delta_count = delta_prob * 3949114
+            if model_count > delta_count+2 or model_count < delta_count-21:
+                deviant_count += good_turing_stats["fqs"][token]
+                abs_delta += abs(model_count - delta_count)
+                f_count += 1
+        print("unigram " + str(f_count) + " abs delta = " + str(abs_delta), " deviant count = " + str(deviant_count))
         ff_count = 0
         deviant_count = 0
         abs_delta = 0

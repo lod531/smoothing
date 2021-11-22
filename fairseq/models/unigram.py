@@ -17,8 +17,7 @@ class Unigram(BaseFairseqModel):
                                                     requires_grad=True, 
                                                     device=torch.device('cuda')))
 
-        unigram_probs = torch.ones(size=[max(unique_items.values())+1])/(max(unique_items.values())+1)
-        self.dist = torch.distributions.categorical.Categorical(unigram_probs)
+
         
 
 
@@ -71,6 +70,7 @@ class Unigram(BaseFairseqModel):
         """
        # probs = self.softmax(self.weights)
         probs = self.logsoftmax(self.weights)
+
         #probs = self.weights/torch.sum(self.weights)
         #probs = self.dist.probs
         desired_shape = list(kwargs["target"].shape) + [1]

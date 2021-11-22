@@ -154,7 +154,7 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         # the alpha_j depends on the word w_j, 
         # so We select from alphas using flat_samples
         # to get alphas of tokens which have occurred
-        relevant_alphas = self.alphas[flat_samples]
+        #relevant_alphas = self.alphas[flat_samples]
         # unsqueeze and expand so that the shape of
         # the kl losses and relevant_alphas is the same
         # this way relevant_alphas[i,:] = row vector of
@@ -167,8 +167,6 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         # sum rows across the first dimension
         # i.e. just sum over the rows.
         # result is a vector of size (# of tokens in batch)
-        kl_pos = torch.sum(kl_pos, dim=1)
-        kl_neg = torch.sum(kl_neg, dim=1)
         kl_loss = kl_pos + kl_neg
         # scale by the appropriate alphas via an element-wise multiply
         #kl_loss = kl_loss * relevant_alphas
@@ -178,13 +176,13 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
             lprobs,
             target,
             ignore_index=self.padding_idx,
-            reduction="sum" if reduce else "none",
+            reduction="none",
         )
 
-        #loss = loss + torch.sum(kl_loss)
+        loss = torch.sum(loss) + torch.sum(kl_loss)
         #neg_losses = torch.sum(kl_neg, dim=1)
         #pos_losses = torch.sum(kl_neg, dim=1)
-        loss = torch.sum(kl_loss) + torch.sum(kl_emp)
+        #loss = torch.sum(kl_loss) + torch.sum(kl_emp)
 
         return loss, loss
 

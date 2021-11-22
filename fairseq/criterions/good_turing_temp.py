@@ -9,6 +9,7 @@ from tqdm import tqdm
 import math
 from dataclasses import dataclass
 
+import torch
 import torch.nn.functional as F
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
@@ -83,10 +84,38 @@ def get_good_turing_counts(dataset):
             katz_probs[token] = d_r*fq/N
             katz_total += abs(katz_probs[token]-fq/N)
             katz_items += 1
-    print(katz_total*3949114) 
+    print(katz_total*N) 
     print(katz_items)
-            
+    
+    gt_dist = torch.zeros(size=[max_token+1], device=torch.device("cuda"))
+    gt_dist = torch.zeros(size=[max_token+1], device=torch.device("cuda"))
+    for token, prob in gt_probs.items():
+        gt_dist[token] = prob
 
+    emp_dist = torch.zeros(size=[max_token+1], device=torch.device("cuda"))
+    for token, fq in fqs.items():
+        emp_dist[token] = fq/N
+
+    add_delta_dist = torch.zeros(size=[max_token+1], device=torch.device("cuda"))
+    for token, prob in fqs.items():
+        add_delta_dist[token] = (delta+fq)/(N+voc_size*delta)
+
+    katz_dist = torch.zeros(size=[max_token+1], device=torch.device("cuda"))
+    for token, prob in katz_probs.items():
+        katz_dist[token] = prob
+
+    total_moved_mass = 0
+    for token, fq in fqs.items():
+        total_moved_mass += abs(fq/N - add_delta_probs[token])
+    print("add_delta moved mass" + str(total_moved_mass))
+
+
+    import pdb; pdb.set_trace()
+    print(torch.sum(emp_dist))
+    print(torch.sum(gt_dist))
+    print(torch.sum(add_delta_dist))
+
+    
     #sanity_1 = sum(r_pos.values())
     #sanity_2 = sum(r_neg.values())
     #sanity_3 = min(r_pos.values())
@@ -94,7 +123,8 @@ def get_good_turing_counts(dataset):
     #sanity_5 = sum(gt_probs.values()) + p0
     return {"fqs":fqs, "lambda_pos":lambda_pos, "lambda_neg":lambda_neg,
             "r_pos":r_pos, "r_neg":r_neg, "add_delta_probs":add_delta_probs,
-            "gtp": gt_probs, "ktp": katz_probs}
+            "gtp": gt_probs, "ktp": katz_probs, "N":N, "emp_dist":emp_dist,
+            "gt_dist": gt_dist, "add_delta_dist":add_delta_dist, "katz_dist":katz_dist}
 
 
 

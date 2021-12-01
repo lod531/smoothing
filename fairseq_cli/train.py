@@ -41,6 +41,8 @@ from fairseq.file_io import PathManager
 from fairseq.logging import meters, metrics, progress_bar
 from fairseq.model_parallel.megatron_trainer import MegatronTrainer
 from fairseq.trainer import Trainer
+from fairseq.tasks.translation import TranslationTask
+from fairseq.tasks.language_modeling import LanguageModelingTask
 from omegaconf import DictConfig, OmegaConf
 
 from fairseq.criterions.good_turing_temp import get_good_turing_counts
@@ -126,8 +128,14 @@ def main(cfg: FairseqConfig) -> None:
             task.load_dataset(valid_sub_split, combine=False, epoch=1)
 
     task.load_dataset("train")
-    dataset = task.datasets["train"].tgt
-
+    if isinstance(task, TranslationTask):
+        dataset = task.datasets["train"].tgt
+    elif isinstance(task, LanguageModelingTask):
+        dataset = task.datasets["train"].dataset.dataset
+    unique_tokens = {}
+    for sentence in dataset:
+        for token in sentence:
+            unique_tokens[token.item()] = token.item()
     stats = get_good_turing_counts(dataset)
 
 
@@ -178,7 +186,7 @@ def main(cfg: FairseqConfig) -> None:
     train_meter.start()
 
     epoch_count = 0
-    eps = 0.0001
+    eps = 0.000001
     while epoch_itr.next_epoch_idx <= max_epoch:
         probs = model.softmax(model.weights)
         log_probs = model.logsoftmax(model.weights)

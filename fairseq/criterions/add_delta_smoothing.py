@@ -10,9 +10,12 @@ from tqdm import tqdm
 
 import torch
 import torch.nn.functional as F
+import fairseq
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
 from fairseq.dataclass import FairseqDataclass
+from fairseq.tasks.translation import TranslationTask
+from fairseq.tasks.language_modeling import LanguageModelingTask
 from omegaconf import II
 
 
@@ -34,7 +37,10 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
         self.delta = label_smoothing
         self.sentence_avg = sentence_avg
         task.load_dataset("train")
-        dataset = task.datasets["train"].tgt
+        if isinstance(task, TranslationTask):
+            dataset = task.datasets["train"].tgt
+        elif isinstance(task, LanguageModelingTask):
+            dataset = task.datasets["train"].dataset.dataset
         self.get_counts(dataset)
 
     def forward(self, model, sample, reduce=True):
@@ -97,18 +103,22 @@ class AddDeltaSmoothingCriterion(FairseqCriterion):
 
 
         kl_loss = kl_pos + kl_neg
-        #loss = F.nll_loss(
-        #    lprobs,
-        #    target,
-        #    ignore_index=self.padding_idx,
-        #    reduction="none",
-        #)
+        torch_nll = F.nll_loss(
+            lprobs,
+            target,
+            ignore_index=self.padding_idx,
+            reduction="none",
+        )
         # select the negative log probabilities according to
         # which tokens have occurrerd
-        test = -lprobs[range(lprobs.shape[0]), flat_samples]
+        #nll_mine = -lprobs[range(lprobs.shape[0]), flat_samples]
         #loss = torch.sum(kl_emp) + torch.sum(kl_loss)
+        #loss = torch.sum(kl_emp)
         #loss = torch.sum(test) + torch.sum(kl_loss)
-        loss = torch.sum(test)
+        #loss = torch.sum(nll_mine)
+
+        loss = torch.sum(torch_nll) + torch.sum(kl_loss)
+        #loss = torch.sum(loss)
 
         return loss, loss
 

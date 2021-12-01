@@ -1,5 +1,6 @@
 from fairseq.models import BaseFairseqModel, register_model
-
+from fairseq.tasks.translation import TranslationTask
+from fairseq.tasks.language_modeling import LanguageModelingTask
 import torch
 
 # Note: the register_model "decorator" should immediately precede the
@@ -19,8 +20,6 @@ class Unigram(BaseFairseqModel):
 
 
         
-
-
     @classmethod
     def build_model(cls, args, task):
         # Fairseq initializes models by calling the ``build_model()``
@@ -32,7 +31,11 @@ class Unigram(BaseFairseqModel):
 
         # Print the model architecture.
         task.load_dataset("train")
-        dataset = task.datasets["train"].tgt 
+        if isinstance(task, TranslationTask):
+            dataset = task.datasets["train"].tgt 
+
+        elif isinstance(task, LanguageModelingTask):
+            dataset = task.datasets["train"].dataset.dataset
         unique_tokens = {}
         for sentence in dataset:
             for token in sentence:
@@ -49,8 +52,10 @@ class Unigram(BaseFairseqModel):
     #     encoder_out = self.encoder(src_tokens, src_lengths)
     #     decoder_out = self.decoder(prev_output_tokens, encoder_out)
     #     return decoder_out
-
-    def forward(self, src_tokens, src_lengths, prev_output_tokens, **kwargs): 
+    @property
+    def supported_targets(self):
+        return {"future"}
+    def forward(self, src_tokens, src_lengths, **kwargs): 
         """
         Args:
             src_tokens (LongTensor): tokens in the source language of shape

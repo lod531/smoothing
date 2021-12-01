@@ -8,6 +8,8 @@ import nltk
 from dataclasses import dataclass, field
 from collections import defaultdict
 from tqdm import tqdm
+from fairseq.tasks.translation import TranslationTask
+from fairseq.tasks.language_modeling import LanguageModelingTask
 
 
 import torch
@@ -31,7 +33,10 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         super().__init__(task)
         self.sentence_avg = sentence_avg
         task.load_dataset("train")
-        dataset = task.datasets["train"].tgt
+        if isinstance(task, TranslationTask):
+            dataset = task.datasets["train"].tgt
+        elif isinstance(task, LanguageModelingTask):
+            dataset = task.datasets["train"].dataset.dataset
         self.get_counts(dataset)
 
     def forward(self, model, sample, reduce=True):
@@ -66,7 +71,6 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         # the 1 is there for torch.repeat
         desired_size = lprobs.shape[:-1] + torch.Size([1])
 
-        # repeated_empirical = self.empirical.repeat(desired_size[-1])
         # uniform = torch.ones(size=[self.max_token+1],
         #                         device=torch.device("cuda")).float()
         # uniform = uniform/torch.sum(uniform)
@@ -90,32 +94,11 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
 
         # flatten the observed samples for indexing
         flat_samples = torch.flatten(sample["target"])
-        #number_of_samples = flat_samples.shape[0]
-        # cum_kl_loss = torch.cuda.FloatTensor([0])
-        # for i in range(0, number_of_samples):
-        #     # token is the actual word that occurred
-        #     token = flat_samples[i]
-        #     # probs is the probabilities output by the model
-        #     # given token has occurred
-        #     probs = lprobs[i,:]
-        #     kl_pos = F.kl_div(
-        #             input=probs,
-        #             target = self.r_pos,
-        #             reduction="sum" if reduce else "none")
-        #     kl_neg = F.kl_div(
-        #             input=probs,
-        #             target = self.r_neg,
-        #             reduction="sum" if reduce else "none")
-        #     kl_loss = kl_pos*self.lambda_pos + kl_neg*self.lambda_neg
-        #     kl_loss = kl_loss * self.alphas[i]
-        #     cum_kl_loss += kl_loss
-
 
         # to double check the order of P and Q in kl_dv
         # see https://pytorch.org/docs/master/generated/torch.nn.KLDivLoss.html#torch.nn.KLDivLoss
         # target = y_true, so it's KL(target || input), so
         # input = model distribution
-
         # empirical kl
         repeated_empirical = self.empirical.repeat(desired_size)
         kl_emp = F.kl_div(
@@ -151,25 +134,7 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         kl_neg = kl_neg * self.lambda_neg
 
 
-        # the alpha_j depends on the word w_j, 
-        # so We select from alphas using flat_samples
-        # to get alphas of tokens which have occurred
-        #relevant_alphas = self.alphas[flat_samples]
-        # unsqueeze and expand so that the shape of
-        # the kl losses and relevant_alphas is the same
-        # this way relevant_alphas[i,:] = row vector of
-        # alpha[token]
-        #relevant_alphas = torch.unsqueeze(relevant_alphas, 1)
-        #relevant_alphas = relevant_alphas.expand(-1, kl_pos.shape[-1])
-        # can add kl losses since We just need to keep the per-token
-        # kl losses distinct
-
-        # sum rows across the first dimension
-        # i.e. just sum over the rows.
-        # result is a vector of size (# of tokens in batch)
         kl_loss = kl_pos + kl_neg
-        # scale by the appropriate alphas via an element-wise multiply
-        #kl_loss = kl_loss * relevant_alphas
         # reduce everything down to a scalar
         # nll_loss literally just returns -lprobs[token] lol
         loss = F.nll_loss(
@@ -179,10 +144,10 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
             reduction="none",
         )
 
-        loss = torch.sum(loss) + torch.sum(kl_loss)
+        #loss = torch.sum(loss) + torch.sum(kl_loss)
         #neg_losses = torch.sum(kl_neg, dim=1)
         #pos_losses = torch.sum(kl_neg, dim=1)
-        #loss = torch.sum(kl_loss) + torch.sum(kl_emp)
+        loss = torch.sum(kl_loss) + torch.sum(kl_emp)
 
         return loss, loss
 
@@ -227,26 +192,6 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         r_pos = r_pos/lambda_pos
         r_neg = r_neg/lambda_neg
 
-        # now We need the a_j terms lol
-        alphas = torch.cuda.FloatTensor(size=[max_token+1])
-        for token, fq in fqs.items():
-            if fq==0:
-                alphas[token]=0
-            else:
-                numerator = gt_probs[token]*N - fq
-                denominator = fq*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token])
-                alphas[token] = numerator/denominator
-
-        # for token, fq in fqs.items():
-        #     if(fq in scc.keys() and (fq+1) in scc.keys()):
-        #         left = (fq+1)*(scc[fq+1]/scc[fq])
-        #         right = fq*(1+alphas[token]*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token]))
-        #         print(left)
-        #         print(right.item())
-        #         import pdb; pdb.set_trace()
-
-
-        self.alphas = alphas
         self.lambda_pos = lambda_pos
         self.lambda_neg = lambda_neg
         self.r_pos = r_pos

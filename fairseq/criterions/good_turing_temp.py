@@ -18,15 +18,17 @@ from omegaconf import II
 
 
 def get_good_turing_counts(dataset):
+    # frequencies
     fqs = defaultdict(int)
     print("Calculating Good-Turing stats:")
     for sentence in tqdm(dataset):
         for token in sentence:
             fqs[token.item()] += 1
 
-    scc = defaultdict(int)
+    # counts of counts
+    cc = defaultdict(int)
     for token, fq in fqs.items():
-        scc[fq] += 1
+        cc[fq] += 1
 
     max_token = max(list(fqs.keys()))
     voc_size = len(fqs.keys())
@@ -76,11 +78,10 @@ def get_good_turing_counts(dataset):
         if fq > 5:
             katz_probs[token] = fq/N
         else:
-            rstar = (fq+1)*scc[fq+1]/scc[fq]
-            ls = rstar/fq - (k+1)*scc[k+1]/scc[1]
-            rs = 1/(1-(k+1)*scc[k+1]/scc[1])
+            rstar = (fq+1)*cc[fq+1]/cc[fq]
+            ls = rstar/fq - (k+1)*cc[k+1]/cc[1]
+            rs = 1/(1-(k+1)*cc[k+1]/cc[1])
             d_r = ls*rs
-            empirical = fq/N
             katz_probs[token] = d_r*fq/N
             katz_total += abs(katz_probs[token]-fq/N)
             katz_items += 1
@@ -110,10 +111,10 @@ def get_good_turing_counts(dataset):
     print("add_delta moved mass" + str(total_moved_mass))
 
 
-    import pdb; pdb.set_trace()
     print(torch.sum(emp_dist))
     print(torch.sum(gt_dist))
     print(torch.sum(add_delta_dist))
+    import pdb; pdb.set_trace()
 
     
     #sanity_1 = sum(r_pos.values())

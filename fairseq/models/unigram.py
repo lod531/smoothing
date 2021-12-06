@@ -9,12 +9,12 @@ import torch
 @register_model('unigram')
 class Unigram(BaseFairseqModel):
 
-    def __init__(self, unique_items):
+    def __init__(self, unique_items, dict_size):
         super().__init__()
 
         self.softmax = torch.nn.Softmax(dim=0)
         self.logsoftmax = torch.nn.LogSoftmax(dim=0)
-        self.weights = torch.nn.Parameter(torch.randn(size=[max(unique_items.values())+1], 
+        self.weights = torch.nn.Parameter(torch.randn(size=[dict_size], 
                                                     requires_grad=True, 
                                                     device=torch.device('cuda')))
 
@@ -41,7 +41,7 @@ class Unigram(BaseFairseqModel):
             for token in sentence:
                 unique_tokens[token.item()] = token.item()
 
-        return Unigram(unique_tokens)
+        return Unigram(unique_tokens, len(task.dictionary))
 
     # We could override the ``forward()`` if we wanted more control over how
     # the encoder and decoder interact, but it's not necessary for this

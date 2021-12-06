@@ -5,9 +5,12 @@
 
 import math
 import nltk
+import fairseq.criterions.utils as crit_utils
 from dataclasses import dataclass, field
 from collections import defaultdict
 from tqdm import tqdm
+from fairseq.tasks.translation import TranslationTask
+from fairseq.tasks.language_modeling import LanguageModelingTask
 
 
 import torch
@@ -16,7 +19,6 @@ from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
 from fairseq.dataclass import FairseqDataclass
 from omegaconf import II
-
 
 @dataclass
 class KatzSmoothingCriterionConfig(FairseqDataclass):
@@ -33,11 +35,31 @@ class KatzSmoothingCriterionConfig(FairseqDataclass):
 class KatzSmoothingCriterion(FairseqCriterion):
     def __init__(self, task, katz_k, sentence_avg):
         super().__init__(task)
-        self.k = katz_k
         self.sentence_avg = sentence_avg
-        task.load_dataset("train")
-        dataset = task.datasets["train"].tgt
-        self.get_counts(dataset)
+        self.k = katz_k
+        self.dataset = crit_utils.get_dataset_from_task(task)
+        self.dict_size = len(task.dictionary)
+        self.ignored_indices = [self.padding_idx]
+        crit_utils.get_fqs(self)
+        smoothed = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
+        scc = defaultdict(int)
+        for token, frequency in self.fqs.items():
+            scc[frequency] += 1
+        for token, fq in self.fqs.items():
+            if fq > self.k:
+                pass
+            else:
+                # this is a mess and it kind of can't be helped.
+                # eq 55 in overleaf
+                rstar = (fq+1)*scc[fq+1]/scc[fq]
+                ls = rstar/fq - (self.k+1)*scc[self.k+1]/scc[1]
+                rs = 1/(1-(self.k+1)*scc[self.k+1]/scc[1])
+                d_r = ls*rs
+                h_w = d_r*fq/self.N
+                smoothed[token] = h_w
+        smoothed[task.dictionary.unk()] = 1 - torch.sum(smoothed)
+        self.smoothed = smoothed
+        crit_utils.get_kl_terms(self)
 
     def forward(self, model, sample, reduce=True):
         """Compute the loss for the given sample.
@@ -61,222 +83,8 @@ class KatzSmoothingCriterion(FairseqCriterion):
         return loss, sample_size, logging_output
 
     def compute_loss(self, model, net_output, sample, reduce=True):
-        lprobs = model.get_normalized_probs(net_output, log_probs=True)
-        # shape of (#tokens in batch, self.max_token+1)
-        # in other words each row gives predicted probabilities
-        # for entire vocabulary
-        lprobs = lprobs.view(-1, lprobs.size(-1))
-        target = model.get_targets(sample, net_output).view(-1)
-        # #tokens in batch, 1
-        # the 1 is there for torch.repeat
-        desired_size = lprobs.shape[:-1] + torch.Size([1])
-
-        # repeated_empirical = self.empirical.repeat(desired_size[-1])
-        # uniform = torch.ones(size=[self.max_token+1],
-        #                         device=torch.device("cuda")).float()
-        # uniform = uniform/torch.sum(uniform)
-        # 
-
-        # uniform_repeated = uniform.repeat(desired_size)
-
-        # kl_uniform_loss = F.kl_div(
-        #         input = lprobs,
-        #         target = uniform_repeated,
-        #         reduction="sum" if reduce else "none")
-
-        # kl_uniform_loss = kl_uniform_loss * (self.max_token * self.delta)/self.N
-
-        #We want a KL loss per token
-
-        # each row is an instance of r_pos (and r_neg lol) 
-        # shape is (#tokens in batch, self.max_token+1)
-        r_pos_repeated = self.r_pos.repeat(desired_size)
-        r_neg_repeated = self.r_neg.repeat(desired_size)
-
-        # flatten the observed samples for indexing
-        flat_samples = torch.flatten(sample["target"])
-        #number_of_samples = flat_samples.shape[0]
-        # cum_kl_loss = torch.cuda.FloatTensor([0])
-        # for i in range(0, number_of_samples):
-        #     # token is the actual word that occurred
-        #     token = flat_samples[i]
-        #     # probs is the probabilities output by the model
-        #     # given token has occurred
-        #     probs = lprobs[i,:]
-        #     kl_pos = F.kl_div(
-        #             input=probs,
-        #             target = self.r_pos,
-        #             reduction="sum" if reduce else "none")
-        #     kl_neg = F.kl_div(
-        #             input=probs,
-        #             target = self.r_neg,
-        #             reduction="sum" if reduce else "none")
-        #     kl_loss = kl_pos*self.lambda_pos + kl_neg*self.lambda_neg
-        #     kl_loss = kl_loss * self.alphas[i]
-        #     cum_kl_loss += kl_loss
-
-
-        # to double check the order of P and Q in kl_dv
-        # see https://pytorch.org/docs/master/generated/torch.nn.KLDivLoss.html#torch.nn.KLDivLoss
-        # target = y_true, so it's KL(target || input), so
-        # input = model distribution
-
-        # empirical kl
-        repeated_empirical = self.empirical.repeat(desired_size)
-        kl_emp = F.kl_div(
-                input = lprobs,
-                target = repeated_empirical,
-                reduction="none")
-
-
-        # this should just go pair by pair of tensors from
-        # lprobs and target, returning
-        # target[i]*(log(target[i]) - lprobs[i])
-        # kl_div won't apply log to lprobs[i] because it
-        # expects lprobs to be already in log space,
-        # hence lprobs instead of probs
-        # also We have reduction="none" because
-        # We need to apply different scaling factors
-        # to losses belonging to different tokens
-        # kl_pos[a, b] = 
-        # r_pos_repeated[a, b] * (torch.log(r_pos_repeated[a, b]) - lprobs[a, b])
-        kl_pos = F.kl_div(
-                input = lprobs,
-                target = r_pos_repeated,
-                reduction="none")
-        kl_neg = F.kl_div(
-                input = lprobs,
-                target = r_neg_repeated,
-                reduction="none")
-
-        # the lambda_pos and lambda_neg are constants
-        # regardless of token, so We can multiply entire
-        # matrices
-        kl_pos = kl_pos * self.lambda_pos
-        kl_neg = kl_neg * self.lambda_neg
-
-
-        # the alpha_j depends on the word w_j, 
-        # so We select from alphas using flat_samples
-        # to get alphas of tokens which have occurred
-        #relevant_alphas = self.alphas[flat_samples]
-        # unsqueeze and expand so that the shape of
-        # the kl losses and relevant_alphas is the same
-        # this way relevant_alphas[i,:] = row vector of
-        # alpha[token]
-        #relevant_alphas = torch.unsqueeze(relevant_alphas, 1)
-        #relevant_alphas = relevant_alphas.expand(-1, kl_pos.shape[-1])
-        # can add kl losses since We just need to keep the per-token
-        # kl losses distinct
-
-        # sum rows across the first dimension
-        # i.e. just sum over the rows.
-        # result is a vector of size (# of tokens in batch)
-        #kl_pos = torch.sum(kl_pos, dim=1)
-        #kl_neg = torch.sum(kl_neg, dim=1)
-        kl_loss = kl_pos + kl_neg
-        # scale by the appropriate alphas via an element-wise multiply
-        #kl_loss = kl_loss * relevant_alphas
-        # reduce everything down to a scalar
-        # nll_loss literally just returns -lprobs[token] lol
-        loss = F.nll_loss(
-            lprobs,
-            target,
-            ignore_index=self.padding_idx,
-            reduction="none",
-        )
-
-        #loss = loss + torch.sum(kl_loss)
-        #neg_losses = torch.sum(kl_neg, dim=1)
-        #pos_losses = torch.sum(kl_neg, dim=1)
-        #loss = torch.sum(kl_loss) + torch.sum(kl_emp)
-        loss = torch.sum(loss) + torch.sum(kl_loss)
-
+        loss = crit_utils.lambda_loss(self, model, net_output, sample, reduce=True)
         return loss, loss
-
-    def get_counts(self, dataset):
-        fqs = defaultdict(int)
-        print("Calculating Good-Turing stats:")
-        #nltk_set = nltk.FreqDist()
-        for sentence in tqdm(dataset):
-            for token in sentence:
-                fqs[token.item()] += 1
-                #nltk_set.update([token.item()])
-
-        max_token = max(list(fqs.keys()))
-        voc_size = len(fqs.keys())
-        N = sum(fqs.values())
-
-        # good_turing probs, p0 is the amount of mass allocated to 
-        # words with 0 frequency, and scc is smoothed
-        # counts of counts
-        gt_probs, p0 = simpleGoodTuringProbs(fqs)
-        scc = defaultdict(int)
-        for token, frequency in fqs.items():
-            scc[frequency] += 1
-        # gt_probs = nltk.probability.SimpleGoodTuringProbDist(nltk_set)
-
-        empirical = torch.cuda.FloatTensor(size=[max_token+1])
-        for token, fq in fqs.items():
-            empirical[token] = fq
-        self.empirical = empirical/N
-
-        lambda_neg = torch.cuda.FloatTensor([0])
-        lambda_pos = torch.cuda.FloatTensor([0])
-
-        r_pos = torch.cuda.FloatTensor(size=[max_token+1])
-        r_neg = torch.cuda.FloatTensor(size=[max_token+1])
-
-        hws = {}
-        for token, fq in fqs.items():
-            if fq > self.k:
-                pass
-            else:
-                # this is a mess and it kind of can't be helped.
-                # eq 55 in overleaf
-                rstar = (fq+1)*scc[fq+1]/scc[fq]
-                ls = rstar/fq - (self.k+1)*scc[self.k+1]/scc[1]
-                rs = 1/(1-(self.k+1)*scc[self.k+1]/scc[1])
-                d_r = ls*rs
-                h_w = (d_r-1)*fq/N
-                hws[token] = h_w
-                if h_w > 0:
-                    r_pos[token] = h_w
-                else:
-                    r_neg[token] = h_w
-        lambda_pos = torch.sum(r_pos)
-        lambda_neg = torch.sum(r_neg)
-        r_pos = r_pos/lambda_pos
-        r_neg = r_neg/lambda_neg
-
-        # now We need the a_j terms lol
-        alphas = torch.cuda.FloatTensor(size=[max_token+1])
-        for token, fq in fqs.items():
-            if fq==0 or fq > self.k:
-                alphas[token]=0
-            else:
-                numerator = hws[token]*N 
-                denominator = fq*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token])
-                alphas[token] = numerator/denominator
-
-        # for token, fq in fqs.items():
-        #     if(fq in scc.keys() and (fq+1) in scc.keys()):
-        #         left = (fq+1)*(scc[fq+1]/scc[fq])
-        #         right = fq*(1+alphas[token]*(lambda_pos*r_pos[token] + lambda_neg*r_neg[token]))
-        #         print(left)
-        #         print(right.item())
-        #         import pdb; pdb.set_trace()
-
-
-        self.alphas = alphas
-        self.lambda_pos = lambda_pos
-        self.lambda_neg = lambda_neg
-        self.r_pos = r_pos
-        self.r_neg = r_neg
-        self.N = N
-        self.max_token = max_token
-        self.voc_size = voc_size
-        self.fqs = fqs
 
 
     @staticmethod

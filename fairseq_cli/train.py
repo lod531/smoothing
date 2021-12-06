@@ -45,9 +45,6 @@ from fairseq.tasks.translation import TranslationTask
 from fairseq.tasks.language_modeling import LanguageModelingTask
 from omegaconf import DictConfig, OmegaConf
 
-from fairseq.criterions.good_turing_temp import get_good_turing_counts
-
-
 
 
 def main(cfg: FairseqConfig) -> None:
@@ -127,16 +124,6 @@ def main(cfg: FairseqConfig) -> None:
         for valid_sub_split in cfg.dataset.valid_subset.split(","):
             task.load_dataset(valid_sub_split, combine=False, epoch=1)
 
-    task.load_dataset("train")
-    if isinstance(task, TranslationTask):
-        dataset = task.datasets["train"].tgt
-    elif isinstance(task, LanguageModelingTask):
-        dataset = task.datasets["train"].dataset.dataset
-    unique_tokens = {}
-    for sentence in dataset:
-        for token in sentence:
-            unique_tokens[token.item()] = token.item()
-    stats = get_good_turing_counts(dataset)
 
 
 
@@ -186,80 +173,22 @@ def main(cfg: FairseqConfig) -> None:
     train_meter.start()
 
     epoch_count = 0
-    eps = 0.000001
+    eps = 0.0001
     while epoch_itr.next_epoch_idx <= max_epoch:
-        probs = model.softmax(model.weights)
-        log_probs = model.logsoftmax(model.weights)
-        emp_divergence = torch.nn.functional.kl_div(input=log_probs, target=stats["emp_dist"], reduce="sum")
-        gt_divergence = torch.nn.functional.kl_div(input=log_probs, target=stats["gt_dist"], reduce="sum")
-        add_delta_divergence = torch.nn.functional.kl_div(input=log_probs, target=stats["add_delta_dist"], reduce="sum")
-        katz_divergence = torch.nn.functional.kl_div(input=log_probs, target=stats["katz_dist"], reduce="sum")
+        #probs = model.softmax(model.weights)
+        #log_probs = model.logsoftmax(model.weights)
+        #emp_divergence = torch.nn.functional.kl_div(input=log_probs, target=criterion.empirical, reduce="sum")
+        #smoothed_divergence = torch.nn.functional.kl_div(input=log_probs, target=criterion.smoothed, reduce="sum")
 
-        if emp_divergence.item() < eps:
-            print("EMP PASSED, DIVERGENCE = " + str(emp_divergence.item()))
-        else:
-            print("EMP NOT PASSED, DIVERGENCE = " + str(emp_divergence.item()))
-
-        if add_delta_divergence.item() < eps:
-            print("ADD_DELTA PASSED DIVERGENCE = " + str(add_delta_divergence.item()))
-        else:
-            print("ADD_DELTA NOT PASSED DIVERGENCE = " + str(add_delta_divergence.item()))
-
-        if gt_divergence.item() < eps:
-            print("GT PASSED DIVERGENCE = " + str(gt_divergence.item()))
-        else:
-            print("GT NOT PASSED DIVERGENCE = " + str(gt_divergence.item()))
-
-        #if katz_divergence.item() < eps:
-        #    print("KATZ PASSED")
+        #if emp_divergence.item() < eps:
+        #    print("EMP PASSED, DIVERGENCE = " + str(emp_divergence.item()))
         #else:
-        #    print("KATZ NOT PASSED DIVERGENCE = " + str(add_delta_divergence.item()))
+        #    print("EMP NOT PASSED, DIVERGENCE = " + str(emp_divergence.item()))
 
-
-        # sanity check
-        #f_count = 0
-        #for token, fq_instance in good_turing_stats["fqs"].items():
-        #    model_count = probs[token].item()*good_turing_stats["N"]
-        #    if model_count > fq_instance+2 or model_count < fq_instance-2:
-        #        f_count += 1
-
-        #print("Empirical mismatch = "+str(f_count))
-        # ff_count = 0
-        # deviant_count = 0
-        # abs_delta = 0
-        # for token, gt_prob in good_turing_stats["gtp"].items():
-        #     model_count = probs[token].item()*3949114
-        #     gt_count = gt_prob*3949114
-        #     if model_count > gt_count+50 or model_count < gt_count-50:
-        #         deviant_count += good_turing_stats["fqs"][token]
-        #         abs_delta += abs(model_count - gt_count)
-        #         ff_count += 1
-
-        # print("GT = "+str(ff_count) + " with deviant count " + str(deviant_count) + " with delta " + str(abs_delta))
-
-        #f_count = 0
-        #abs_delta = 0
-        #deviant_count = 0
-        #for token, delta_prob in good_turing_stats["add_delta_probs"].items():
-        #    model_count = probs[token].item()*3949114
-        #    delta_count = delta_prob * 3949114
-        #    if model_count > delta_count+2 or model_count < delta_count-21:
-        #        deviant_count += good_turing_stats["fqs"][token]
-        #        abs_delta += abs(model_count - delta_count)
-        #        f_count += 1
-        #print("unigram " + str(f_count) + " abs delta = " + str(abs_delta), " deviant count = " + str(deviant_count))
-        #ff_count = 0
-        #deviant_count = 0
-        #abs_delta = 0
-        #for token, kt_prob in good_turing_stats["ktp"].items():
-        #    model_count = probs[token].item()*3949114
-        #    kt_count = kt_prob*3949114
-        #    if model_count > kt_count+2 or model_count < kt_count-2:
-        #        deviant_count += good_turing_stats["fqs"][token]
-        #        abs_delta += abs(model_count - kt_count)
-        #        ff_count += 1
-
-        #print("KATZ = "+str(ff_count) + " with deviant count " + str(deviant_count) + " with delta " + str(abs_delta))
+        #if smoothed_divergence.item() < eps:
+        #    print("SMOOTHED PASSED DIVERGENCE = " + str(smoothed_divergence.item()))
+        #else:
+        #    print("SMOOTHED NOT PASSED DIVERGENCE = " + str(smoothed_divergence.item()))
 
 
 

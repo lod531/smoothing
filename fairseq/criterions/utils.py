@@ -105,6 +105,28 @@ def tokenize(crit, dataset, n):
             res.append(token)
     return res
 
+
+# crit is a criterion
+# tens is the tensor
+# n is the order, as in ngram
+def tokenize_tensor(crit, tens, n):
+    assert(n>0)
+    res = []
+    BOS = crit.task.dictionary.bos()
+    for end in range(len(tens)):
+        start = end-(n-1)
+        # +1 because I want slices to include
+        # the token at [end], but [start:end]
+        # excludes end
+        end = end+1
+        if start < 0:
+            pad = [BOS]*abs(start)
+            token = pad + tens[:end]
+        else:
+            token = tens[start:end]
+        res.append(token)
+    return res
+
 def get_contexts(data):
     # the input to this is expected to be the output of tokenize, basically.
     contexts = set()

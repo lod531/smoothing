@@ -11,7 +11,7 @@ def chunks(lst, n):
 
 Path("./synth_data").mkdir(parents=True, exist_ok=True) 
 
-cc = {1:10000, 2:2, 3:3, 5:4, 6:5, 7:6}
+cc = {1:200, 2:2, 3:3, 5:4, 6:5, 7:6}
 
 t=0
 res=[]

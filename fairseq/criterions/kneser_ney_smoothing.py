@@ -3,6 +3,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+import pickle
 import sys
 import math
 import os
@@ -89,10 +90,15 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         self.kl_terms = {}
         self.smoothed = {}
         print("Getting smoothed dists:")
-        for context in tqdm(self.contexts):
-            self.kl_terms[context] = self.get_kl_terms(context)
-        print()
-        import os, psutil; print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
+        filename = "/cluster/scratch/andriusb/pickled_kl/test.pickle"
+        pickled = False
+        if pickled:
+            self.kl_terms = pickle.load( open(filename, "rb" ) )
+        else:
+            for context in tqdm(self.contexts):
+                self.kl_terms[context] = self.get_kl_terms(context)
+        #print()
+        #import os, psutil; print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
 
     def get_kl_terms(self, context):
         dist= defaultdict(float)
@@ -121,8 +127,6 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
                 neg_indices.append(index)
                 neg_values.append(value)
 
-
-
         indices = [list(dist.keys())]
         values = list(dist.values())
         dist_tensor = torch.sparse_coo_tensor(indices = indices, values=values).coalesce()
@@ -133,6 +137,13 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         lambda_neg = torch.sparse.sum(r_neg)
         r_pos = r_pos/lambda_pos
         r_neg = r_neg/lambda_neg
+        # handling edge case where
+        if len(torch.nonzero(lambda_pos)) == 0:
+            r_pos = torch.sparse_coo_tensor(size=(0,)).coalesce()
+        if len(torch.nonzero(lambda_neg)) == 0:
+            r_neg = torch.sparse_coo_tensor(size=(0,)).coalesce()
+        if torch.isnan(r_pos.values()).any() or torch.isnan(r_neg.values()).any() or torch.isnan(lambda_pos).any() or torch.isnan(lambda_neg).any():
+            import pdb; pdb.set_trace()
         del dist
         del pos_indices
         del neg_indices
@@ -140,9 +151,6 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         del neg_values
         return {"r_pos":r_pos, "r_neg":r_neg, "lambda_pos":lambda_pos, "lambda_neg":lambda_neg}
         #return len(self.alpha[context].keys()), len(relevant_numerators.keys())
-
-
-
 
     def get_empirical(self):
         empirical = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
@@ -205,7 +213,7 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
             ignore_index=self.padding_idx,
             reduction="none",
         )
-        loss = torch.sum(torch_nll) + torch.sum(kl_loss)
+        loss = torch.sum(torch_nll) + kl_loss
         return loss, loss
 
 

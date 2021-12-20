@@ -89,14 +89,8 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         # so what, per context We'll need a 
         self.kl_terms = {}
         self.smoothed = {}
-        print("Getting smoothed dists:")
-        filename = "/cluster/scratch/andriusb/pickled_kl/test.pickle"
-        pickled = False
-        if pickled:
-            self.kl_terms = pickle.load( open(filename, "rb" ) )
-        else:
-            for context in tqdm(self.contexts):
-                self.kl_terms[context] = self.get_kl_terms(context)
+        for context in tqdm(self.contexts):
+            self.kl_terms[context] = self.get_kl_terms(context)
         #print()
         #import os, psutil; print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
 
@@ -108,6 +102,7 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
             #dist[hash(token)] = (count-self.d)/n_tokens
             # same as doing -count 
             dist[token] = -self.d/n_tokens
+
         gamma = (self.d/n_tokens)*len(self.gamma2[context])
         #smooth denominator
         sm_denum = len(self.psmooth_denum[context[1:]])
@@ -129,28 +124,34 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
 
         indices = [list(dist.keys())]
         values = list(dist.values())
-        dist_tensor = torch.sparse_coo_tensor(indices = indices, values=values).coalesce()
 
-        r_pos = torch.sparse_coo_tensor(indices = [pos_indices], values=pos_values).coalesce()
-        r_neg = torch.sparse_coo_tensor(indices = [neg_indices], values=neg_values).coalesce()
-        lambda_pos = torch.sparse.sum(r_pos)
-        lambda_neg = torch.sparse.sum(r_neg)
-        r_pos = r_pos/lambda_pos
-        r_neg = r_neg/lambda_neg
+        idx_type = torch.long
+        val_type = torch.bfloat16
+        r_pos_val = torch.tensor(pos_values, device=torch.device("cuda"), dtype=val_type)
+        r_neg_val = torch.tensor(neg_values, device=torch.device("cuda"), dtype=val_type)
+        r_pos_idx = torch.tensor(pos_indices, device=torch.device("cuda"), dtype=idx_type)
+        r_neg_idx = torch.tensor(neg_indices, device=torch.device("cuda"), dtype=idx_type)
+        lambda_pos = torch.sum(r_pos_val)
+        lambda_neg = torch.sum(r_neg_val)
+        r_pos_val = r_pos_val/lambda_pos
+        r_neg_val = r_neg_val/lambda_neg
         # handling edge case where
         if len(torch.nonzero(lambda_pos)) == 0:
-            r_pos = torch.sparse_coo_tensor(size=(0,)).coalesce()
+            r_pos_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type)
+            r_pos_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type)
         if len(torch.nonzero(lambda_neg)) == 0:
-            r_neg = torch.sparse_coo_tensor(size=(0,)).coalesce()
-        if torch.isnan(r_pos.values()).any() or torch.isnan(r_neg.values()).any() or torch.isnan(lambda_pos).any() or torch.isnan(lambda_neg).any():
-            import pdb; pdb.set_trace()
+            r_neg_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type)
+            r_neg_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type)
+        #if torch.isnan(r_pos_val).any() or torch.isnan(r_neg_val).any() or torch.isnan(lambda_pos).any() or torch.isnan(lambda_neg).any():
+        #    import pdb; pdb.set_trace()
         del dist
         del pos_indices
         del neg_indices
         del pos_values
         del neg_values
-        return {"r_pos":r_pos, "r_neg":r_neg, "lambda_pos":lambda_pos, "lambda_neg":lambda_neg}
-        #return len(self.alpha[context].keys()), len(relevant_numerators.keys())
+        return {"r_pos_val":r_pos_val, "r_neg_val":r_neg_val, 
+                "r_pos_idx":r_pos_idx, "r_neg_idx":r_neg_idx,
+                "lambda_pos":lambda_pos, "lambda_neg":lambda_neg}
 
     def get_empirical(self):
         empirical = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
@@ -196,14 +197,16 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
             context = tuple(token[:-1])
             if context in self.contexts:
                 kl_stuff = self.kl_terms[context]
-                r_pos = kl_stuff["r_pos"].cuda()
-                r_neg = kl_stuff["r_neg"].cuda()
+                r_pos = kl_stuff["r_pos_val"]
+                r_neg = kl_stuff["r_neg_val"]
+                r_pos_idx = kl_stuff["r_pos_idx"]
+                r_neg_idx = kl_stuff["r_neg_idx"]
 
                 lprob = lprobs[i,:]
-                kl_pos = -r_pos.values()*lprob[r_pos.indices().flatten()]
-                kl_neg = -r_neg.values()*lprob[r_neg.indices().flatten()]
-                kl_pos = kl_pos * kl_stuff["lambda_pos"].cuda()
-                kl_neg = kl_neg * kl_stuff["lambda_neg"].cuda()
+                kl_pos = -r_pos*lprob[r_pos_idx]
+                kl_neg = -r_neg*lprob[r_neg_idx]
+                kl_pos = kl_pos * kl_stuff["lambda_pos"]
+                kl_neg = kl_neg * kl_stuff["lambda_neg"]
 
                 kl_loss += torch.sum(kl_pos) + torch.sum(kl_neg)
             
@@ -211,9 +214,9 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
             lprobs,
             target,
             ignore_index=self.padding_idx,
-            reduction="none",
+            reduction="sum",
         )
-        loss = torch.sum(torch_nll) + kl_loss
+        loss = torch_nll + kl_loss
         return loss, loss
 
 

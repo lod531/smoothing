@@ -88,11 +88,16 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         #self.ngrams = kenlm.Model("/cluster/home/andriusb/fq/kenlm/build/3gram.arpa")
         # so what, per context We'll need a 
         self.kl_terms = {}
-        self.smoothed = {}
         for context in tqdm(self.contexts):
             self.kl_terms[context] = self.get_kl_terms(context)
         #print()
         #import os, psutil; print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
+        avg_density = 0
+        for key, kl in self.kl_terms.items():
+            avg_density += kl["r_pos_idx"].shape[0] + kl["r_neg_idx"].shape[0]
+        avg_density = avg_density/len(self.kl_terms.keys())
+        print("AVERAGE DENSITY :" + str(avg_density))
+
 
     def get_kl_terms(self, context):
         dist= defaultdict(float)
@@ -122,26 +127,24 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
                 neg_indices.append(index)
                 neg_values.append(value)
 
-        indices = [list(dist.keys())]
-        values = list(dist.values())
-
         idx_type = torch.long
-        val_type = torch.bfloat16
-        r_pos_val = torch.tensor(pos_values, device=torch.device("cuda"), dtype=val_type)
-        r_neg_val = torch.tensor(neg_values, device=torch.device("cuda"), dtype=val_type)
-        r_pos_idx = torch.tensor(pos_indices, device=torch.device("cuda"), dtype=idx_type)
-        r_neg_idx = torch.tensor(neg_indices, device=torch.device("cuda"), dtype=idx_type)
+        val_type = torch.float
+        pin = True
+        r_pos_val = torch.tensor(pos_values, device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
+        r_neg_val = torch.tensor(neg_values, device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
+        r_pos_idx = torch.tensor(pos_indices, device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
+        r_neg_idx = torch.tensor(neg_indices, device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
         lambda_pos = torch.sum(r_pos_val)
         lambda_neg = torch.sum(r_neg_val)
         r_pos_val = r_pos_val/lambda_pos
         r_neg_val = r_neg_val/lambda_neg
         # handling edge case where
         if len(torch.nonzero(lambda_pos)) == 0:
-            r_pos_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type)
-            r_pos_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type)
+            r_pos_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
+            r_pos_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
         if len(torch.nonzero(lambda_neg)) == 0:
-            r_neg_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type)
-            r_neg_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type)
+            r_neg_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
+            r_neg_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
         #if torch.isnan(r_pos_val).any() or torch.isnan(r_neg_val).any() or torch.isnan(lambda_pos).any() or torch.isnan(lambda_neg).any():
         #    import pdb; pdb.set_trace()
         del dist

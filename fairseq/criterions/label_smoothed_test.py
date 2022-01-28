@@ -7,6 +7,7 @@ import math
 from dataclasses import dataclass, field
 
 import torch
+import fairseq.criterions.utils as crit_utils
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
 from fairseq.dataclass import FairseqDataclass
@@ -14,7 +15,7 @@ from omegaconf import II
 
 
 @dataclass
-class LabelSmoothedCrossEntropyCriterionConfig(FairseqDataclass):
+class LabelSmoothedTestCriterionConfig(FairseqDataclass):
     label_smoothing: float = field(
         default=0.0,
         metadata={"help": "epsilon for label smoothing, 0 means no label smoothing"},
@@ -30,11 +31,12 @@ class LabelSmoothedCrossEntropyCriterionConfig(FairseqDataclass):
     sentence_avg: bool = II("optimization.sentence_avg")
 
 
-def label_smoothed_nll_loss(lprobs, target, epsilon, ignore_index=None, reduce=True):
+def label_smoothed_nll_loss(lprobs, target, epsilon, dist, ignore_index=None, reduce=True):
     if target.dim() == lprobs.dim() - 1:
         target = target.unsqueeze(-1)
     nll_loss = -lprobs.gather(dim=-1, index=target)
-    smooth_loss = -lprobs.sum(dim=-1, keepdim=True)
+    dist_tile = dist.expand(lprobs.shape[0], -1)
+    smooth_loss = -(dist_tile*lprobs).sum(dim=-1, keepdim=True)
     if ignore_index is not None:
         pad_mask = target.eq(ignore_index)
         nll_loss.masked_fill_(pad_mask, 0.0)
@@ -45,16 +47,14 @@ def label_smoothed_nll_loss(lprobs, target, epsilon, ignore_index=None, reduce=T
     if reduce:
         nll_loss = nll_loss.sum()
         smooth_loss = smooth_loss.sum()
-    eps_i = epsilon / (lprobs.size(-1) - 1)
-    import pdb; pdb.set_trace()
-    loss = (1.0 - epsilon - eps_i) * nll_loss + eps_i * smooth_loss
+    loss = (1.0 - epsilon) * nll_loss + epsilon * smooth_loss
     return loss, nll_loss
 
 
 @register_criterion(
-    "label_smoothed_cross_entropy", dataclass=LabelSmoothedCrossEntropyCriterionConfig
+    "label_smoothed_test", dataclass=LabelSmoothedTestCriterionConfig
 )
-class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
+class LabelSmoothedTestCriterion(FairseqCriterion):
     def __init__(
         self,
         task,
@@ -68,6 +68,18 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         self.eps = label_smoothing
         self.ignore_prefix_size = ignore_prefix_size
         self.report_accuracy = report_accuracy
+        self.dataset = crit_utils.get_dataset_from_task(task)
+        self.dict_size = len(task.dictionary)
+        #self.unigram = torch.zeros(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
+        
+        #for sentence in self.dataset:
+        #    for word in sentence:
+        #        self.unigram[word] += 1
+        #self.unigram = self.unigram/torch.sum(self.unigram)
+        self.unigram = torch.ones(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
+        self.unigram = self.unigram/torch.sum(self.unigram)
+
+
 
     def forward(self, model, sample, reduce=True):
         """Compute the loss for the given sample.
@@ -113,6 +125,7 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
             lprobs,
             target,
             self.eps,
+            dist = self.unigram,
             ignore_index=self.padding_idx,
             reduce=reduce,
         )

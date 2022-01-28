@@ -55,13 +55,8 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         # alpha, gamma to keep track of alpha, gamma as in
         # https://dash.harvard.edu/bitstream/handle/1/25104739/tr-10-98.pdf page 17
         # An Empirical Study of Smoothing Techniques for Language Modeling
-        self.gamma = defaultdict(set)
-        self.psmooth1 = defaultdict(set)
-        self.psmooth2 = defaultdict(set)
-        self.filtered_u = defaultdict(lambda: defaultdict(int))
-
         self.alpha = defaultdict(lambda: defaultdict(int))
-        self.gamma2 = defaultdict(set)
+        self.gamma = defaultdict(set)
         self.psmooth_num = defaultdict(lambda: defaultdict(set))
         self.psmooth_denum = defaultdict(set)
         # code for manually calculating kneser-ney
@@ -70,7 +65,7 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
             context = token[:-1]
             word = token[-1]
             self.alpha[context][word] += 1
-            self.gamma2[context].add(word)
+            self.gamma[context].add(word)
             # psmooth_numerator
             # this is tricky
             # We'll want to find the cases where the numerator is non-zero
@@ -80,21 +75,31 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
             # the non-zero sets which are determined by token[-1]
             self.psmooth_num[token[1:-1]][word].add(token[0])
             self.psmooth_denum[token[1:-1]].add(token[:1] + token[-1:])
-
-            self.gamma[token[:-1]].add(token[-1:])
-            self.psmooth1[token[1:]].add(token[:1])
-            self.psmooth2[token[1:-1]].add(token[:1] + token[-1:])
-            self.filtered_u[token[:-1]][token[-1]] += 1
+        for context, nums in self.psmooth_num.items():
+            del_list = []
+            for word, wset in nums.items():
+                if len(wset) < 2:
+                    del_list.append(word)
+            for item in del_list:
+                del nums[item]
         #self.ngrams = kenlm.Model("/cluster/home/andriusb/fq/kenlm/build/3gram.arpa")
         # so what, per context We'll need a 
         self.kl_terms = {}
+        avg_density = 0
+        test = 0
+        self.test_count = 0
         for context in tqdm(self.contexts):
-            self.kl_terms[context] = self.get_kl_terms(context)
+#            test += 1
+#            if test % 1000 == 0:
+#                print()
+#                print()
+#                print(self.dict_size)
+#                print(avg_density/test)
+#                import pdb; pdb.set_trace()
+            self.kl_terms[hash(context)] = self.get_kl_terms(context)
+#            avg_density += self.kl_terms[context]["idx"].shape[0]
         #print()
         #import os, psutil; print(psutil.Process(os.getpid()).memory_info().rss / 1024 ** 2)
-        avg_density = 0
-        for key, kl in self.kl_terms.items():
-            avg_density += kl["r_pos_idx"].shape[0] + kl["r_neg_idx"].shape[0]
         avg_density = avg_density/len(self.kl_terms.keys())
         print("AVERAGE DENSITY :" + str(avg_density))
 
@@ -108,53 +113,26 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
             # same as doing -count 
             dist[token] = -self.d/n_tokens
 
-        gamma = (self.d/n_tokens)*len(self.gamma2[context])
+        gamma = (self.d/n_tokens)*len(self.gamma[context])
         #smooth denominator
         sm_denum = len(self.psmooth_denum[context[1:]])
         relevant_numerators = self.psmooth_num[context[1:]]
         for word, wset in relevant_numerators.items():
+            # if numerator is significant
             dist[word] += gamma*len(wset)/sm_denum
         # at this point dist = smoothed - empirical
-        pos_indices = []
-        neg_indices = []
-        pos_values = []
-        neg_values = []
-        for index, value in dist.items():
-            if value > 0:
-                pos_indices.append(index)
-                pos_values.append(value)
-            else:
-                neg_indices.append(index)
-                neg_values.append(value)
-
+        self.test_sum = 1 - sum(dist.values())
+        indices = list(dist.keys())
+        values = list(dist.values())
         idx_type = torch.long
-        val_type = torch.float
+        val_type = torch.float16
         pin = True
-        r_pos_val = torch.tensor(pos_values, device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
-        r_neg_val = torch.tensor(neg_values, device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
-        r_pos_idx = torch.tensor(pos_indices, device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
-        r_neg_idx = torch.tensor(neg_indices, device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
-        lambda_pos = torch.sum(r_pos_val)
-        lambda_neg = torch.sum(r_neg_val)
-        r_pos_val = r_pos_val/lambda_pos
-        r_neg_val = r_neg_val/lambda_neg
-        # handling edge case where
-        if len(torch.nonzero(lambda_pos)) == 0:
-            r_pos_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
-            r_pos_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
-        if len(torch.nonzero(lambda_neg)) == 0:
-            r_neg_val = torch.tensor([], device=torch.device("cuda"), dtype=val_type, pin_memory=pin)
-            r_neg_idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type, pin_memory=pin)
-        #if torch.isnan(r_pos_val).any() or torch.isnan(r_neg_val).any() or torch.isnan(lambda_pos).any() or torch.isnan(lambda_neg).any():
-        #    import pdb; pdb.set_trace()
-        del dist
-        del pos_indices
-        del neg_indices
-        del pos_values
-        del neg_values
-        return {"r_pos_val":r_pos_val, "r_neg_val":r_neg_val, 
-                "r_pos_idx":r_pos_idx, "r_neg_idx":r_neg_idx,
-                "lambda_pos":lambda_pos, "lambda_neg":lambda_neg}
+        #val = torch.tensor(values, device=torch.device("cuda"), dtype=val_type)
+        #idx = torch.tensor(indices, device=torch.device("cuda"), dtype=idx_type)
+        val = torch.tensor(values, dtype=val_type)
+        idx = torch.tensor(indices, dtype=idx_type)
+
+        return {hash("val"):val, hash("idx"):idx}
 
     def get_empirical(self):
         empirical = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
@@ -190,36 +168,21 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         lprobs = model.get_normalized_probs(net_output, log_probs=True)
         lprobs = lprobs.view(-1, lprobs.size(-1))
         target = model.get_targets(sample, net_output).view(-1)
-        desired_size = lprobs.shape[:-1] + torch.Size([1])
 
         labels = torch.flatten(target).tolist()
         tokens = crit_utils.tokenize_tensor(self, labels, self.n)
-        kl_loss = torch.tensor([0], device=torch.device("cuda")).float()
+        #kl_loss = torch.tensor([0], device=torch.device("cuda")).float()
+        coeffs = torch.zeros(size=lprobs.shape, device=torch.device("cuda"), dtype=torch.float16)
         for i in range(len(tokens)):
             token = tokens[i]
             context = tuple(token[:-1])
             if context in self.contexts:
-                kl_stuff = self.kl_terms[context]
-                r_pos = kl_stuff["r_pos_val"]
-                r_neg = kl_stuff["r_neg_val"]
-                r_pos_idx = kl_stuff["r_pos_idx"]
-                r_neg_idx = kl_stuff["r_neg_idx"]
-
-                lprob = lprobs[i,:]
-                kl_pos = -r_pos*lprob[r_pos_idx]
-                kl_neg = -r_neg*lprob[r_neg_idx]
-                kl_pos = kl_pos * kl_stuff["lambda_pos"]
-                kl_neg = kl_neg * kl_stuff["lambda_neg"]
-
-                kl_loss += torch.sum(kl_pos) + torch.sum(kl_neg)
-            
-        torch_nll = F.nll_loss(
-            lprobs,
-            target,
-            ignore_index=self.padding_idx,
-            reduction="sum",
-        )
-        loss = torch_nll + kl_loss
+                kl_stuff = self.kl_terms[hash(context)]
+                vals = torch.tensor(kl_stuff[hash("val")], device=torch.device("cuda"), dtype=torch.float16)
+                coeffs[i, kl_stuff[hash("idx")]] = vals
+                # corresponds to NLL
+                coeffs[i, labels[i]] += 1
+        loss = torch.sum(coeffs * (-lprobs))
         return loss, loss
 
 

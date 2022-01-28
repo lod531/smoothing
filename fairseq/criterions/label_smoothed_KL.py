@@ -7,6 +7,7 @@ import math
 from dataclasses import dataclass, field
 
 import torch
+import fairseq.criterions.utils as crit_utils
 from fairseq import metrics, utils
 from fairseq.criterions import FairseqCriterion, register_criterion
 from fairseq.dataclass import FairseqDataclass
@@ -14,7 +15,7 @@ from omegaconf import II
 
 
 @dataclass
-class LabelSmoothedCrossEntropyCriterionConfig(FairseqDataclass):
+class LabelSmoothedKLCriterionConfig(FairseqDataclass):
     label_smoothing: float = field(
         default=0.0,
         metadata={"help": "epsilon for label smoothing, 0 means no label smoothing"},
@@ -30,31 +31,11 @@ class LabelSmoothedCrossEntropyCriterionConfig(FairseqDataclass):
     sentence_avg: bool = II("optimization.sentence_avg")
 
 
-def label_smoothed_nll_loss(lprobs, target, epsilon, ignore_index=None, reduce=True):
-    if target.dim() == lprobs.dim() - 1:
-        target = target.unsqueeze(-1)
-    nll_loss = -lprobs.gather(dim=-1, index=target)
-    smooth_loss = -lprobs.sum(dim=-1, keepdim=True)
-    if ignore_index is not None:
-        pad_mask = target.eq(ignore_index)
-        nll_loss.masked_fill_(pad_mask, 0.0)
-        smooth_loss.masked_fill_(pad_mask, 0.0)
-    else:
-        nll_loss = nll_loss.squeeze(-1)
-        smooth_loss = smooth_loss.squeeze(-1)
-    if reduce:
-        nll_loss = nll_loss.sum()
-        smooth_loss = smooth_loss.sum()
-    eps_i = epsilon / (lprobs.size(-1) - 1)
-    import pdb; pdb.set_trace()
-    loss = (1.0 - epsilon - eps_i) * nll_loss + eps_i * smooth_loss
-    return loss, nll_loss
-
 
 @register_criterion(
-    "label_smoothed_cross_entropy", dataclass=LabelSmoothedCrossEntropyCriterionConfig
+    "label_smoothed_KL", dataclass=LabelSmoothedKLCriterionConfig
 )
-class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
+class LabelSmoothedKLCriterion(FairseqCriterion):
     def __init__(
         self,
         task,
@@ -68,6 +49,19 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
         self.eps = label_smoothing
         self.ignore_prefix_size = ignore_prefix_size
         self.report_accuracy = report_accuracy
+        self.dataset = crit_utils.get_dataset_from_task(task)
+        self.fqs, self.N = crit_utils.get_fqs(self)
+        self.dict_size = len(task.dictionary)
+        #self.unigram = torch.zeros(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
+        
+        #for sentence in self.dataset:
+        #    for word in sentence:
+        #        self.unigram[word] += 1
+        #self.unigram = self.unigram/torch.sum(self.unigram)
+        self.dist = torch.ones(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
+        self.dist = self.dist/torch.sum(self.dist)
+
+
 
     def forward(self, model, sample, reduce=True):
         """Compute the loss for the given sample.
@@ -109,13 +103,25 @@ class LabelSmoothedCrossEntropyCriterion(FairseqCriterion):
 
     def compute_loss(self, model, net_output, sample, reduce=True):
         lprobs, target = self.get_lprobs_and_target(model, net_output, sample)
-        loss, nll_loss = label_smoothed_nll_loss(
-            lprobs,
-            target,
-            self.eps,
-            ignore_index=self.padding_idx,
-            reduce=reduce,
-        )
+
+        if target.dim() == lprobs.dim() - 1:
+            target = target.unsqueeze(-1)
+        nll_loss = -lprobs.gather(dim=-1, index=target)
+        gamma_c = self.eps/(1-self.eps)
+        dist_tile = gamma_c*self.dist.expand(lprobs.shape[0], -1)
+        smooth_loss = -(dist_tile*lprobs).sum(dim=-1, keepdim=True)
+        ignore_index = self.padding_idx
+        if ignore_index is not None:
+            pad_mask = target.eq(ignore_index)
+            nll_loss.masked_fill_(pad_mask, 0.0)
+            smooth_loss.masked_fill_(pad_mask, 0.0)
+        else:
+            nll_loss = nll_loss.squeeze(-1)
+            smooth_loss = smooth_loss.squeeze(-1)
+        if reduce:
+            nll_loss = nll_loss.sum()
+            smooth_loss = smooth_loss.sum()
+        loss = nll_loss + smooth_loss
         return loss, nll_loss
 
     def compute_accuracy(self, model, net_output, sample):

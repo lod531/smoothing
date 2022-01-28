@@ -134,3 +134,7 @@ experimental/*
 
 # Weights and Biases logs
 wandb/
+
+# vim temp files
+*.swp
+*.swo

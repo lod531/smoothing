@@ -3,8 +3,11 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+import pickle
+import sys
 import math
-import nltk
+import os
+import kenlm
 import fairseq.criterions.utils as crit_utils
 from dataclasses import dataclass, field
 from collections import defaultdict
@@ -22,6 +25,10 @@ from omegaconf import II
 
 @dataclass
 class KatzSmoothingCriterionConfig(FairseqDataclass):
+    katz_n: int = field(
+        default=1,
+        metadata={"help": "n-gram version of Kneser-Ney"},
+    )
     katz_k: int = field(
         default=0,
         metadata={"help": "Tokens occuring up to and including k times will be smoothed."},
@@ -29,37 +36,90 @@ class KatzSmoothingCriterionConfig(FairseqDataclass):
     sentence_avg: bool = II("optimization.sentence_avg")
 
 
-
-
 @register_criterion("katz_smoothing", dataclass=KatzSmoothingCriterionConfig)
 class KatzSmoothingCriterion(FairseqCriterion):
-    def __init__(self, task, katz_k, sentence_avg):
+    def __init__(self, task, katz_n, katz_k, sentence_avg):
         super().__init__(task)
-        self.sentence_avg = sentence_avg
+        self.n = katz_n
         self.k = katz_k
+        self.sentence_avg = sentence_avg
         self.dataset = crit_utils.get_dataset_from_task(task)
         self.dict_size = len(task.dictionary)
         self.ignored_indices = [self.padding_idx]
-        crit_utils.get_fqs(self)
-        smoothed = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
+        self.fqs, self.N = crit_utils.get_fqs(self)
+        self.empirical = self.get_empirical()
+        self.tokenized = crit_utils.tokenize(self, self.dataset, self.n)
+        self.contexts = crit_utils.get_contexts(self.tokenized)
+        self.backoff = crit_utils.get_ngram_stats(self, self.dataset, self.n-1)
+        self.counts = defaultdict(lambda: defaultdict(int))
+        for token in self.tokenized:
+            token = tuple(token)
+            context = token[:-1]
+            word = token[-1]
+            self.counts[context][word] += 1
+        self.kl_terms = {}
+#        self.test = 0
+#        hist = defaultdict(float)
+#        for context in self.contexts:
+#            counts = self.counts[context]
+#            for count in counts.items():
+#                hist[count] += count
+#
+#        test = 0
+#        for i in range(10):
+#            test += hist[i]
+#
+        for context in tqdm(self.contexts):
+            self.kl_terms[context] = self.get_kl_terms(context)
+
+    def get_kl_terms(self, context):
+        dist = defaultdict(float)
+        sanity = defaultdict(float)
         scc = defaultdict(int)
-        for token, frequency in self.fqs.items():
+        n_items = sum(self.counts[context].values())
+        for token, frequency in self.counts[context].items():
             scc[frequency] += 1
+        if scc[1]/n_items == 0.0 or scc[1]/n_items == 1.0:
+            dist = {}
+        else:
+            try:
+                for token, fq in self.counts[context].items():
+                    if fq > self.k:
+                        sanity[token] = fq/n_items
+                    else:
+                        # this is a mess and it kind of can't be helped.
+                        # eq 55 in overleaf
+                        rstar = (fq+1)*scc[fq+1]/scc[fq]
+                        ls = rstar/fq - (self.k+1)*scc[self.k+1]/scc[1]
+                        rs = 1/(1-(self.k+1)*scc[self.k+1]/scc[1])
+                        d_r = ls*rs
+                        d_r = d_r*fq/n_items
+                        dist[token] = d_r-fq/n_items
+                        sanity[token] = d_r
+                p0 = scc[1]/n_items
+                if (sum(sanity.values()) + p0) == 1.0:
+                    backoff_dist = self.backoff[context[1:]]
+                    for token, prob in backoff_dist.items():
+                        dist[token] += p0*prob
+                else:
+                    dist = {}
+            except Exception as e:
+                dist = {}
+        indices = list(dist.keys())
+        values = list(dist.values())
+        idx_type = torch.long
+        val_type = torch.float16
+        val = torch.tensor(values, device=torch.device("cuda"), dtype=val_type)
+        idx = torch.tensor(indices, device=torch.device("cuda"), dtype=idx_type)
+        return {"val":val, "idx":idx}
+
+    def get_empirical(self):
+        empirical = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
         for token, fq in self.fqs.items():
-            if fq > self.k:
-                pass
-            else:
-                # this is a mess and it kind of can't be helped.
-                # eq 55 in overleaf
-                rstar = (fq+1)*scc[fq+1]/scc[fq]
-                ls = rstar/fq - (self.k+1)*scc[self.k+1]/scc[1]
-                rs = 1/(1-(self.k+1)*scc[self.k+1]/scc[1])
-                d_r = ls*rs
-                h_w = d_r*fq/self.N
-                smoothed[token] = h_w
-        smoothed[task.dictionary.unk()] = 1 - torch.sum(smoothed)
-        self.smoothed = smoothed
-        crit_utils.get_kl_terms(self)
+            if token not in self.ignored_indices:
+                empirical[token] = fq
+        empirical = empirical/torch.sum(empirical)
+        return empirical
 
     def forward(self, model, sample, reduce=True):
         """Compute the loss for the given sample.
@@ -69,7 +129,8 @@ class KatzSmoothingCriterion(FairseqCriterion):
         2) the sample size, which is used as the denominator for the gradient
         3) logging outputs to display while training
         """
-        net_output = model(**sample["net_input"], target=sample["target"])
+        #net_output = model(**sample["net_input"], target=sample["target"])
+        net_output = model(**sample["net_input"])
         loss, _ = self.compute_loss(model, net_output, sample, reduce=reduce)
         sample_size = (
             sample["target"].size(0) if self.sentence_avg else sample["ntokens"]
@@ -83,7 +144,20 @@ class KatzSmoothingCriterion(FairseqCriterion):
         return loss, sample_size, logging_output
 
     def compute_loss(self, model, net_output, sample, reduce=True):
-        loss = crit_utils.lambda_loss(self, model, net_output, sample, reduce=True)
+        lprobs = model.get_normalized_probs(net_output, log_probs=True)
+        lprobs = lprobs.view(-1, lprobs.size(-1))
+        target = model.get_targets(sample, net_output).view(-1)
+        labels = torch.flatten(target).tolist()
+        tokens = crit_utils.tokenize_tensor(self, labels, self.n)
+        coeffs = torch.zeros(size=lprobs.shape, device=torch.device("cuda"), dtype=torch.float16)
+        for i in range(len(tokens)):
+            token = tokens[i]
+            context = tuple(token[:-1])
+            if context in self.contexts:
+                kl_stuff = self.kl_terms[context]
+                coeffs[i, kl_stuff["idx"]] = kl_stuff["val"]
+            coeffs[i, labels[i]] += 1
+        loss = torch.sum(coeffs * (-lprobs))
         return loss, loss
 
 
@@ -119,7 +193,25 @@ class KatzSmoothingCriterion(FairseqCriterion):
         """
         return True
 
-
+def get_size(obj, seen=None):
+    """Recursively finds size of objects"""
+    size = sys.getsizeof(obj)
+    if seen is None:
+        seen = set()
+    obj_id = id(obj)
+    if obj_id in seen:
+        return 0
+    # Important mark as seen *before* entering recursion to gracefully handle
+    # self-referential objects
+    seen.add(obj_id)
+    if isinstance(obj, dict):
+        size += sum([get_size(v, seen) for v in obj.values()])
+        size += sum([get_size(k, seen) for k in obj.keys()])
+    elif hasattr(obj, '__dict__'):
+        size += get_size(obj.__dict__, seen)
+    elif hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes, bytearray)):
+        size += sum([get_size(i, seen) for i in obj])
+    return size
 
 # Copyright 2009-2011 by Max Bane
 #
@@ -193,7 +285,7 @@ def simpleGoodTuringProbs(counts, confidenceLevel=1.96):
     assert(totalCounts == sum([r*n for r,n in countsOfCounts.items()]))
 
     p0 = countsOfCounts[1] / totalCounts
-    print('p0 = %f' % p0)
+    #print('p0 = %f' % p0)
 
     Z = __sgtZ(sortedCounts, countsOfCounts)
 
@@ -214,14 +306,15 @@ def simpleGoodTuringProbs(counts, confidenceLevel=1.96):
         # with count r+1.
         if r+1 not in countsOfCounts:
             if not useY:
-                print('Warning: reached unobserved count before crossing the '\
-                      'smoothing threshold.')
+                #print('Warning: reached unobserved count before crossing the '\
+                #      'smoothing threshold.')
+                pass
             useY = True
 
         if useY:
             rSmoothed[r] = y
             continue
-        
+
         # x is the empirical Turing estimate for r
         x = (float(r+1) * countsOfCounts[r+1]) / countsOfCounts[r]
 
@@ -275,9 +368,9 @@ def __sgtZ(sortedCounts, countsOfCounts):
 def __loglinregression(rs, zs):
     coef = linalg.lstsq(c_[log(rs), (1,)*len(rs)], log(zs))[0]
     a, b = coef
-    print('Regression: log(z) = %f*log(r) + %f' % (a,b))
+    #print('Regression: log(z) = %f*log(r) + %f' % (a,b))
     if a > -1.0:
-        print('Warning: slope is > -1.0')
+        #print('Warning: slope is > -1.0')
+        pass
     return a, b
-
 

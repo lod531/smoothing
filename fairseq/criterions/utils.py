@@ -26,6 +26,12 @@ def get_fqs(crit):
             fqs[token.item()] += 1
     return fqs, sum(fqs.values())
 
+def get_scc(fqs):
+    scc = defaultdict(int)
+    for token, count in fqs.items():
+        scc[count] += 1
+    return scc
+
 def get_dataset_from_task(task):
     task.load_dataset("train")
     if isinstance(task, TranslationTask):
@@ -105,6 +111,34 @@ def tokenize(crit, dataset, n):
             res.append(token)
     return res
 
+def get_ngram_stats(crit, dataset, n):
+    assert(n>0)
+    res = defaultdict(lambda: defaultdict(float))
+    BOS = crit.task.dictionary.bos()
+    print()
+    print("gathering stats for n=" + str(n))
+    for sentence in tqdm(dataset):
+        sentence = sentence.tolist()
+        for end in range(len(sentence)):
+            start = end-(n-1)
+            # +1 because I want slices to include
+            # the token at [end], but [start:end]
+            # excludes end
+            end = end+1
+            if start < 0:
+                pad = [BOS]*abs(start)
+                token = pad + sentence[:end]
+            else:
+                token = sentence[start:end]
+            #res[context][word] += 1
+            token = tuple(token)
+            res[token[:-1]][token[-1]] += 1
+    for context, counts in res.items():
+        total = sum(counts.values())
+        for word, count in counts.items():
+            counts[word] = count/total
+        assert sum(counts.values()) < 1.000001 and sum(counts.values()) > 0.99999
+    return res
 
 # crit is a criterion
 # tens is the tensor
@@ -153,3 +187,5 @@ def filter_by_context(data, context):
             res_with_contexts.append(token)
             res_unigram.append(token[-1])
     return res_with_contexts, res_unigram
+
+

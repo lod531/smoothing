@@ -3,8 +3,11 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+import pickle
+import sys
 import math
-import nltk
+import os
+import kenlm
 import fairseq.criterions.utils as crit_utils
 from dataclasses import dataclass, field
 from collections import defaultdict
@@ -20,32 +23,97 @@ from fairseq.criterions import FairseqCriterion, register_criterion
 from fairseq.dataclass import FairseqDataclass
 from omegaconf import II
 
-
 @dataclass
 class GoodTuringSmoothingCriterionConfig(FairseqDataclass):
+    good_turing_n: int = field(
+        default=1,
+        metadata={"help": "n-gram version of Kneser-Ney"},
+    )
     sentence_avg: bool = II("optimization.sentence_avg")
-
-
 
 
 @register_criterion("good_turing_smoothing", dataclass=GoodTuringSmoothingCriterionConfig)
 class GoodTuringSmoothingCriterion(FairseqCriterion):
-    def __init__(self, task, sentence_avg):
+    def __init__(self, task, good_turing_n, sentence_avg):
         super().__init__(task)
+        self.n = good_turing_n
         self.sentence_avg = sentence_avg
         self.dataset = crit_utils.get_dataset_from_task(task)
         self.dict_size = len(task.dictionary)
         self.ignored_indices = [self.padding_idx]
-        crit_utils.get_fqs(self)
-        smoothed = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
-        gt_probs, p0 = simpleGoodTuringProbs(self.fqs)
-        for token, prob in gt_probs.items():
+        self.fqs, self.N = crit_utils.get_fqs(self)
+        self.scc = crit_utils.get_scc(self.fqs)
+        #self.empirical = self.get_empirical()
+        self.tokenized = crit_utils.tokenize(self, self.dataset, self.n)
+        self.contexts = crit_utils.get_contexts(self.tokenized)
+        self.counts = defaultdict(lambda: defaultdict(int))
+        self.ngram_probs = {}
+        self.empirical = crit_utils.get_ngram_stats(self, self.dataset, self.n)
+        #self.backoff = crit_utils.get_ngram_stats(self, self.dataset, self.n-1)
+        for token in self.tokenized:
+            token = tuple(token)
+            context = token[:-1]
+            word = token[-1]
+            self.counts[context][word] += 1
+        #hist = defaultdict(int)
+        #stats = defaultdict(int)
+        #for context in self.contexts:
+        #    counts = self.counts[context]
+        #    for count in counts.values():
+        #        hist[count] += 1
+        #    stats[sum(counts.values())] += 1
+
+        #test = 0
+        #test2 = 0
+        #for i in range(1, 10):
+        #    test += hist[i]
+        #for i in range(1, 100):
+        #    test2 += stats[i]
+
+        self.kl_terms = {}
+        self.smoothed_count = 0
+        for context in tqdm(self.contexts):
+            self.kl_terms[context] = self.get_kl_terms(context)
+        print("SMOOTHED CONTEXTS")
+        print(self.smoothed_count)
+        print("TOTAL CONTEXTS")
+        print(len(self.contexts))
+
+    def get_kl_terms(self, context):
+        #test = 0
+        #for token, count in self.counts[context].items():
+        #    if count == 1:
+        #        test += 1
+        #counts = self.counts[context]
+        #scc = defaultdict(int)
+        #for _, count in counts.items():
+        #    scc[count] += 1
+        #import pdb; pdb.set_trace()
+
+        dist, p0 = simpleGoodTuringProbs(self.counts[context])
+        idx_type = torch.long
+        val_type = torch.float16
+        if p0 == 0.0 or 1.0:
+            idx = torch.tensor([], device=torch.device("cuda"), dtype=idx_type)
+            val = torch.tensor([], device=torch.device("cuda"), dtype=val_type)
+        else:
+            self.smoothed_count += 1
+            dist[self.task.dictionary.unk()] += p0
+            for token, prob in dist.items():
+                dist[token] = prob - self.empirical[context][token]
+            indices = list(dist.keys())
+            values = list(dist.values())
+            idx = torch.tensor(indices, device=torch.device("cuda"), dtype=idx_type)
+            val = torch.tensor(values, device=torch.device("cuda"), dtype=val_type)
+        return {"val":val, "idx":idx}
+
+    def get_empirical(self):
+        empirical = torch.zeros(size=[self.dict_size], device=torch.device("cuda"))
+        for token, fq in self.fqs.items():
             if token not in self.ignored_indices:
-                smoothed[token] = prob
-        smoothed[task.dictionary.unk()] = p0
-        #smoothed = smoothed/torch.sum(smoothed)
-        self.smoothed = smoothed
-        crit_utils.get_kl_terms(self)
+                empirical[token] = fq
+        empirical = empirical/torch.sum(empirical)
+        return empirical
 
     def forward(self, model, sample, reduce=True):
         """Compute the loss for the given sample.
@@ -55,9 +123,8 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         2) the sample size, which is used as the denominator for the gradient
         3) logging outputs to display while training
         """
-        import pdb; pdb.set_trace()
-        net_output = model(**sample["net_input"])
         #net_output = model(**sample["net_input"], target=sample["target"])
+        net_output = model(**sample["net_input"])
         loss, _ = self.compute_loss(model, net_output, sample, reduce=reduce)
         sample_size = (
             sample["target"].size(0) if self.sentence_avg else sample["ntokens"]
@@ -71,7 +138,21 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         return loss, sample_size, logging_output
 
     def compute_loss(self, model, net_output, sample, reduce=True):
-        loss = crit_utils.lambda_loss(self, model, net_output, sample, reduce=True)
+        lprobs = model.get_normalized_probs(net_output, log_probs=True)
+        lprobs = lprobs.view(-1, lprobs.size(-1))
+        target = model.get_targets(sample, net_output).view(-1)
+
+        labels = torch.flatten(target).tolist()
+        tokens = crit_utils.tokenize_tensor(self, labels, self.n)
+        coeffs = torch.zeros(size=lprobs.shape, device=torch.device("cuda"), dtype=torch.float16)
+        for i in range(len(tokens)):
+            token = tokens[i]
+            context = tuple(token[:-1])
+            if context in self.contexts:
+                kl_stuff = self.kl_terms[context]
+                coeffs[i, kl_stuff["idx"]] = kl_stuff["val"]
+            coeffs[i, labels[i]] += 1
+        loss = torch.sum(coeffs * (-lprobs))
         return loss, loss
 
 
@@ -107,7 +188,25 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         """
         return True
 
-
+def get_size(obj, seen=None):
+    """Recursively finds size of objects"""
+    size = sys.getsizeof(obj)
+    if seen is None:
+        seen = set()
+    obj_id = id(obj)
+    if obj_id in seen:
+        return 0
+    # Important mark as seen *before* entering recursion to gracefully handle
+    # self-referential objects
+    seen.add(obj_id)
+    if isinstance(obj, dict):
+        size += sum([get_size(v, seen) for v in obj.values()])
+        size += sum([get_size(k, seen) for k in obj.keys()])
+    elif hasattr(obj, '__dict__'):
+        size += get_size(obj.__dict__, seen)
+    elif hasattr(obj, '__iter__') and not isinstance(obj, (str, bytes, bytearray)):
+        size += sum([get_size(i, seen) for i in obj])
+    return size
 
 # Copyright 2009-2011 by Max Bane
 #
@@ -181,7 +280,7 @@ def simpleGoodTuringProbs(counts, confidenceLevel=1.96):
     assert(totalCounts == sum([r*n for r,n in countsOfCounts.items()]))
 
     p0 = countsOfCounts[1] / totalCounts
-    print('p0 = %f' % p0)
+    #print('p0 = %f' % p0)
 
     Z = __sgtZ(sortedCounts, countsOfCounts)
 
@@ -202,14 +301,15 @@ def simpleGoodTuringProbs(counts, confidenceLevel=1.96):
         # with count r+1.
         if r+1 not in countsOfCounts:
             if not useY:
-                print('Warning: reached unobserved count before crossing the '\
-                      'smoothing threshold.')
+                #print('Warning: reached unobserved count before crossing the '\
+                #      'smoothing threshold.')
+                pass
             useY = True
 
         if useY:
             rSmoothed[r] = y
             continue
-        
+
         # x is the empirical Turing estimate for r
         x = (float(r+1) * countsOfCounts[r+1]) / countsOfCounts[r]
 
@@ -234,7 +334,7 @@ def simpleGoodTuringProbs(counts, confidenceLevel=1.96):
 
     # normalize and return the resulting smoothed probabilities, less the
     # estimated probability mass of unseen species.
-    sgtProbs = {}
+    sgtProbs = defaultdict(float)
     smoothTot = 0.0
     for r, rSmooth in rSmoothed.items():
         smoothTot += countsOfCounts[r] * rSmooth
@@ -263,9 +363,9 @@ def __sgtZ(sortedCounts, countsOfCounts):
 def __loglinregression(rs, zs):
     coef = linalg.lstsq(c_[log(rs), (1,)*len(rs)], log(zs))[0]
     a, b = coef
-    print('Regression: log(z) = %f*log(r) + %f' % (a,b))
+    #print('Regression: log(z) = %f*log(r) + %f' % (a,b))
     if a > -1.0:
-        print('Warning: slope is > -1.0')
+        #print('Warning: slope is > -1.0')
+        pass
     return a, b
-
 

@@ -219,13 +219,14 @@ def main(cfg: FairseqConfig) -> None:
             disable_iterator_cache=task.has_sharded_data("train"),
         )
 
-        avg_uniform_KL = (criterion.KL_div_uniform/criterion.KL_n_terms)
-        avg_unigram_KL = (criterion.KL_div_unigram/criterion.KL_n_terms)
-        print("KL Stats: Epoch " + str(epoch_count) + " Divergences: " + "Uniform: " + str(avg_uniform_KL) + " Unigram: " + str(avg_unigram_KL))
-        criterion.KL_div_uniform = 0
-        criterion.KL_div_unigram = 0
-        criterion.KL_n_terms = 0
-        epoch_count += 1
+        if hasattr(criterion, "KL_div_uniform"):
+            avg_uniform_KL = (criterion.KL_div_uniform/criterion.KL_n_terms)
+            avg_unigram_KL = (criterion.KL_div_unigram/criterion.KL_n_terms)
+            print("KL Stats: Epoch " + str(epoch_count) + " Divergences: " + "Uniform: " + str(avg_uniform_KL) + " Unigram: " + str(avg_unigram_KL))
+            criterion.KL_div_uniform = 0
+            criterion.KL_div_unigram = 0
+            criterion.KL_n_terms = 0
+            epoch_count += 1
 
     train_meter.stop()
     logger.info("done training in {:.1f} seconds".format(train_meter.sum))

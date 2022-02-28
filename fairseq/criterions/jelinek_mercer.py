@@ -7,7 +7,6 @@ import pickle
 import sys
 import math
 import os
-import kenlm
 import fairseq.criterions.utils as crit_utils
 from ast import literal_eval as make_tuple
 from typing import List
@@ -51,11 +50,14 @@ class JelinekMercerSmoothingCriterion(FairseqCriterion):
         self.ignored_indices = [self.padding_idx]
         self.fqs, self.N = crit_utils.get_fqs(self)
         self.unigram = self.get_empirical()
-        self.uniform = torch.ones(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
-        self.uniform = self.uniform/torch.sum(self.uniform)
+        #self.uniform = torch.ones(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
+        #self.uniform = self.uniform/torch.sum(self.uniform)
+
         self.KL_div_uniform = 0
         self.KL_div_unigram = 0
         self.KL_n_terms = 0
+        #self.uniform_tile = self.alphas[0]*self.uniform.expand(lprobs.shape[0], -1)
+
 
         self.ngram_probs = {}
         for i in range(1, self.n):
@@ -111,28 +113,40 @@ class JelinekMercerSmoothingCriterion(FairseqCriterion):
         lprobs = model.get_normalized_probs(net_output, log_probs=True)
         lprobs = lprobs.view(-1, lprobs.size(-1))
 
-        uniform_tile = self.uniform.expand(lprobs.shape[0], -1)
-        unigram_tile = self.unigram.expand(lprobs.shape[0], -1)
-        self.KL_div_uniform += F.kl_div(input=lprobs, target=uniform_tile, reduction="sum").item()
-        self.KL_div_unigram += F.kl_div(input=lprobs, target=unigram_tile, reduction="sum").item()
-        self.KL_n_terms += lprobs.shape[0]
-
+        #uniform_loss = uniform_tile * (-lprobs)
+        #KL_div_uniform = F.kl_div(input=lprobs, target=uniform_tile, reduction="sum")
+        #KL_div_unigram = F.kl_div(input=lprobs, target=unigram_tile, reduction="sum")
+        #self.KL_div_uniform += KL_div_uniform.item()
+        #self.KL_div_unigram += KL_div_unigram.item()
+        #self.KL_n_terms += lprobs.shape[0]
         target = model.get_targets(sample, net_output).view(-1)
-        labels = torch.flatten(target).tolist()
-        tokens = crit_utils.tokenize_tensor(self, labels, self.n)
-        coeffs = torch.zeros(size=lprobs.shape, device=torch.device("cuda"), dtype=torch.float16)
-        for i in range(len(tokens)):
-            token = tokens[i]
-            # 0-order backoff a.k.a. uniform
-            coeffs[i, :] += self.alphas[0]*self.uniform
-            for j in range(self.n-1):
-                context = tuple(token[-1-j:-1])
-                if context in self.kl_terms[j+1]:
-                    kl_stuff = self.kl_terms[j+1][context]
-                    coeffs[i, kl_stuff["idx"]] += self.alphas[j+1]*kl_stuff["val"]
-            coeffs[i, labels[i]] += 1*self.alphas[-1]
-        loss = torch.sum(coeffs * (-lprobs))
-        return loss, loss
+        nll_loss = F.nll_loss(
+            lprobs,
+            target,
+            ignore_index=self.padding_idx,
+            reduction="sum" if reduce else "none",
+        )
+        #nll_coefs = F.one_hot(torch.flatten(target), num_classes=lprobs.shape[-1])
+        #loss = nll_loss*self.alphas[2] + KL_div_unigram*self.alphas[1] + KL_div_uniform*self.alphas[0]
+        #nll_loss = (nll_coefs*(-lprobs)).sum()
+        uniform_loss = -lprobs.sum()*(self.alphas[0]/lprobs.shape[-1])
+        unigram_tile = self.alphas[1]*self.unigram.expand(lprobs.shape[0], -1)
+        unigram_loss = (unigram_tile*(-lprobs)).sum()
+        loss = nll_loss*self.alphas[2] + unigram_loss + uniform_loss
+        #tokens = crit_utils.tokenize_tensor(self, labels, self.n)
+        #coeffs = torch.zeros(size=lprobs.shape, device=torch.device("cuda"), dtype=torch.float16)
+        #for i in range(len(tokens)):
+        #    token = tokens[i]
+        #    # 0-order backoff a.k.a. uniform
+        #    coeffs[i, :] += self.alphas[0]*self.uniform
+        #    for j in range(self.n-1):
+        #        context = tuple(token[-1-j:-1])
+        #        if context in self.kl_terms[j+1]:
+        #            kl_stuff = self.kl_terms[j+1][context]
+        #            coeffs[i, kl_stuff["idx"]] += self.alphas[j+1]*kl_stuff["val"]
+        #    coeffs[i, labels[i]] += 1*self.alphas[-1]
+        #loss = torch.sum(coeffs * (-lprobs))
+        return loss, nll_loss
 
 
     @staticmethod

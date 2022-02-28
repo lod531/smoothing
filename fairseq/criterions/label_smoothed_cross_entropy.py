@@ -46,7 +46,6 @@ def label_smoothed_nll_loss(lprobs, target, epsilon, ignore_index=None, reduce=T
         nll_loss = nll_loss.sum()
         smooth_loss = smooth_loss.sum()
     eps_i = epsilon / (lprobs.size(-1) - 1)
-    import pdb; pdb.set_trace()
     loss = (1.0 - epsilon - eps_i) * nll_loss + eps_i * smooth_loss
     return loss, nll_loss
 

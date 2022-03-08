@@ -1,0 +1,32 @@
+Sender: LSF System <lsfadmin@eu-g3-002>
+Subject: Job 207535871: <w103_fp16_size_0.0625_jelinek_0.04_0.06_0.9_#4> in cluster <euler> Exited
+
+Job <w103_fp16_size_0.0625_jelinek_0.04_0.06_0.9_#4> was submitted from host <eu-login-27> by user <andriusb> in cluster <euler> at Tue Mar  8 10:34:20 2022
+Job was executed on host(s) <eu-g3-002>, in queue <gpu.120h>, as user <andriusb> in cluster <euler> at Tue Mar  8 10:34:48 2022
+</cluster/home/andriusb> was used as the home directory.
+</cluster/home/andriusb/fq/fairseq> was used as the working directory.
+Started at Tue Mar  8 10:34:48 2022
+Terminated at Tue Mar  8 10:34:51 2022
+Results reported at Tue Mar  8 10:34:51 2022
+Cannot open your job file: /cluster/shadow/.lsbatch/1646732060.207535871
+TERM_OWNER: job killed by owner.
+Exited with signal termination: 2.
+
+Resource usage summary:
+
+    CPU time :                                   0.06 sec.
+    Max Memory :                                 6 MB
+    Average Memory :                             1.00 MB
+    Total Requested Memory :                     20000.00 MB
+    Delta Memory :                               19994.00 MB
+    Max Swap :                                   -
+    Max Processes :                              1
+    Max Threads :                                1
+    Run time :                                   0 sec.
+    Turnaround time :                            31 sec.
+
+
+PS:
+
+Unable to read output data from the stdout buffer file </cluster/shadow/.lsbatch/1646732060.207535871.out>: your job was probably aborted prematurely.
+

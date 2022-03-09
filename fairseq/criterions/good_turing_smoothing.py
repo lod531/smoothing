@@ -48,6 +48,7 @@ class GoodTuringSmoothingCriterion(FairseqCriterion):
         self.counts = defaultdict(lambda: defaultdict(int))
         self.ngram_probs = {}
         self.empirical = crit_utils.get_ngram_stats(self, self.dataset, self.n)
+        import pdb; pdb.set_trace()
         #self.backoff = crit_utils.get_ngram_stats(self, self.dataset, self.n-1)
         for token in self.tokenized:
             token = tuple(token)

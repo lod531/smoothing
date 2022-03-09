@@ -50,13 +50,12 @@ class JelinekMercerSmoothingCriterion(FairseqCriterion):
         self.ignored_indices = [self.padding_idx]
         self.fqs, self.N = crit_utils.get_fqs(self)
         self.unigram = self.get_empirical()
-        #self.uniform = torch.ones(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
-        #self.uniform = self.uniform/torch.sum(self.uniform)
+        self.uniform = torch.ones(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
+        self.uniform = self.uniform/torch.sum(self.uniform)
 
         self.KL_div_uniform = 0
         self.KL_div_unigram = 0
         self.KL_n_terms = 0
-        #self.uniform_tile = self.alphas[0]*self.uniform.expand(lprobs.shape[0], -1)
 
 
         self.ngram_probs = {}
@@ -113,12 +112,18 @@ class JelinekMercerSmoothingCriterion(FairseqCriterion):
         lprobs = model.get_normalized_probs(net_output, log_probs=True)
         lprobs = lprobs.view(-1, lprobs.size(-1))
 
-        #uniform_loss = uniform_tile * (-lprobs)
-        #KL_div_uniform = F.kl_div(input=lprobs, target=uniform_tile, reduction="sum")
-        #KL_div_unigram = F.kl_div(input=lprobs, target=unigram_tile, reduction="sum")
-        #self.KL_div_uniform += KL_div_uniform.item()
-        #self.KL_div_unigram += KL_div_unigram.item()
-        #self.KL_n_terms += lprobs.shape[0]
+
+        uniform_tile = self.uniform.expand(lprobs.shape[0], -1)
+        unigram_tile = self.unigram.expand(lprobs.shape[0], -1)
+        uniform_loss = uniform_tile * (-lprobs)
+        KL_div_uniform = F.kl_div(input=lprobs, target=uniform_tile, reduction="sum")
+        KL_div_unigram = F.kl_div(input=lprobs, target=unigram_tile, reduction="sum")
+        self.KL_div_uniform += KL_div_uniform.item()
+        self.KL_div_unigram += KL_div_unigram.item()
+        self.KL_n_terms += lprobs.shape[0]
+
+        unigram_tile = self.alphas[1]*unigram_tile
+
         target = model.get_targets(sample, net_output).view(-1)
         nll_loss = F.nll_loss(
             lprobs,
@@ -130,7 +135,6 @@ class JelinekMercerSmoothingCriterion(FairseqCriterion):
         #loss = nll_loss*self.alphas[2] + KL_div_unigram*self.alphas[1] + KL_div_uniform*self.alphas[0]
         #nll_loss = (nll_coefs*(-lprobs)).sum()
         uniform_loss = -lprobs.sum()*(self.alphas[0]/lprobs.shape[-1])
-        unigram_tile = self.alphas[1]*self.unigram.expand(lprobs.shape[0], -1)
         unigram_loss = (unigram_tile*(-lprobs)).sum()
         loss = nll_loss*self.alphas[2] + unigram_loss + uniform_loss
         #tokens = crit_utils.tokenize_tensor(self, labels, self.n)

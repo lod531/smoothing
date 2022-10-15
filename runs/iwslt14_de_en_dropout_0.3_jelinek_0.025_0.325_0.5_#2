@@ -1,0 +1,56 @@
+Sender: LSF System <lsfadmin@eu-g3-053>
+Subject: Job 210595127: <iwslt14_de_en_dropout_0.3_jelinek_0.025_0.325_0.5_#2> in cluster <euler> Exited
+
+Job <iwslt14_de_en_dropout_0.3_jelinek_0.025_0.325_0.5_#2> was submitted from host <eu-login-06> by user <andriusb> in cluster <euler> at Wed Mar 23 11:33:57 2022
+Job was executed on host(s) <eu-g3-053>, in queue <gpuhe.4h>, as user <andriusb> in cluster <euler> at Wed Mar 23 11:34:28 2022
+</cluster/home/andriusb> was used as the home directory.
+</cluster/home/andriusb/fq/fairseq> was used as the working directory.
+Started at Wed Mar 23 11:34:28 2022
+Terminated at Wed Mar 23 11:34:38 2022
+Results reported at Wed Mar 23 11:34:38 2022
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+CUDA_VISIBLE_DEVICES=0 fairseq-train data-bin/iwslt14.tokenized.de-en --save-dir /cluster/scratch/andriusb/checkpoints/iwslt14_de_en_dropout_0.3_jelinek_0.025_0.325_0.5_#2 --arch transformer_iwslt_de_en --share-decoder-input-output-embed --optimizer adam --adam-betas "(0.9, 0.98)" --clip-norm 0.0 --lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 --dropout 0.3 --weight-decay 0.0001 --criterion jelinek_mercer_smoothing --jelinek-n 2 --alphas \(0.025,0.325,0.5\) --max-tokens 32768 --eval-bleu --eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' --eval-bleu-detok moses --eval-bleu-remove-bpe --eval-bleu-print-samples --fp16 --no-epoch-checkpoints --patience 3 --seed 66575612 --best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 1.
+
+Resource usage summary:
+
+    CPU time :                                   1.64 sec.
+    Max Memory :                                 938 MB
+    Average Memory :                             487.67 MB
+    Total Requested Memory :                     20000.00 MB
+    Delta Memory :                               19062.00 MB
+    Max Swap :                                   1 MB
+    Max Processes :                              3
+    Max Threads :                                4
+    Run time :                                   10 sec.
+    Turnaround time :                            41 sec.
+
+The output (if any) follows:
+
+Traceback (most recent call last):
+  File "/cluster/home/andriusb/fq/env/bin/fairseq-train", line 33, in <module>
+    sys.exit(load_entry_point('fairseq', 'console_scripts', 'fairseq-train')())
+  File "/cluster/home/andriusb/fq/env/bin/fairseq-train", line 25, in importlib_load_entry_point
+    return next(matches).load()
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/importlib/metadata.py", line 77, in load
+    module = import_module(match.group('module'))
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/importlib/__init__.py", line 127, in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+  File "<frozen importlib._bootstrap>", line 1014, in _gcd_import
+  File "<frozen importlib._bootstrap>", line 991, in _find_and_load
+  File "<frozen importlib._bootstrap>", line 975, in _find_and_load_unlocked
+  File "<frozen importlib._bootstrap>", line 671, in _load_unlocked
+  File "<frozen importlib._bootstrap_external>", line 783, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py", line 27, in <module>
+    import torch
+  File "/cluster/apps/nss/gcc-6.3.0/python_gpu/3.8.5/torch/__init__.py", line 190, in <module>
+    from torch._C import *
+RuntimeError: KeyboardInterrupt: 

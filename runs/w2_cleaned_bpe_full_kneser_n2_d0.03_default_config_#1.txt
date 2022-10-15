@@ -1,0 +1,109 @@
+Sender: LSF System <lsfadmin@eu-g3-065>
+Subject: Job 207794217: <w2_cleaned_bpe_full_kneser_n2_d0.03_default_config_#1> in cluster <euler> Exited
+
+Job <w2_cleaned_bpe_full_kneser_n2_d0.03_default_config_#1> was submitted from host <eu-login-40> by user <andriusb> in cluster <euler> at Thu Mar 10 07:54:44 2022
+Job was executed on host(s) <eu-g3-065>, in queue <gpuhe.24h>, as user <andriusb> in cluster <euler> at Thu Mar 10 07:55:11 2022
+</cluster/home/andriusb> was used as the home directory.
+</cluster/home/andriusb/fq/fairseq> was used as the working directory.
+Started at Thu Mar 10 07:55:11 2022
+Terminated at Thu Mar 10 07:55:21 2022
+Results reported at Thu Mar 10 07:55:21 2022
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+CUDA_VISIBLE_DEVICES=0 fairseq-train --task language_modeling data-bin/wikitext-2-cleaned-bpe-full --save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_kneser_n2_d0.03_default_config_#1 --arch transformer_lm --share-decoder-input-output-embed --dropout 0.1 --criterion kneser_ney_smoothing --kneser-d 0.8 --kneser-n 2 --optimizer adam --adam-betas "(0.9, 0.98)" --weight-decay 0.03 --clip-norm 0.0 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 --tokens-per-sample 512 --sample-break-mode none --max-tokens 2048 --update-freq 32 --seed 66575614 --fp16 --no-epoch-checkpoints --patience 3 --max-update 50000
+------------------------------------------------------------
+
+TERM_OWNER: job killed by owner.
+Exited with exit code 130.
+
+Resource usage summary:
+
+    CPU time :                                   4.05 sec.
+    Max Memory :                                 398 MB
+    Average Memory :                             385.33 MB
+    Total Requested Memory :                     20000.00 MB
+    Delta Memory :                               19602.00 MB
+    Max Swap :                                   -
+    Max Processes :                              3
+    Max Threads :                                5
+    Run time :                                   9 sec.
+    Turnaround time :                            37 sec.
+
+The output (if any) follows:
+
+2022-03-10 07:55:20 | ERROR | fairseq.dataclass.utils | Error when composing. Overrides: ['common.no_progress_bar=False', 'common.log_interval=100', 'common.log_format=null', 'common.log_file=null', 'common.tensorboard_logdir=null', 'common.wandb_project=null', 'common.azureml_logging=False', 'common.seed=66575614', 'common.cpu=False', 'common.tpu=False', 'common.bf16=False', 'common.memory_efficient_bf16=False', 'common.fp16=True', 'common.memory_efficient_fp16=False', 'common.fp16_no_flatten_grads=False', 'common.fp16_init_scale=128', 'common.fp16_scale_window=null', 'common.fp16_scale_tolerance=0.0', 'common.on_cpu_convert_precision=False', 'common.min_loss_scale=0.0001', 'common.threshold_loss_scale=null', 'common.amp=False', 'common.amp_batch_retries=2', 'common.amp_init_scale=128', 'common.amp_scale_window=null', 'common.user_dir=null', 'common.empty_cache_freq=0', 'common.all_gather_list_size=16384', 'common.model_parallel_size=1', 'common.quantization_config_path=null', 'common.profile=False', 'common.reset_logging=False', 'common.suppress_crashes=False', 'common.use_plasma_view=False', "common.plasma_path='/tmp/plasma'", 'common_eval.path=null', 'common_eval.post_process=null', 'common_eval.quiet=False', "common_eval.model_overrides='{}'", 'common_eval.results_path=null', 'distributed_training.distributed_world_size=1', 'distributed_training.distributed_num_procs=1', 'distributed_training.distributed_rank=0', "distributed_training.distributed_backend='nccl'", 'distributed_training.distributed_init_method=null', 'distributed_training.distributed_port=-1', 'distributed_training.device_id=0', 'distributed_training.distributed_no_spawn=False', "distributed_training.ddp_backend='pytorch_ddp'", "distributed_training.ddp_comm_hook='none'", 'distributed_training.bucket_cap_mb=25', 'distributed_training.fix_batches_to_gpus=False', 'distributed_training.find_unused_parameters=False', 'distributed_training.gradient_as_bucket_view=False', 'distributed_training.fast_stat_sync=False', 'distributed_training.heartbeat_timeout=-1', 'distributed_training.broadcast_buffers=False', 'distributed_training.slowmo_momentum=null', "distributed_training.slowmo_algorithm='LocalSGD'", 'distributed_training.localsgd_frequency=3', 'distributed_training.nprocs_per_node=1', 'distributed_training.pipeline_model_parallel=False', 'distributed_training.pipeline_balance=null', 'distributed_training.pipeline_devices=null', 'distributed_training.pipeline_chunks=0', 'distributed_training.pipeline_encoder_balance=null', 'distributed_training.pipeline_encoder_devices=null', 'distributed_training.pipeline_decoder_balance=null', 'distributed_training.pipeline_decoder_devices=null', "distributed_training.pipeline_checkpoint='never'", "distributed_training.zero_sharding='none'", 'distributed_training.fp16=True', 'distributed_training.memory_efficient_fp16=False', 'distributed_training.tpu=False', 'distributed_training.no_reshard_after_forward=False', 'distributed_training.fp32_reduce_scatter=False', 'distributed_training.cpu_offload=False', 'distributed_training.use_sharded_state=False', 'dataset.num_workers=1', 'dataset.skip_invalid_size_inputs_valid_test=False', 'dataset.max_tokens=2048', 'dataset.batch_size=null', 'dataset.required_batch_size_multiple=8', 'dataset.required_seq_len_multiple=1', 'dataset.dataset_impl=null', 'dataset.data_buffer_size=10', "dataset.train_subset='train'", "dataset.valid_subset='valid'", 'dataset.combine_valid_subsets=null', 'dataset.ignore_unused_valid_subsets=False', 'dataset.validate_interval=1', 'dataset.validate_interval_updates=0', 'dataset.validate_after_updates=0', 'dataset.fixed_validation_seed=null', 'dataset.disable_validation=False', 'dataset.max_tokens_valid=2048', 'dataset.batch_size_valid=null', 'dataset.max_valid_steps=null', 'dataset.curriculum=0', "dataset.gen_subset='test'", 'dataset.num_shards=1', 'dataset.shard_id=0', 'optimization.max_epoch=0', 'optimization.max_update=50000', 'optimization.stop_time_hours=0.0', 'optimization.clip_norm=0.0', 'optimization.sentence_avg=False', 'optimization.update_freq=[32]', 'optimization.lr=[0.0005]', 'optimization.stop_min_lr=-1.0', 'optimization.use_bmuf=False', "checkpoint.save_dir='/cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe_full_kneser_n2_d0.03_default_config_#1'", "checkpoint.restore_file='checkpoint_last.pt'", 'checkpoint.finetune_from_model=null', 'checkpoint.reset_dataloader=False', 'checkpoint.reset_lr_scheduler=False', 'checkpoint.reset_meters=False', 'checkpoint.reset_optimizer=False', "checkpoint.optimizer_overrides='{}'", 'checkpoint.save_interval=1', 'checkpoint.save_interval_updates=0', 'checkpoint.keep_interval_updates=-1', 'checkpoint.keep_interval_updates_pattern=-1', 'checkpoint.keep_last_epochs=-1', 'checkpoint.keep_best_checkpoints=-1', 'checkpoint.no_save=False', 'checkpoint.no_epoch_checkpoints=True', 'checkpoint.no_last_checkpoints=False', 'checkpoint.no_save_optimizer_state=False', "checkpoint.best_checkpoint_metric='loss'", 'checkpoint.maximize_best_checkpoint_metric=False', 'checkpoint.patience=3', "checkpoint.checkpoint_suffix=''", 'checkpoint.checkpoint_shard_count=1', 'checkpoint.load_checkpoint_on_all_dp_ranks=False', 'checkpoint.write_checkpoints_asynchronously=False', 'checkpoint.model_parallel_size=1', 'bmuf.block_lr=1.0', 'bmuf.block_momentum=0.875', 'bmuf.global_sync_iter=50', 'bmuf.warmup_iterations=500', 'bmuf.use_nbm=False', 'bmuf.average_sync=False', 'bmuf.distributed_world_size=1', 'generation.beam=5', 'generation.nbest=1', 'generation.max_len_a=0.0', 'generation.max_len_b=200', 'generation.min_len=1', 'generation.match_source_len=False', 'generation.unnormalized=False', 'generation.no_early_stop=False', 'generation.no_beamable_mm=False', 'generation.lenpen=1.0', 'generation.unkpen=0.0', 'generation.replace_unk=null', 'generation.sacrebleu=False', 'generation.score_reference=False', 'generation.prefix_size=0', 'generation.no_repeat_ngram_size=0', 'generation.sampling=False', 'generation.sampling_topk=-1', 'generation.sampling_topp=-1.0', 'generation.constraints=null', 'generation.temperature=1.0', 'generation.diverse_beam_groups=-1', 'generation.diverse_beam_strength=0.5', 'generation.diversity_rate=-1.0', 'generation.print_alignment=null', 'generation.print_step=False', 'generation.lm_path=null', 'generation.lm_weight=0.0', 'generation.iter_decode_eos_penalty=0.0', 'generation.iter_decode_max_iter=10', 'generation.iter_decode_force_max_iter=False', 'generation.iter_decode_with_beam=1', 'generation.iter_decode_with_external_reranker=False', 'generation.retain_iter_history=False', 'generation.retain_dropout=False', 'generation.retain_dropout_modules=null', 'generation.decoding_format=null', 'generation.no_seed_provided=False', 'eval_lm.output_word_probs=False', 'eval_lm.output_word_stats=False', 'eval_lm.context_window=0', 'eval_lm.softmax_batch=9223372036854775807', 'interactive.buffer_size=0', "interactive.input='-'", 'ema.store_ema=False', 'ema.ema_decay=0.9999', 'ema.ema_start_update=0', 'ema.ema_seed_model=null', 'ema.ema_update_freq=1', 'ema.ema_fp32=False', 'task=language_modeling', 'task._name=language_modeling', "task.data='data-bin/wikitext-2-cleaned-bpe-full'", "task.sample_break_mode='none'", 'task.tokens_per_sample=512', 'task.output_dictionary_size=-1', 'task.self_target=False', 'task.future_target=False', 'task.past_target=False', 'task.add_bos_token=False', 'task.max_target_positions=null', "task.shorten_method='none'", "task.shorten_data_split_list=''", 'task.pad_to_fixed_length=False', 'task.pad_to_fixed_bsz=False', 'task.seed=66575614', 'task.batch_size=null', 'task.batch_size_valid=null', 'task.dataset_impl=null', 'task.data_buffer_size=10', 'task.tpu=False', 'task.use_plasma_view=False', "task.plasma_path='/tmp/plasma'", 'criterion=kneser_ney_smoothing', 'criterion._name=kneser_ney_smoothing', 'criterion.kneser_d=0.8', 'criterion.kneser_n=2', 'criterion.sentence_avg=False', 'optimizer=adam', 'optimizer._name=adam', "optimizer.adam_betas='(0.9, 0.98)'", 'optimizer.adam_eps=1e-08', 'optimizer.weight_decay=0.03', 'optimizer.use_old_adam=False', 'optimizer.fp16_adam_stats=False', 'optimizer.tpu=False', 'optimizer.lr=[0.0005]', 'lr_scheduler=inverse_sqrt', 'lr_scheduler._name=inverse_sqrt', 'lr_scheduler.warmup_updates=4000', 'lr_scheduler.warmup_init_lr=1e-07', 'lr_scheduler.lr=[0.0005]', 'scoring=bleu', 'scoring._name=bleu', 'scoring.pad=1', 'scoring.eos=2', 'scoring.unk=3', 'model=transformer_lm', 'model._name=transformer_lm', "model.activation_fn='relu'", 'model.dropout=0.1', 'model.attention_dropout=0.0', 'model.activation_dropout=0.0', 'model.relu_dropout=0.0', 'model.decoder_embed_dim=512', 'model.decoder_output_dim=512', 'model.decoder_input_dim=512', 'model.decoder_ffn_embed_dim=2048', 'model.decoder_layers=6', 'model.decoder_attention_heads=8', 'model.decoder_normalize_before=False', 'model.no_decoder_final_norm=False', 'model.adaptive_softmax_cutoff=null', 'model.adaptive_softmax_dropout=0.0', 'model.adaptive_softmax_factor=4.0', 'model.no_token_positional_embeddings=False', 'model.share_decoder_input_output_embed=True', 'model.character_embeddings=False', "model.character_filters='[(1, 64), (2, 128), (3, 192), (4, 256), (5, 256), (6, 256), (7, 256)]'", 'model.character_embedding_dim=4', 'model.char_embedder_highway_layers=2', 'model.adaptive_input=False', 'model.adaptive_input_factor=4.0', 'model.adaptive_input_cutoff=null', 'model.tie_adaptive_weights=False', 'model.tie_adaptive_proj=False', 'model.decoder_learned_pos=False', 'model.layernorm_embedding=False', 'model.no_scale_embedding=False', 'model.checkpoint_activations=False', 'model.offload_activations=False', 'model.decoder_layerdrop=0.0', 'model.decoder_layers_to_keep=null', 'model.quant_noise_pq=0.0', 'model.quant_noise_pq_block_size=8', 'model.quant_noise_scalar=0.0', 'model.min_params_to_wrap=100000000', 'model.base_layers=0', 'model.base_sublayers=1', 'model.base_shuffle=1', 'model.scale_fc=False', 'model.scale_attn=False', 'model.scale_heads=False', 'model.scale_resids=False', 'model.add_bos_token=False', 'model.tokens_per_sample=512', 'model.max_target_positions=null', 'model.tpu=False']
+Traceback (most recent call last):
+  File "/cluster/home/andriusb/fq/env/bin/fairseq-train", line 33, in <module>
+    sys.exit(load_entry_point('fairseq', 'console_scripts', 'fairseq-train')())
+  File "/cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py", line 533, in cli_main
+    cfg = convert_namespace_to_omegaconf(args)
+  File "/cluster/home/andriusb/fq/fairseq/fairseq/dataclass/utils.py", line 389, in convert_namespace_to_omegaconf
+    composed_cfg = compose("config", overrides=overrides, strict=False)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/hydra/experimental/compose.py", line 31, in compose
+    cfg = gh.hydra.compose_config(
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/hydra/_internal/hydra.py", line 507, in compose_config
+    cfg = self.config_loader.load_configuration(
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/hydra/_internal/config_loader_impl.py", line 151, in load_configuration
+    return self._load_configuration(
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/hydra/_internal/config_loader_impl.py", line 233, in _load_configuration
+    hydra_cfg._promote(job_cfg_type)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/dictconfig.py", line 519, in _promote
+    self.merge_with(proto)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/basecontainer.py", line 329, in merge_with
+    self._merge_with(*others)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/basecontainer.py", line 347, in _merge_with
+    BaseContainer._map_merge(self, other)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/basecontainer.py", line 314, in _map_merge
+    dest[key] = src._get_node(key)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/dictconfig.py", line 256, in __setitem__
+    self.__set_impl(key=key, value=value)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/dictconfig.py", line 266, in __set_impl
+    self._set_item_impl(key, value)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/basecontainer.py", line 470, in _set_item_impl
+    assign(key, value)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/basecontainer.py", line 452, in assign
+    v = copy.deepcopy(value_to_assign)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 153, in deepcopy
+    y = copier(memo)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/nodes.py", line 159, in __deepcopy__
+    self._deepcopy_impl(res, memo)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/nodes.py", line 76, in _deepcopy_impl
+    res.__dict__ = copy.deepcopy(self.__dict__, memo=memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 146, in deepcopy
+    y = copier(x, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 230, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 153, in deepcopy
+    y = copier(memo)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/dictconfig.py", line 93, in __deepcopy__
+    res.__dict__[k] = copy.deepcopy(v, memo=memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 146, in deepcopy
+    y = copier(x, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 230, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 153, in deepcopy
+    y = copier(memo)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/dictconfig.py", line 93, in __deepcopy__
+    res.__dict__[k] = copy.deepcopy(v, memo=memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 146, in deepcopy
+    y = copier(x, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 230, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 153, in deepcopy
+    y = copier(memo)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/nodes.py", line 222, in __deepcopy__
+    self._deepcopy_impl(res, memo)
+  File "/cluster/home/andriusb/fq/env/lib64/python3.8/site-packages/omegaconf/nodes.py", line 76, in _deepcopy_impl
+    res.__dict__ = copy.deepcopy(self.__dict__, memo=memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 146, in deepcopy
+    y = copier(x, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 230, in _deepcopy_dict
+    y[deepcopy(key, memo)] = deepcopy(value, memo)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 172, in deepcopy
+    y = _reconstruct(x, memo, *rv)
+  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/copy.py", line 271, in _reconstruct
+    if hasattr(y, '__setstate__'):
+KeyboardInterrupt

@@ -1,0 +1,548 @@
+Sender: LSF System <lsfadmin@eu-g3-065>
+Subject: Job 210565992: <wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2> in cluster <euler> Done
+
+Job <wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2> was submitted from host <eu-login-06> by user <andriusb> in cluster <euler> at Wed Mar 23 06:32:34 2022
+Job was executed on host(s) <eu-g3-065>, in queue <gpuhe.4h>, as user <andriusb> in cluster <euler> at Wed Mar 23 06:33:00 2022
+</cluster/home/andriusb> was used as the home directory.
+</cluster/home/andriusb/fq/fairseq> was used as the working directory.
+Started at Wed Mar 23 06:33:00 2022
+Terminated at Wed Mar 23 07:24:59 2022
+Results reported at Wed Mar 23 07:24:59 2022
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+CUDA_VISIBLE_DEVICES=0 fairseq-train --task language_modeling data-bin/wikitext-103-cleaned-bpe-size0.0625 --save-dir /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2 --arch transformer_lm --share-decoder-input-output-embed --dropout 0.1 --criterion cross_entropy --optimizer adam --adam-betas "(0.9, 0.98)" --weight-decay 0.01 --clip-norm 0.0 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 --tokens-per-sample 512 --sample-break-mode none --max-tokens 2048 --update-freq 32 --seed 66575611 --fp16 --no-epoch-checkpoints --no-last-checkpoints --patience 3 --seed 66575612 --max-update 50000
+------------------------------------------------------------
+
+Successfully completed.
+
+Resource usage summary:
+
+    CPU time :                                   3090.85 sec.
+    Max Memory :                                 4743 MB
+    Average Memory :                             3605.00 MB
+    Total Requested Memory :                     20000.00 MB
+    Delta Memory :                               15257.00 MB
+    Max Swap :                                   -
+    Max Processes :                              4
+    Max Threads :                                14
+    Run time :                                   3118 sec.
+    Turnaround time :                            3145 sec.
+
+The output (if any) follows:
+
+2022-03-23 06:33:18 | INFO | fairseq_cli.train | {'_name': None, 'common': {'_name': None, 'no_progress_bar': False, 'log_interval': 100, 'log_format': None, 'log_file': None, 'tensorboard_logdir': None, 'wandb_project': None, 'azureml_logging': False, 'seed': 66575612, 'cpu': False, 'tpu': False, 'bf16': False, 'memory_efficient_bf16': False, 'fp16': True, 'memory_efficient_fp16': False, 'fp16_no_flatten_grads': False, 'fp16_init_scale': 128, 'fp16_scale_window': None, 'fp16_scale_tolerance': 0.0, 'on_cpu_convert_precision': False, 'min_loss_scale': 0.0001, 'threshold_loss_scale': None, 'amp': False, 'amp_batch_retries': 2, 'amp_init_scale': 128, 'amp_scale_window': None, 'user_dir': None, 'empty_cache_freq': 0, 'all_gather_list_size': 16384, 'model_parallel_size': 1, 'quantization_config_path': None, 'profile': False, 'reset_logging': False, 'suppress_crashes': False, 'use_plasma_view': False, 'plasma_path': '/tmp/plasma'}, 'common_eval': {'_name': None, 'path': None, 'post_process': None, 'quiet': False, 'model_overrides': '{}', 'results_path': None}, 'distributed_training': {'_name': None, 'distributed_world_size': 1, 'distributed_num_procs': 1, 'distributed_rank': 0, 'distributed_backend': 'nccl', 'distributed_init_method': None, 'distributed_port': -1, 'device_id': 0, 'distributed_no_spawn': False, 'ddp_backend': 'pytorch_ddp', 'ddp_comm_hook': 'none', 'bucket_cap_mb': 25, 'fix_batches_to_gpus': False, 'find_unused_parameters': False, 'gradient_as_bucket_view': False, 'fast_stat_sync': False, 'heartbeat_timeout': -1, 'broadcast_buffers': False, 'slowmo_momentum': None, 'slowmo_algorithm': 'LocalSGD', 'localsgd_frequency': 3, 'nprocs_per_node': 1, 'pipeline_model_parallel': False, 'pipeline_balance': None, 'pipeline_devices': None, 'pipeline_chunks': 0, 'pipeline_encoder_balance': None, 'pipeline_encoder_devices': None, 'pipeline_decoder_balance': None, 'pipeline_decoder_devices': None, 'pipeline_checkpoint': 'never', 'zero_sharding': 'none', 'fp16': True, 'memory_efficient_fp16': False, 'tpu': False, 'no_reshard_after_forward': False, 'fp32_reduce_scatter': False, 'cpu_offload': False, 'use_sharded_state': False}, 'dataset': {'_name': None, 'num_workers': 1, 'skip_invalid_size_inputs_valid_test': False, 'max_tokens': 2048, 'batch_size': None, 'required_batch_size_multiple': 8, 'required_seq_len_multiple': 1, 'dataset_impl': None, 'data_buffer_size': 10, 'train_subset': 'train', 'valid_subset': 'valid', 'combine_valid_subsets': None, 'ignore_unused_valid_subsets': False, 'validate_interval': 1, 'validate_interval_updates': 0, 'validate_after_updates': 0, 'fixed_validation_seed': None, 'disable_validation': False, 'max_tokens_valid': 2048, 'batch_size_valid': None, 'max_valid_steps': None, 'curriculum': 0, 'gen_subset': 'test', 'num_shards': 1, 'shard_id': 0}, 'optimization': {'_name': None, 'max_epoch': 0, 'max_update': 50000, 'stop_time_hours': 0.0, 'clip_norm': 0.0, 'sentence_avg': False, 'update_freq': [32], 'lr': [0.0005], 'stop_min_lr': -1.0, 'use_bmuf': False}, 'checkpoint': {'_name': None, 'save_dir': '/cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2', 'restore_file': 'checkpoint_last.pt', 'finetune_from_model': None, 'reset_dataloader': False, 'reset_lr_scheduler': False, 'reset_meters': False, 'reset_optimizer': False, 'optimizer_overrides': '{}', 'save_interval': 1, 'save_interval_updates': 0, 'keep_interval_updates': -1, 'keep_interval_updates_pattern': -1, 'keep_last_epochs': -1, 'keep_best_checkpoints': -1, 'no_save': False, 'no_epoch_checkpoints': True, 'no_last_checkpoints': True, 'no_save_optimizer_state': False, 'best_checkpoint_metric': 'loss', 'maximize_best_checkpoint_metric': False, 'patience': 3, 'checkpoint_suffix': '', 'checkpoint_shard_count': 1, 'load_checkpoint_on_all_dp_ranks': False, 'write_checkpoints_asynchronously': False, 'model_parallel_size': 1}, 'bmuf': {'_name': None, 'block_lr': 1.0, 'block_momentum': 0.875, 'global_sync_iter': 50, 'warmup_iterations': 500, 'use_nbm': False, 'average_sync': False, 'distributed_world_size': 1}, 'generation': {'_name': None, 'beam': 5, 'nbest': 1, 'max_len_a': 0.0, 'max_len_b': 200, 'min_len': 1, 'match_source_len': False, 'unnormalized': False, 'no_early_stop': False, 'no_beamable_mm': False, 'lenpen': 1.0, 'unkpen': 0.0, 'replace_unk': None, 'sacrebleu': False, 'score_reference': False, 'prefix_size': 0, 'no_repeat_ngram_size': 0, 'sampling': False, 'sampling_topk': -1, 'sampling_topp': -1.0, 'constraints': None, 'temperature': 1.0, 'diverse_beam_groups': -1, 'diverse_beam_strength': 0.5, 'diversity_rate': -1.0, 'print_alignment': None, 'print_step': False, 'lm_path': None, 'lm_weight': 0.0, 'iter_decode_eos_penalty': 0.0, 'iter_decode_max_iter': 10, 'iter_decode_force_max_iter': False, 'iter_decode_with_beam': 1, 'iter_decode_with_external_reranker': False, 'retain_iter_history': False, 'retain_dropout': False, 'retain_dropout_modules': None, 'decoding_format': None, 'no_seed_provided': False}, 'eval_lm': {'_name': None, 'output_word_probs': False, 'output_word_stats': False, 'context_window': 0, 'softmax_batch': 9223372036854775807}, 'interactive': {'_name': None, 'buffer_size': 0, 'input': '-'}, 'model': {'_name': 'transformer_lm', 'activation_fn': 'relu', 'dropout': 0.1, 'attention_dropout': 0.0, 'activation_dropout': 0.0, 'relu_dropout': 0.0, 'decoder_embed_dim': 512, 'decoder_output_dim': 512, 'decoder_input_dim': 512, 'decoder_ffn_embed_dim': 2048, 'decoder_layers': 6, 'decoder_attention_heads': 8, 'decoder_normalize_before': False, 'no_decoder_final_norm': False, 'adaptive_softmax_cutoff': None, 'adaptive_softmax_dropout': 0.0, 'adaptive_softmax_factor': 4.0, 'no_token_positional_embeddings': False, 'share_decoder_input_output_embed': True, 'character_embeddings': False, 'character_filters': '[(1, 64), (2, 128), (3, 192), (4, 256), (5, 256), (6, 256), (7, 256)]', 'character_embedding_dim': 4, 'char_embedder_highway_layers': 2, 'adaptive_input': False, 'adaptive_input_factor': 4.0, 'adaptive_input_cutoff': None, 'tie_adaptive_weights': False, 'tie_adaptive_proj': False, 'decoder_learned_pos': False, 'layernorm_embedding': False, 'no_scale_embedding': False, 'checkpoint_activations': False, 'offload_activations': False, 'decoder_layerdrop': 0.0, 'decoder_layers_to_keep': None, 'quant_noise_pq': 0.0, 'quant_noise_pq_block_size': 8, 'quant_noise_scalar': 0.0, 'min_params_to_wrap': 100000000, 'base_layers': 0, 'base_sublayers': 1, 'base_shuffle': 1, 'scale_fc': False, 'scale_attn': False, 'scale_heads': False, 'scale_resids': False, 'add_bos_token': False, 'tokens_per_sample': 512, 'max_target_positions': None, 'tpu': False}, 'task': {'_name': 'language_modeling', 'data': 'data-bin/wikitext-103-cleaned-bpe-size0.0625', 'sample_break_mode': 'none', 'tokens_per_sample': 512, 'output_dictionary_size': -1, 'self_target': False, 'future_target': False, 'past_target': False, 'add_bos_token': False, 'max_target_positions': None, 'shorten_method': 'none', 'shorten_data_split_list': '', 'pad_to_fixed_length': False, 'pad_to_fixed_bsz': False, 'seed': 66575612, 'batch_size': None, 'batch_size_valid': None, 'dataset_impl': None, 'data_buffer_size': 10, 'tpu': False, 'use_plasma_view': False, 'plasma_path': '/tmp/plasma'}, 'criterion': {'_name': 'cross_entropy', 'sentence_avg': False}, 'optimizer': {'_name': 'adam', 'adam_betas': '(0.9, 0.98)', 'adam_eps': 1e-08, 'weight_decay': 0.01, 'use_old_adam': False, 'fp16_adam_stats': False, 'tpu': False, 'lr': [0.0005]}, 'lr_scheduler': {'_name': 'inverse_sqrt', 'warmup_updates': 4000, 'warmup_init_lr': 1e-07, 'lr': [0.0005]}, 'scoring': {'_name': 'bleu', 'pad': 1, 'eos': 2, 'unk': 3}, 'bpe': None, 'tokenizer': None, 'ema': {'_name': None, 'store_ema': False, 'ema_decay': 0.9999, 'ema_start_update': 0, 'ema_seed_model': None, 'ema_update_freq': 1, 'ema_fp32': False}}
+2022-03-23 06:33:18 | INFO | fairseq.tasks.language_modeling | dictionary: 39136 types
+2022-03-23 06:33:19 | INFO | fairseq_cli.train | TransformerLanguageModel(
+  (decoder): TransformerDecoder(
+    (dropout_module): FairseqDropout()
+    (embed_tokens): Embedding(39136, 512, padding_idx=1)
+    (embed_positions): SinusoidalPositionalEmbedding()
+    (layers): ModuleList(
+      (0): TransformerDecoderLayerBase(
+        (dropout_module): FairseqDropout()
+        (self_attn): MultiheadAttention(
+          (dropout_module): FairseqDropout()
+          (k_proj): Linear(in_features=512, out_features=512, bias=True)
+          (v_proj): Linear(in_features=512, out_features=512, bias=True)
+          (q_proj): Linear(in_features=512, out_features=512, bias=True)
+          (out_proj): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (activation_dropout_module): FairseqDropout()
+        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (fc1): Linear(in_features=512, out_features=2048, bias=True)
+        (fc2): Linear(in_features=2048, out_features=512, bias=True)
+        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (1): TransformerDecoderLayerBase(
+        (dropout_module): FairseqDropout()
+        (self_attn): MultiheadAttention(
+          (dropout_module): FairseqDropout()
+          (k_proj): Linear(in_features=512, out_features=512, bias=True)
+          (v_proj): Linear(in_features=512, out_features=512, bias=True)
+          (q_proj): Linear(in_features=512, out_features=512, bias=True)
+          (out_proj): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (activation_dropout_module): FairseqDropout()
+        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (fc1): Linear(in_features=512, out_features=2048, bias=True)
+        (fc2): Linear(in_features=2048, out_features=512, bias=True)
+        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (2): TransformerDecoderLayerBase(
+        (dropout_module): FairseqDropout()
+        (self_attn): MultiheadAttention(
+          (dropout_module): FairseqDropout()
+          (k_proj): Linear(in_features=512, out_features=512, bias=True)
+          (v_proj): Linear(in_features=512, out_features=512, bias=True)
+          (q_proj): Linear(in_features=512, out_features=512, bias=True)
+          (out_proj): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (activation_dropout_module): FairseqDropout()
+        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (fc1): Linear(in_features=512, out_features=2048, bias=True)
+        (fc2): Linear(in_features=2048, out_features=512, bias=True)
+        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (3): TransformerDecoderLayerBase(
+        (dropout_module): FairseqDropout()
+        (self_attn): MultiheadAttention(
+          (dropout_module): FairseqDropout()
+          (k_proj): Linear(in_features=512, out_features=512, bias=True)
+          (v_proj): Linear(in_features=512, out_features=512, bias=True)
+          (q_proj): Linear(in_features=512, out_features=512, bias=True)
+          (out_proj): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (activation_dropout_module): FairseqDropout()
+        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (fc1): Linear(in_features=512, out_features=2048, bias=True)
+        (fc2): Linear(in_features=2048, out_features=512, bias=True)
+        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (4): TransformerDecoderLayerBase(
+        (dropout_module): FairseqDropout()
+        (self_attn): MultiheadAttention(
+          (dropout_module): FairseqDropout()
+          (k_proj): Linear(in_features=512, out_features=512, bias=True)
+          (v_proj): Linear(in_features=512, out_features=512, bias=True)
+          (q_proj): Linear(in_features=512, out_features=512, bias=True)
+          (out_proj): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (activation_dropout_module): FairseqDropout()
+        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (fc1): Linear(in_features=512, out_features=2048, bias=True)
+        (fc2): Linear(in_features=2048, out_features=512, bias=True)
+        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+      (5): TransformerDecoderLayerBase(
+        (dropout_module): FairseqDropout()
+        (self_attn): MultiheadAttention(
+          (dropout_module): FairseqDropout()
+          (k_proj): Linear(in_features=512, out_features=512, bias=True)
+          (v_proj): Linear(in_features=512, out_features=512, bias=True)
+          (q_proj): Linear(in_features=512, out_features=512, bias=True)
+          (out_proj): Linear(in_features=512, out_features=512, bias=True)
+        )
+        (activation_dropout_module): FairseqDropout()
+        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+        (fc1): Linear(in_features=512, out_features=2048, bias=True)
+        (fc2): Linear(in_features=2048, out_features=512, bias=True)
+        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+      )
+    )
+    (output_projection): Linear(in_features=512, out_features=39136, bias=False)
+  )
+)
+2022-03-23 06:33:19 | INFO | fairseq_cli.train | task: LanguageModelingTask
+2022-03-23 06:33:19 | INFO | fairseq_cli.train | model: TransformerLanguageModel
+2022-03-23 06:33:19 | INFO | fairseq_cli.train | criterion: CrossEntropyCriterion
+2022-03-23 06:33:19 | INFO | fairseq_cli.train | num. shared model params: 38,951,936 (num. trained: 38,951,936)
+2022-03-23 06:33:19 | INFO | fairseq_cli.train | num. expert model params: 0 (num. trained: 0)
+2022-03-23 06:33:19 | INFO | fairseq.data.data_utils | loaded 3,760 examples from: data-bin/wikitext-103-cleaned-bpe-size0.0625/valid
+2022-03-23 06:33:28 | INFO | fairseq.trainer | detected shared parameter: decoder.embed_tokens.weight <- decoder.output_projection.weight
+2022-03-23 06:33:28 | INFO | fairseq.utils | ***********************CUDA enviroments for all 1 workers***********************
+2022-03-23 06:33:28 | INFO | fairseq.utils | rank   0: capabilities =  7.5  ; total memory = 23.653 GB ; name = Quadro RTX 6000                         
+2022-03-23 06:33:28 | INFO | fairseq.utils | ***********************CUDA enviroments for all 1 workers***********************
+2022-03-23 06:33:28 | INFO | fairseq_cli.train | training on 1 devices (GPUs/TPUs)
+2022-03-23 06:33:28 | INFO | fairseq_cli.train | max tokens per device = 2048 and max sentences per device = None
+2022-03-23 06:33:28 | INFO | fairseq.trainer | Preparing to load checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_last.pt
+2022-03-23 06:33:28 | INFO | fairseq.trainer | No existing checkpoint found /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_last.pt
+2022-03-23 06:33:28 | INFO | fairseq.trainer | loading train data for epoch 1
+2022-03-23 06:33:28 | INFO | fairseq.data.data_utils | loaded 112,584 examples from: data-bin/wikitext-103-cleaned-bpe-size0.0625/train
+2022-03-23 06:33:28 | INFO | fairseq.trainer | begin training epoch 1
+2022-03-23 06:33:28 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:33:31 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 64.0
+2022-03-23 06:33:33 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 32.0
+2022-03-23 06:33:36 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 16.0
+2022-03-23 06:33:39 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 8.0
+2022-03-23 06:35:00 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:35:02 | INFO | valid | epoch 001 | valid on 'valid' subset | loss 12.84 | ppl 7330.26 | wps 165175 | wpb 2040.3 | bsz 4 | num_updates 99
+2022-03-23 06:35:02 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 1 @ 99 updates
+2022-03-23 06:35:02 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:35:03 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:35:03 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 1 @ 99 updates, score 12.84) (writing took 0.9278109440056141 seconds)
+2022-03-23 06:35:03 | INFO | fairseq_cli.train | end of epoch 1 (average epoch stats below)
+2022-03-23 06:35:03 | INFO | train | epoch 001 | loss 14.395 | ppl 21546.7 | wps 78831.7 | ups 1.21 | wpb 65303.3 | bsz 127.6 | num_updates 99 | lr 1.24725e-05 | gnorm 3.398 | loss_scale 8 | train_wall 87 | gb_free 21.6 | wall 95
+2022-03-23 06:35:03 | INFO | fairseq.trainer | begin training epoch 2
+2022-03-23 06:35:03 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:35:04 | INFO | train_inner | epoch 002:      1 / 103 loss=14.38, ppl=21326.7, wps=78769.8, ups=1.21, wpb=65305.6, bsz=127.6, num_updates=100, lr=1.25975e-05, gnorm=3.378, loss_scale=8, train_wall=88, gb_free=21.6, wall=96
+2022-03-23 06:36:25 | INFO | train_inner | epoch 002:    101 / 103 loss=12.278, ppl=4966.29, wps=80925.3, ups=1.23, wpb=65536, bsz=128, num_updates=200, lr=2.5095e-05, gnorm=1.118, loss_scale=8, train_wall=76, gb_free=21.6, wall=177
+2022-03-23 06:36:26 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:36:28 | INFO | valid | epoch 002 | valid on 'valid' subset | loss 11.504 | ppl 2904.63 | wps 162872 | wpb 2040.3 | bsz 4 | num_updates 202 | best_loss 11.504
+2022-03-23 06:36:28 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 2 @ 202 updates
+2022-03-23 06:36:28 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:36:28 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:36:28 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 2 @ 202 updates, score 11.504) (writing took 0.8910666110168677 seconds)
+2022-03-23 06:36:28 | INFO | fairseq_cli.train | end of epoch 2 (average epoch stats below)
+2022-03-23 06:36:28 | INFO | train | epoch 002 | loss 12.273 | ppl 4948.69 | wps 78600.5 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 202 | lr 2.5345e-05 | gnorm 1.115 | loss_scale 8 | train_wall 78 | gb_free 21.6 | wall 181
+2022-03-23 06:36:28 | INFO | fairseq.trainer | begin training epoch 3
+2022-03-23 06:36:28 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:37:48 | INFO | train_inner | epoch 003:     98 / 103 loss=11.033, ppl=2095.89, wps=78498.6, ups=1.2, wpb=65300.5, bsz=127.6, num_updates=300, lr=3.75925e-05, gnorm=0.648, loss_scale=8, train_wall=76, gb_free=21.6, wall=260
+2022-03-23 06:37:52 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:37:53 | INFO | valid | epoch 003 | valid on 'valid' subset | loss 10.521 | ppl 1469.69 | wps 165390 | wpb 2040.3 | bsz 4 | num_updates 305 | best_loss 10.521
+2022-03-23 06:37:53 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 3 @ 305 updates
+2022-03-23 06:37:53 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:37:54 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:37:54 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 3 @ 305 updates, score 10.521) (writing took 0.9223641569842584 seconds)
+2022-03-23 06:37:54 | INFO | fairseq_cli.train | end of epoch 3 (average epoch stats below)
+2022-03-23 06:37:54 | INFO | train | epoch 003 | loss 11.004 | ppl 2053.29 | wps 78548.4 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 305 | lr 3.82174e-05 | gnorm 0.636 | loss_scale 8 | train_wall 78 | gb_free 21.6 | wall 267
+2022-03-23 06:37:54 | INFO | fairseq.trainer | begin training epoch 4
+2022-03-23 06:37:54 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:39:11 | INFO | train_inner | epoch 004:     95 / 103 loss=10.338, ppl=1294.05, wps=78470.3, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=400, lr=5.009e-05, gnorm=0.452, loss_scale=8, train_wall=76, gb_free=21.6, wall=344
+2022-03-23 06:39:17 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:39:19 | INFO | valid | epoch 004 | valid on 'valid' subset | loss 10.076 | ppl 1079.29 | wps 163425 | wpb 2040.3 | bsz 4 | num_updates 408 | best_loss 10.076
+2022-03-23 06:39:19 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 4 @ 408 updates
+2022-03-23 06:39:19 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:39:20 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:39:20 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 4 @ 408 updates, score 10.076) (writing took 0.9607548000058159 seconds)
+2022-03-23 06:39:20 | INFO | fairseq_cli.train | end of epoch 4 (average epoch stats below)
+2022-03-23 06:39:20 | INFO | train | epoch 004 | loss 10.312 | ppl 1271.11 | wps 78474.4 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 408 | lr 5.10898e-05 | gnorm 0.45 | loss_scale 8 | train_wall 78 | gb_free 21.6 | wall 352
+2022-03-23 06:39:20 | INFO | fairseq.trainer | begin training epoch 5
+2022-03-23 06:39:20 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:40:34 | INFO | train_inner | epoch 005:     92 / 103 loss=9.966, ppl=1000.29, wps=78409.8, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=500, lr=6.25875e-05, gnorm=0.498, loss_scale=8, train_wall=76, gb_free=21.6, wall=427
+2022-03-23 06:40:43 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:40:45 | INFO | valid | epoch 005 | valid on 'valid' subset | loss 9.731 | ppl 849.52 | wps 163256 | wpb 2040.3 | bsz 4 | num_updates 511 | best_loss 9.731
+2022-03-23 06:40:45 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 5 @ 511 updates
+2022-03-23 06:40:45 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:40:45 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:40:45 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 5 @ 511 updates, score 9.731) (writing took 0.8881420890102163 seconds)
+2022-03-23 06:40:45 | INFO | fairseq_cli.train | end of epoch 5 (average epoch stats below)
+2022-03-23 06:40:45 | INFO | train | epoch 005 | loss 9.935 | ppl 978.62 | wps 78540.8 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 511 | lr 6.39622e-05 | gnorm 0.498 | loss_scale 8 | train_wall 78 | gb_free 21.6 | wall 438
+2022-03-23 06:40:45 | INFO | fairseq.trainer | begin training epoch 6
+2022-03-23 06:40:45 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:41:58 | INFO | train_inner | epoch 006:     89 / 103 loss=9.641, ppl=798.48, wps=78467.2, ups=1.2, wpb=65310.7, bsz=127.6, num_updates=600, lr=7.5085e-05, gnorm=0.586, loss_scale=16, train_wall=76, gb_free=21.6, wall=510
+2022-03-23 06:42:09 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:42:10 | INFO | valid | epoch 006 | valid on 'valid' subset | loss 9.416 | ppl 683.29 | wps 164309 | wpb 2040.3 | bsz 4 | num_updates 614 | best_loss 9.416
+2022-03-23 06:42:10 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 6 @ 614 updates
+2022-03-23 06:42:10 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:42:11 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:42:11 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 6 @ 614 updates, score 9.416) (writing took 0.9768823059857823 seconds)
+2022-03-23 06:42:11 | INFO | fairseq_cli.train | end of epoch 6 (average epoch stats below)
+2022-03-23 06:42:11 | INFO | train | epoch 006 | loss 9.607 | ppl 779.6 | wps 78466.3 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 614 | lr 7.68347e-05 | gnorm 0.617 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 524
+2022-03-23 06:42:11 | INFO | fairseq.trainer | begin training epoch 7
+2022-03-23 06:42:11 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:43:21 | INFO | train_inner | epoch 007:     86 / 103 loss=9.344, ppl=649.71, wps=78440.3, ups=1.2, wpb=65300.5, bsz=127.6, num_updates=700, lr=8.75825e-05, gnorm=0.682, loss_scale=16, train_wall=76, gb_free=21.6, wall=593
+2022-03-23 06:43:34 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:43:36 | INFO | valid | epoch 007 | valid on 'valid' subset | loss 9.117 | ppl 555.33 | wps 163376 | wpb 2040.3 | bsz 4 | num_updates 717 | best_loss 9.117
+2022-03-23 06:43:36 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 7 @ 717 updates
+2022-03-23 06:43:36 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:43:37 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:43:37 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 7 @ 717 updates, score 9.117) (writing took 0.9552462930150796 seconds)
+2022-03-23 06:43:37 | INFO | fairseq_cli.train | end of epoch 7 (average epoch stats below)
+2022-03-23 06:43:37 | INFO | train | epoch 007 | loss 9.299 | ppl 629.87 | wps 78531.6 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 717 | lr 8.97071e-05 | gnorm 0.684 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 609
+2022-03-23 06:43:37 | INFO | fairseq.trainer | begin training epoch 8
+2022-03-23 06:43:37 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:44:44 | INFO | train_inner | epoch 008:     83 / 103 loss=9.058, ppl=533.08, wps=78400.7, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=800, lr=0.00010008, gnorm=0.792, loss_scale=16, train_wall=76, gb_free=21.6, wall=677
+2022-03-23 06:45:00 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:45:02 | INFO | valid | epoch 008 | valid on 'valid' subset | loss 8.85 | ppl 461.3 | wps 165475 | wpb 2040.3 | bsz 4 | num_updates 820 | best_loss 8.85
+2022-03-23 06:45:02 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 8 @ 820 updates
+2022-03-23 06:45:02 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:45:02 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:45:02 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 8 @ 820 updates, score 8.85) (writing took 0.8709473600029014 seconds)
+2022-03-23 06:45:02 | INFO | fairseq_cli.train | end of epoch 8 (average epoch stats below)
+2022-03-23 06:45:02 | INFO | train | epoch 008 | loss 9.008 | ppl 514.91 | wps 78553.2 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 820 | lr 0.00010258 | gnorm 0.805 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 695
+2022-03-23 06:45:02 | INFO | fairseq.trainer | begin training epoch 9
+2022-03-23 06:45:02 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:46:07 | INFO | train_inner | epoch 009:     80 / 103 loss=8.802, ppl=446.39, wps=78437.1, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=900, lr=0.000112578, gnorm=0.859, loss_scale=16, train_wall=76, gb_free=21.6, wall=760
+2022-03-23 06:46:26 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:46:27 | INFO | valid | epoch 009 | valid on 'valid' subset | loss 8.625 | ppl 394.88 | wps 165463 | wpb 2040.3 | bsz 4 | num_updates 923 | best_loss 8.625
+2022-03-23 06:46:27 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 9 @ 923 updates
+2022-03-23 06:46:27 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:46:28 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:46:28 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 9 @ 923 updates, score 8.625) (writing took 0.9405447189928964 seconds)
+2022-03-23 06:46:28 | INFO | fairseq_cli.train | end of epoch 9 (average epoch stats below)
+2022-03-23 06:46:28 | INFO | train | epoch 009 | loss 8.754 | ppl 431.72 | wps 78438.8 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 923 | lr 0.000115452 | gnorm 0.871 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 781
+2022-03-23 06:46:28 | INFO | fairseq.trainer | begin training epoch 10
+2022-03-23 06:46:28 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:47:31 | INFO | train_inner | epoch 010:     77 / 103 loss=8.581, ppl=382.98, wps=78398.8, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=1000, lr=0.000125075, gnorm=0.876, loss_scale=16, train_wall=76, gb_free=21.6, wall=843
+2022-03-23 06:47:52 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:47:53 | INFO | valid | epoch 010 | valid on 'valid' subset | loss 8.443 | ppl 348.09 | wps 167100 | wpb 2040.3 | bsz 4 | num_updates 1026 | best_loss 8.443
+2022-03-23 06:47:53 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 10 @ 1026 updates
+2022-03-23 06:47:53 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:47:54 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:47:54 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 10 @ 1026 updates, score 8.443) (writing took 0.929705754009774 seconds)
+2022-03-23 06:47:54 | INFO | fairseq_cli.train | end of epoch 10 (average epoch stats below)
+2022-03-23 06:47:54 | INFO | train | epoch 010 | loss 8.532 | ppl 370.06 | wps 78447.3 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1026 | lr 0.000128324 | gnorm 0.879 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 866
+2022-03-23 06:47:54 | INFO | fairseq.trainer | begin training epoch 11
+2022-03-23 06:47:54 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:48:54 | INFO | train_inner | epoch 011:     74 / 103 loss=8.385, ppl=334.26, wps=78357, ups=1.2, wpb=65310.7, bsz=127.6, num_updates=1100, lr=0.000137573, gnorm=0.881, loss_scale=32, train_wall=76, gb_free=21.6, wall=927
+2022-03-23 06:49:17 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:49:19 | INFO | valid | epoch 011 | valid on 'valid' subset | loss 8.273 | ppl 309.36 | wps 166927 | wpb 2040.3 | bsz 4 | num_updates 1129 | best_loss 8.273
+2022-03-23 06:49:19 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 11 @ 1129 updates
+2022-03-23 06:49:19 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:49:20 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:49:20 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 11 @ 1129 updates, score 8.273) (writing took 0.8877534800267313 seconds)
+2022-03-23 06:49:20 | INFO | fairseq_cli.train | end of epoch 11 (average epoch stats below)
+2022-03-23 06:49:20 | INFO | train | epoch 011 | loss 8.338 | ppl 323.49 | wps 78465.7 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1129 | lr 0.000141197 | gnorm 0.919 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 952
+2022-03-23 06:49:20 | INFO | fairseq.trainer | begin training epoch 12
+2022-03-23 06:49:20 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:50:17 | INFO | train_inner | epoch 012:     71 / 103 loss=8.212, ppl=296.5, wps=78385.2, ups=1.2, wpb=65300.5, bsz=127.6, num_updates=1200, lr=0.00015007, gnorm=0.932, loss_scale=32, train_wall=76, gb_free=21.6, wall=1010
+2022-03-23 06:50:43 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:50:45 | INFO | valid | epoch 012 | valid on 'valid' subset | loss 8.12 | ppl 278.14 | wps 167568 | wpb 2040.3 | bsz 4 | num_updates 1232 | best_loss 8.12
+2022-03-23 06:50:45 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 12 @ 1232 updates
+2022-03-23 06:50:45 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:50:45 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:50:45 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 12 @ 1232 updates, score 8.12) (writing took 0.8909468020137865 seconds)
+2022-03-23 06:50:45 | INFO | fairseq_cli.train | end of epoch 12 (average epoch stats below)
+2022-03-23 06:50:45 | INFO | train | epoch 012 | loss 8.159 | ppl 285.74 | wps 78453.7 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1232 | lr 0.000154069 | gnorm 0.907 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1038
+2022-03-23 06:50:45 | INFO | fairseq.trainer | begin training epoch 13
+2022-03-23 06:50:45 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:51:41 | INFO | train_inner | epoch 013:     68 / 103 loss=8.037, ppl=262.64, wps=78418.1, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=1300, lr=0.000162568, gnorm=0.894, loss_scale=32, train_wall=76, gb_free=21.6, wall=1093
+2022-03-23 06:52:09 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:52:10 | INFO | valid | epoch 013 | valid on 'valid' subset | loss 7.979 | ppl 252.31 | wps 167387 | wpb 2040.3 | bsz 4 | num_updates 1335 | best_loss 7.979
+2022-03-23 06:52:10 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 13 @ 1335 updates
+2022-03-23 06:52:10 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:52:11 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:52:11 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 13 @ 1335 updates, score 7.979) (writing took 0.9500158640148584 seconds)
+2022-03-23 06:52:11 | INFO | fairseq_cli.train | end of epoch 13 (average epoch stats below)
+2022-03-23 06:52:11 | INFO | train | epoch 013 | loss 7.987 | ppl 253.66 | wps 78454.3 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1335 | lr 0.000166942 | gnorm 0.912 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1124
+2022-03-23 06:52:11 | INFO | fairseq.trainer | begin training epoch 14
+2022-03-23 06:52:11 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:53:04 | INFO | train_inner | epoch 014:     65 / 103 loss=7.88, ppl=235.52, wps=78372.1, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=1400, lr=0.000175065, gnorm=0.957, loss_scale=32, train_wall=76, gb_free=21.6, wall=1176
+2022-03-23 06:53:35 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:53:36 | INFO | valid | epoch 014 | valid on 'valid' subset | loss 7.845 | ppl 229.9 | wps 168829 | wpb 2040.3 | bsz 4 | num_updates 1438 | best_loss 7.845
+2022-03-23 06:53:36 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 14 @ 1438 updates
+2022-03-23 06:53:36 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:53:37 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:53:37 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 14 @ 1438 updates, score 7.845) (writing took 0.9572612810006831 seconds)
+2022-03-23 06:53:37 | INFO | fairseq_cli.train | end of epoch 14 (average epoch stats below)
+2022-03-23 06:53:37 | INFO | train | epoch 014 | loss 7.822 | ppl 226.26 | wps 78443.1 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1438 | lr 0.000179814 | gnorm 0.945 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1209
+2022-03-23 06:53:37 | INFO | fairseq.trainer | begin training epoch 15
+2022-03-23 06:53:37 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:54:27 | INFO | train_inner | epoch 015:     62 / 103 loss=7.721, ppl=211.01, wps=78377.1, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=1500, lr=0.000187563, gnorm=0.972, loss_scale=32, train_wall=76, gb_free=21.6, wall=1260
+2022-03-23 06:55:00 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:55:02 | INFO | valid | epoch 015 | valid on 'valid' subset | loss 7.716 | ppl 210.27 | wps 167902 | wpb 2040.3 | bsz 4 | num_updates 1541 | best_loss 7.716
+2022-03-23 06:55:02 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 15 @ 1541 updates
+2022-03-23 06:55:02 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:55:03 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:55:03 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 15 @ 1541 updates, score 7.716) (writing took 0.948042075993726 seconds)
+2022-03-23 06:55:03 | INFO | fairseq_cli.train | end of epoch 15 (average epoch stats below)
+2022-03-23 06:55:03 | INFO | train | epoch 015 | loss 7.661 | ppl 202.36 | wps 78447.6 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1541 | lr 0.000192686 | gnorm 0.981 | loss_scale 64 | train_wall 78 | gb_free 21.6 | wall 1295
+2022-03-23 06:55:03 | INFO | fairseq.trainer | begin training epoch 16
+2022-03-23 06:55:03 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:55:09 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 32.0
+2022-03-23 06:55:51 | INFO | train_inner | epoch 016:     60 / 103 loss=7.567, ppl=189.58, wps=77631.8, ups=1.19, wpb=65310.7, bsz=127.6, num_updates=1600, lr=0.00020006, gnorm=0.98, loss_scale=32, train_wall=77, gb_free=21.6, wall=1344
+2022-03-23 06:56:26 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:56:28 | INFO | valid | epoch 016 | valid on 'valid' subset | loss 7.605 | ppl 194.74 | wps 168123 | wpb 2040.3 | bsz 4 | num_updates 1643 | best_loss 7.605
+2022-03-23 06:56:28 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 16 @ 1643 updates
+2022-03-23 06:56:28 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:56:28 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:56:28 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 16 @ 1643 updates, score 7.605) (writing took 0.9341428549960256 seconds)
+2022-03-23 06:56:28 | INFO | fairseq_cli.train | end of epoch 16 (average epoch stats below)
+2022-03-23 06:56:28 | INFO | train | epoch 016 | loss 7.5 | ppl 181.03 | wps 77697.9 | ups 1.19 | wpb 65310.1 | bsz 127.6 | num_updates 1643 | lr 0.000205434 | gnorm 0.992 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1381
+2022-03-23 06:56:28 | INFO | fairseq.trainer | begin training epoch 17
+2022-03-23 06:56:28 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:57:15 | INFO | train_inner | epoch 017:     57 / 103 loss=7.406, ppl=169.63, wps=78418.5, ups=1.2, wpb=65300.5, bsz=127.6, num_updates=1700, lr=0.000212558, gnorm=0.994, loss_scale=32, train_wall=76, gb_free=21.6, wall=1427
+2022-03-23 06:57:52 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:57:53 | INFO | valid | epoch 017 | valid on 'valid' subset | loss 7.496 | ppl 180.46 | wps 167297 | wpb 2040.3 | bsz 4 | num_updates 1746 | best_loss 7.496
+2022-03-23 06:57:53 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 17 @ 1746 updates
+2022-03-23 06:57:53 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:57:54 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:57:54 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 17 @ 1746 updates, score 7.496) (writing took 0.9944562829914503 seconds)
+2022-03-23 06:57:54 | INFO | fairseq_cli.train | end of epoch 17 (average epoch stats below)
+2022-03-23 06:57:54 | INFO | train | epoch 017 | loss 7.343 | ppl 162.35 | wps 78425.9 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1746 | lr 0.000218306 | gnorm 0.977 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1467
+2022-03-23 06:57:54 | INFO | fairseq.trainer | begin training epoch 18
+2022-03-23 06:57:54 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 06:58:38 | INFO | train_inner | epoch 018:     54 / 103 loss=7.256, ppl=152.84, wps=78307.9, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=1800, lr=0.000225055, gnorm=0.963, loss_scale=32, train_wall=76, gb_free=21.6, wall=1511
+2022-03-23 06:59:18 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 06:59:19 | INFO | valid | epoch 018 | valid on 'valid' subset | loss 7.378 | ppl 166.34 | wps 167934 | wpb 2040.3 | bsz 4 | num_updates 1849 | best_loss 7.378
+2022-03-23 06:59:19 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 18 @ 1849 updates
+2022-03-23 06:59:19 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:59:20 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 06:59:20 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 18 @ 1849 updates, score 7.378) (writing took 0.9705393519834615 seconds)
+2022-03-23 06:59:20 | INFO | fairseq_cli.train | end of epoch 18 (average epoch stats below)
+2022-03-23 06:59:20 | INFO | train | epoch 018 | loss 7.187 | ppl 145.7 | wps 78409.3 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1849 | lr 0.000231179 | gnorm 0.983 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1553
+2022-03-23 06:59:20 | INFO | fairseq.trainer | begin training epoch 19
+2022-03-23 06:59:20 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:00:01 | INFO | train_inner | epoch 019:     51 / 103 loss=7.11, ppl=138.15, wps=78368.6, ups=1.2, wpb=65310.7, bsz=127.6, num_updates=1900, lr=0.000237553, gnorm=1.009, loss_scale=32, train_wall=76, gb_free=21.6, wall=1594
+2022-03-23 07:00:43 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:00:45 | INFO | valid | epoch 019 | valid on 'valid' subset | loss 7.284 | ppl 155.81 | wps 167663 | wpb 2040.3 | bsz 4 | num_updates 1952 | best_loss 7.284
+2022-03-23 07:00:45 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 19 @ 1952 updates
+2022-03-23 07:00:45 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:00:46 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:00:46 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 19 @ 1952 updates, score 7.284) (writing took 0.968498586997157 seconds)
+2022-03-23 07:00:46 | INFO | fairseq_cli.train | end of epoch 19 (average epoch stats below)
+2022-03-23 07:00:46 | INFO | train | epoch 019 | loss 7.034 | ppl 131.09 | wps 78459.8 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 1952 | lr 0.000244051 | gnorm 0.986 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1638
+2022-03-23 07:00:46 | INFO | fairseq.trainer | begin training epoch 20
+2022-03-23 07:00:46 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:01:25 | INFO | train_inner | epoch 020:     48 / 103 loss=6.961, ppl=124.63, wps=78424.8, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=2000, lr=0.00025005, gnorm=0.989, loss_scale=32, train_wall=76, gb_free=21.6, wall=1677
+2022-03-23 07:02:09 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:02:11 | INFO | valid | epoch 020 | valid on 'valid' subset | loss 7.186 | ppl 145.64 | wps 168507 | wpb 2040.3 | bsz 4 | num_updates 2055 | best_loss 7.186
+2022-03-23 07:02:11 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 20 @ 2055 updates
+2022-03-23 07:02:11 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:02:11 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:02:11 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 20 @ 2055 updates, score 7.186) (writing took 0.919285593990935 seconds)
+2022-03-23 07:02:11 | INFO | fairseq_cli.train | end of epoch 20 (average epoch stats below)
+2022-03-23 07:02:11 | INFO | train | epoch 020 | loss 6.888 | ppl 118.4 | wps 78542.6 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 2055 | lr 0.000256924 | gnorm 0.985 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1724
+2022-03-23 07:02:11 | INFO | fairseq.trainer | begin training epoch 21
+2022-03-23 07:02:11 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:02:29 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 32.0
+2022-03-23 07:02:49 | INFO | train_inner | epoch 021:     46 / 103 loss=6.824, ppl=113.26, wps=77646.2, ups=1.19, wpb=65300.5, bsz=127.6, num_updates=2100, lr=0.000262548, gnorm=0.963, loss_scale=32, train_wall=77, gb_free=21.6, wall=1761
+2022-03-23 07:03:35 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:03:36 | INFO | valid | epoch 021 | valid on 'valid' subset | loss 7.116 | ppl 138.74 | wps 169058 | wpb 2040.3 | bsz 4 | num_updates 2157 | best_loss 7.116
+2022-03-23 07:03:36 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 21 @ 2157 updates
+2022-03-23 07:03:36 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:03:37 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:03:37 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 21 @ 2157 updates, score 7.116) (writing took 1.0297890189976897 seconds)
+2022-03-23 07:03:37 | INFO | fairseq_cli.train | end of epoch 21 (average epoch stats below)
+2022-03-23 07:03:37 | INFO | train | epoch 021 | loss 6.749 | ppl 107.57 | wps 77590.2 | ups 1.19 | wpb 65310.1 | bsz 127.6 | num_updates 2157 | lr 0.000269671 | gnorm 0.985 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1810
+2022-03-23 07:03:37 | INFO | fairseq.trainer | begin training epoch 22
+2022-03-23 07:03:37 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:04:12 | INFO | train_inner | epoch 022:     43 / 103 loss=6.69, ppl=103.29, wps=78307.4, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=2200, lr=0.000275045, gnorm=0.995, loss_scale=32, train_wall=76, gb_free=21.6, wall=1845
+2022-03-23 07:05:01 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:05:02 | INFO | valid | epoch 022 | valid on 'valid' subset | loss 7.049 | ppl 132.42 | wps 168170 | wpb 2040.3 | bsz 4 | num_updates 2260 | best_loss 7.049
+2022-03-23 07:05:02 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 22 @ 2260 updates
+2022-03-23 07:05:02 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:05:03 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:05:03 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 22 @ 2260 updates, score 7.049) (writing took 0.9403766909963451 seconds)
+2022-03-23 07:05:03 | INFO | fairseq_cli.train | end of epoch 22 (average epoch stats below)
+2022-03-23 07:05:03 | INFO | train | epoch 022 | loss 6.619 | ppl 98.28 | wps 78520.3 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 2260 | lr 0.000282544 | gnorm 0.976 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1895
+2022-03-23 07:05:03 | INFO | fairseq.trainer | begin training epoch 23
+2022-03-23 07:05:03 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:05:35 | INFO | train_inner | epoch 023:     40 / 103 loss=6.565, ppl=94.65, wps=78511.8, ups=1.2, wpb=65310.7, bsz=127.6, num_updates=2300, lr=0.000287543, gnorm=0.97, loss_scale=32, train_wall=76, gb_free=21.6, wall=1928
+2022-03-23 07:06:26 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:06:28 | INFO | valid | epoch 023 | valid on 'valid' subset | loss 6.981 | ppl 126.32 | wps 168116 | wpb 2040.3 | bsz 4 | num_updates 2363 | best_loss 6.981
+2022-03-23 07:06:28 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 23 @ 2363 updates
+2022-03-23 07:06:28 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:06:29 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:06:29 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 23 @ 2363 updates, score 6.981) (writing took 0.9095561639987864 seconds)
+2022-03-23 07:06:29 | INFO | fairseq_cli.train | end of epoch 23 (average epoch stats below)
+2022-03-23 07:06:29 | INFO | train | epoch 023 | loss 6.495 | ppl 90.19 | wps 78564.6 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 2363 | lr 0.000295416 | gnorm 0.983 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 1981
+2022-03-23 07:06:29 | INFO | fairseq.trainer | begin training epoch 24
+2022-03-23 07:06:29 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:06:59 | INFO | train_inner | epoch 024:     37 / 103 loss=6.452, ppl=87.55, wps=78449.4, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=2400, lr=0.00030004, gnorm=0.974, loss_scale=32, train_wall=76, gb_free=21.6, wall=2011
+2022-03-23 07:07:52 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:07:53 | INFO | valid | epoch 024 | valid on 'valid' subset | loss 6.932 | ppl 122.12 | wps 168694 | wpb 2040.3 | bsz 4 | num_updates 2466 | best_loss 6.932
+2022-03-23 07:07:53 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 24 @ 2466 updates
+2022-03-23 07:07:53 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:07:54 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:07:54 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 24 @ 2466 updates, score 6.932) (writing took 0.9370573010237422 seconds)
+2022-03-23 07:07:54 | INFO | fairseq_cli.train | end of epoch 24 (average epoch stats below)
+2022-03-23 07:07:54 | INFO | train | epoch 024 | loss 6.376 | ppl 83.06 | wps 78452.4 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 2466 | lr 0.000308288 | gnorm 0.962 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 2067
+2022-03-23 07:07:54 | INFO | fairseq.trainer | begin training epoch 25
+2022-03-23 07:07:54 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:08:22 | INFO | train_inner | epoch 025:     34 / 103 loss=6.332, ppl=80.55, wps=78391.4, ups=1.2, wpb=65300.5, bsz=127.6, num_updates=2500, lr=0.000312538, gnorm=0.948, loss_scale=32, train_wall=76, gb_free=21.6, wall=2094
+2022-03-23 07:09:18 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:09:19 | INFO | valid | epoch 025 | valid on 'valid' subset | loss 6.877 | ppl 117.5 | wps 168235 | wpb 2040.3 | bsz 4 | num_updates 2569 | best_loss 6.877
+2022-03-23 07:09:19 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 25 @ 2569 updates
+2022-03-23 07:09:19 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:09:20 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:09:20 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 25 @ 2569 updates, score 6.877) (writing took 0.9274718539963942 seconds)
+2022-03-23 07:09:20 | INFO | fairseq_cli.train | end of epoch 25 (average epoch stats below)
+2022-03-23 07:09:20 | INFO | train | epoch 025 | loss 6.264 | ppl 76.88 | wps 78466 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 2569 | lr 0.000321161 | gnorm 0.973 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 2153
+2022-03-23 07:09:20 | INFO | fairseq.trainer | begin training epoch 26
+2022-03-23 07:09:20 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:09:44 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 32.0
+2022-03-23 07:09:46 | INFO | train_inner | epoch 026:     32 / 103 loss=6.233, ppl=75.2, wps=77606.2, ups=1.19, wpb=65305.6, bsz=127.6, num_updates=2600, lr=0.000325035, gnorm=0.987, loss_scale=32, train_wall=77, gb_free=21.6, wall=2179
+2022-03-23 07:10:43 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:10:45 | INFO | valid | epoch 026 | valid on 'valid' subset | loss 6.834 | ppl 114.07 | wps 168948 | wpb 2040.3 | bsz 4 | num_updates 2671 | best_loss 6.834
+2022-03-23 07:10:45 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 26 @ 2671 updates
+2022-03-23 07:10:45 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:10:46 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:10:46 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 26 @ 2671 updates, score 6.834) (writing took 0.9385956379992422 seconds)
+2022-03-23 07:10:46 | INFO | fairseq_cli.train | end of epoch 26 (average epoch stats below)
+2022-03-23 07:10:46 | INFO | train | epoch 026 | loss 6.158 | ppl 71.4 | wps 77687.6 | ups 1.19 | wpb 65310.1 | bsz 127.6 | num_updates 2671 | lr 0.000333908 | gnorm 0.966 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 2238
+2022-03-23 07:10:46 | INFO | fairseq.trainer | begin training epoch 27
+2022-03-23 07:10:46 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:11:09 | INFO | train_inner | epoch 027:     29 / 103 loss=6.133, ppl=70.2, wps=78443.8, ups=1.2, wpb=65310.7, bsz=127.6, num_updates=2700, lr=0.000337533, gnorm=0.952, loss_scale=32, train_wall=76, gb_free=21.6, wall=2262
+2022-03-23 07:12:09 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:12:11 | INFO | valid | epoch 027 | valid on 'valid' subset | loss 6.804 | ppl 111.75 | wps 168370 | wpb 2040.3 | bsz 4 | num_updates 2774 | best_loss 6.804
+2022-03-23 07:12:11 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 27 @ 2774 updates
+2022-03-23 07:12:11 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:12:11 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:12:11 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 27 @ 2774 updates, score 6.804) (writing took 0.8993986739951652 seconds)
+2022-03-23 07:12:11 | INFO | fairseq_cli.train | end of epoch 27 (average epoch stats below)
+2022-03-23 07:12:11 | INFO | train | epoch 027 | loss 6.057 | ppl 66.56 | wps 78550 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 2774 | lr 0.000346781 | gnorm 0.958 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 2324
+2022-03-23 07:12:11 | INFO | fairseq.trainer | begin training epoch 28
+2022-03-23 07:12:11 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:12:33 | INFO | train_inner | epoch 028:     26 / 103 loss=6.029, ppl=65.31, wps=78464.5, ups=1.2, wpb=65300.5, bsz=127.6, num_updates=2800, lr=0.00035003, gnorm=0.974, loss_scale=32, train_wall=76, gb_free=21.6, wall=2345
+2022-03-23 07:13:35 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:13:36 | INFO | valid | epoch 028 | valid on 'valid' subset | loss 6.754 | ppl 107.95 | wps 168340 | wpb 2040.3 | bsz 4 | num_updates 2877 | best_loss 6.754
+2022-03-23 07:13:36 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 28 @ 2877 updates
+2022-03-23 07:13:36 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:13:37 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:13:37 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 28 @ 2877 updates, score 6.754) (writing took 0.9209426699962933 seconds)
+2022-03-23 07:13:37 | INFO | fairseq_cli.train | end of epoch 28 (average epoch stats below)
+2022-03-23 07:13:37 | INFO | train | epoch 028 | loss 5.958 | ppl 62.18 | wps 78514.6 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 2877 | lr 0.000359653 | gnorm 0.968 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 2410
+2022-03-23 07:13:37 | INFO | fairseq.trainer | begin training epoch 29
+2022-03-23 07:13:37 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:13:56 | INFO | train_inner | epoch 029:     23 / 103 loss=5.932, ppl=61.05, wps=78448.8, ups=1.2, wpb=65310.7, bsz=127.6, num_updates=2900, lr=0.000362528, gnorm=0.96, loss_scale=32, train_wall=76, gb_free=21.6, wall=2428
+2022-03-23 07:13:57 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 16.0
+2022-03-23 07:15:00 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:15:02 | INFO | valid | epoch 029 | valid on 'valid' subset | loss 6.745 | ppl 107.29 | wps 168269 | wpb 2040.3 | bsz 4 | num_updates 2979 | best_loss 6.745
+2022-03-23 07:15:02 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 29 @ 2979 updates
+2022-03-23 07:15:02 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:15:03 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:15:03 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 29 @ 2979 updates, score 6.745) (writing took 0.9022101510199718 seconds)
+2022-03-23 07:15:03 | INFO | fairseq_cli.train | end of epoch 29 (average epoch stats below)
+2022-03-23 07:15:03 | INFO | train | epoch 029 | loss 5.862 | ppl 58.17 | wps 77799 | ups 1.19 | wpb 65310.1 | bsz 127.6 | num_updates 2979 | lr 0.000372401 | gnorm 0.964 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 2495
+2022-03-23 07:15:03 | INFO | fairseq.trainer | begin training epoch 30
+2022-03-23 07:15:03 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:15:20 | INFO | train_inner | epoch 030:     21 / 103 loss=5.842, ppl=57.35, wps=77735.1, ups=1.19, wpb=65305.6, bsz=127.6, num_updates=3000, lr=0.000375025, gnorm=0.949, loss_scale=16, train_wall=77, gb_free=21.6, wall=2512
+2022-03-23 07:16:26 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:16:28 | INFO | valid | epoch 030 | valid on 'valid' subset | loss 6.719 | ppl 105.38 | wps 168038 | wpb 2040.3 | bsz 4 | num_updates 3082 | best_loss 6.719
+2022-03-23 07:16:28 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 30 @ 3082 updates
+2022-03-23 07:16:28 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:16:28 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:16:28 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 30 @ 3082 updates, score 6.719) (writing took 0.9470412550144829 seconds)
+2022-03-23 07:16:28 | INFO | fairseq_cli.train | end of epoch 30 (average epoch stats below)
+2022-03-23 07:16:28 | INFO | train | epoch 030 | loss 5.772 | ppl 54.64 | wps 78488.7 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 3082 | lr 0.000385273 | gnorm 0.931 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 2581
+2022-03-23 07:16:29 | INFO | fairseq.trainer | begin training epoch 31
+2022-03-23 07:16:29 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:16:43 | INFO | train_inner | epoch 031:     18 / 103 loss=5.754, ppl=53.98, wps=78409.4, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=3100, lr=0.000387523, gnorm=0.936, loss_scale=16, train_wall=76, gb_free=21.6, wall=2596
+2022-03-23 07:17:52 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:17:53 | INFO | valid | epoch 031 | valid on 'valid' subset | loss 6.73 | ppl 106.15 | wps 168788 | wpb 2040.3 | bsz 4 | num_updates 3185 | best_loss 6.719
+2022-03-23 07:17:53 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 31 @ 3185 updates
+2022-03-23 07:17:53 | INFO | fairseq_cli.train | end of epoch 31 (average epoch stats below)
+2022-03-23 07:17:53 | INFO | train | epoch 031 | loss 5.685 | ppl 51.44 | wps 79323.8 | ups 1.21 | wpb 65312.3 | bsz 127.6 | num_updates 3185 | lr 0.000398145 | gnorm 0.956 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 2666
+2022-03-23 07:17:53 | INFO | fairseq.trainer | begin training epoch 32
+2022-03-23 07:17:53 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:18:06 | INFO | train_inner | epoch 032:     15 / 103 loss=5.678, ppl=51.21, wps=79282.9, ups=1.21, wpb=65305.6, bsz=127.6, num_updates=3200, lr=0.00040002, gnorm=0.986, loss_scale=16, train_wall=76, gb_free=21.6, wall=2678
+2022-03-23 07:19:17 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:19:18 | INFO | valid | epoch 032 | valid on 'valid' subset | loss 6.708 | ppl 104.53 | wps 168436 | wpb 2040.3 | bsz 4 | num_updates 3288 | best_loss 6.708
+2022-03-23 07:19:18 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 32 @ 3288 updates
+2022-03-23 07:19:18 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:19:19 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:19:19 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 32 @ 3288 updates, score 6.708) (writing took 0.9293618059891742 seconds)
+2022-03-23 07:19:19 | INFO | fairseq_cli.train | end of epoch 32 (average epoch stats below)
+2022-03-23 07:19:19 | INFO | train | epoch 032 | loss 5.599 | ppl 48.47 | wps 78581.8 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 3288 | lr 0.000411018 | gnorm 0.973 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 2751
+2022-03-23 07:19:19 | INFO | fairseq.trainer | begin training epoch 33
+2022-03-23 07:19:19 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:19:29 | INFO | train_inner | epoch 033:     12 / 103 loss=5.591, ppl=48.19, wps=78509.7, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=3300, lr=0.000412518, gnorm=0.96, loss_scale=16, train_wall=76, gb_free=21.6, wall=2761
+2022-03-23 07:20:42 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:20:44 | INFO | valid | epoch 033 | valid on 'valid' subset | loss 6.687 | ppl 103.03 | wps 167916 | wpb 2040.3 | bsz 4 | num_updates 3391 | best_loss 6.687
+2022-03-23 07:20:44 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 33 @ 3391 updates
+2022-03-23 07:20:44 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:20:45 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt
+2022-03-23 07:20:45 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/wikitext-103-cleaned-bpe-size0.0625_cross_entropy_dropout_0.1_#2/checkpoint_best.pt (epoch 33 @ 3391 updates, score 6.687) (writing took 0.9271463770128321 seconds)
+2022-03-23 07:20:45 | INFO | fairseq_cli.train | end of epoch 33 (average epoch stats below)
+2022-03-23 07:20:45 | INFO | train | epoch 033 | loss 5.512 | ppl 45.65 | wps 78530.6 | ups 1.2 | wpb 65312.3 | bsz 127.6 | num_updates 3391 | lr 0.00042389 | gnorm 0.964 | loss_scale 16 | train_wall 78 | gb_free 21.6 | wall 2837
+2022-03-23 07:20:45 | INFO | fairseq.trainer | begin training epoch 34
+2022-03-23 07:20:45 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:20:52 | INFO | train_inner | epoch 034:      9 / 103 loss=5.499, ppl=45.21, wps=78485.1, ups=1.2, wpb=65305.6, bsz=127.6, num_updates=3400, lr=0.000425015, gnorm=0.946, loss_scale=16, train_wall=76, gb_free=21.6, wall=2844
+2022-03-23 07:22:08 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:22:09 | INFO | valid | epoch 034 | valid on 'valid' subset | loss 6.702 | ppl 104.1 | wps 168191 | wpb 2040.3 | bsz 4 | num_updates 3494 | best_loss 6.687
+2022-03-23 07:22:09 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 34 @ 3494 updates
+2022-03-23 07:22:09 | INFO | fairseq_cli.train | end of epoch 34 (average epoch stats below)
+2022-03-23 07:22:09 | INFO | train | epoch 034 | loss 5.432 | ppl 43.17 | wps 79458 | ups 1.22 | wpb 65312.3 | bsz 127.6 | num_updates 3494 | lr 0.000436763 | gnorm 0.957 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 2922
+2022-03-23 07:22:09 | INFO | fairseq.trainer | begin training epoch 35
+2022-03-23 07:22:09 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:22:14 | INFO | train_inner | epoch 035:      6 / 103 loss=5.432, ppl=43.18, wps=79412.9, ups=1.22, wpb=65305.6, bsz=127.6, num_updates=3500, lr=0.000437513, gnorm=0.97, loss_scale=32, train_wall=76, gb_free=21.6, wall=2927
+2022-03-23 07:23:33 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:23:34 | INFO | valid | epoch 035 | valid on 'valid' subset | loss 6.702 | ppl 104.1 | wps 167286 | wpb 2040.3 | bsz 4 | num_updates 3597 | best_loss 6.687
+2022-03-23 07:23:34 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 35 @ 3597 updates
+2022-03-23 07:23:34 | INFO | fairseq_cli.train | end of epoch 35 (average epoch stats below)
+2022-03-23 07:23:34 | INFO | train | epoch 035 | loss 5.354 | ppl 40.91 | wps 79425.1 | ups 1.22 | wpb 65312.3 | bsz 127.6 | num_updates 3597 | lr 0.000449635 | gnorm 0.985 | loss_scale 32 | train_wall 78 | gb_free 21.6 | wall 3006
+2022-03-23 07:23:34 | INFO | fairseq.trainer | begin training epoch 36
+2022-03-23 07:23:34 | INFO | fairseq_cli.train | Start iterating over samples
+2022-03-23 07:23:36 | INFO | train_inner | epoch 036:      3 / 103 loss=5.351, ppl=40.81, wps=79396.3, ups=1.22, wpb=65305.6, bsz=127.6, num_updates=3600, lr=0.00045001, gnorm=0.985, loss_scale=32, train_wall=76, gb_free=21.6, wall=3009
+2022-03-23 07:24:01 | INFO | fairseq.trainer | NOTE: gradient overflow detected, ignoring gradient, setting loss scale to: 16.0
+2022-03-23 07:24:56 | INFO | fairseq_cli.train | begin validation on "valid" subset
+2022-03-23 07:24:58 | INFO | valid | epoch 036 | valid on 'valid' subset | loss 6.703 | ppl 104.18 | wps 176390 | wpb 2040.3 | bsz 4 | num_updates 3699 | best_loss 6.687
+2022-03-23 07:24:58 | INFO | fairseq_cli.train | early stop since valid performance hasn't improved for last 3 runs
+2022-03-23 07:24:58 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 36 @ 3699 updates
+2022-03-23 07:24:58 | INFO | fairseq_cli.train | end of epoch 36 (average epoch stats below)
+2022-03-23 07:24:58 | INFO | train | epoch 036 | loss 5.272 | ppl 38.64 | wps 79561.6 | ups 1.22 | wpb 65310.1 | bsz 127.6 | num_updates 3699 | lr 0.000462383 | gnorm 0.956 | loss_scale 16 | train_wall 77 | gb_free 21.6 | wall 3090
+2022-03-23 07:24:58 | INFO | fairseq_cli.train | done training in 3089.9 seconds

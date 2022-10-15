@@ -1,0 +1,143 @@
+Sender: LSF System <lsfadmin@eu-g2-09>
+Subject: Job 208068419: <ru_label_smoothing_0.15_dropout_0.3_#1> in cluster <euler> Exited
+
+Job <ru_label_smoothing_0.15_dropout_0.3_#1> was submitted from host <eu-login-45> by user <andriusb> in cluster <euler> at Sun Mar 13 12:01:55 2022
+Job was executed on host(s) <eu-g2-09>, in queue <gpu.120h>, as user <andriusb> in cluster <euler> at Sun Mar 13 12:02:15 2022
+</cluster/home/andriusb> was used as the home directory.
+</cluster/home/andriusb/fq/fairseq> was used as the working directory.
+Started at Sun Mar 13 12:02:15 2022
+Terminated at Sun Mar 13 12:02:21 2022
+Results reported at Sun Mar 13 12:02:21 2022
+
+Your job looked like:
+
+------------------------------------------------------------
+# LSBATCH: User input
+CUDA_VISIBLE_DEVICES=0 fairseq-train --task language_modeling data-bin/ru --save-dir /cluster/scratch/andriusb/checkpoints/ru_label_smoothing_0.15_dropout_0.3_#1 --arch transformer_lm --share-decoder-input-output-embed --dropout 0.3 --criterion label_smoothed_cross_entropy --label-smoothing 0.15 --optimizer adam --adam-betas "(0.9, 0.98)" --weight-decay 0.01 --clip-norm 0.0 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 --tokens-per-sample 512 --sample-break-mode none --max-tokens 512 --update-freq 128 --seed 66575611 --fp16 --no-epoch-checkpoints --patience 3 --max-update 50000bsub -J ru_label_smoothing_0.15_dropout_0.3_#1 -W 5760 -o runs/ru_label_smoothing_0.15_dropout_0.3_#1.txt -R rusage[ngpus_excl_p=1,mem=20000] CUDA_VISIBLE_DEVICES=0 fairseq-train --task language_modeling data-bin/ru --save-dir /cluster/scratch/andriusb/checkpoints/ru_label_smoothing_0.15_dropout_0.3_#1 --arch transformer_lm --share-decoder-input-output-embed --dropout 0.3 --criterion label_smoothed_cross_entropy --label-smoothing 0.15 --optimizer adam --adam-betas "(0.9, 0.98)" --weight-decay 0.01 --clip-norm 0.0 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 --tokens-per-sample 512 --sample-break-mode none --max-tokens 512 --update-freq 128 --seed 66575611 --fp16 --no-epoch-checkpoints --patience 3 --max-update 50000
+------------------------------------------------------------
+
+Exited with exit code 2.
+
+Resource usage summary:
+
+    CPU time :                                   2.82 sec.
+    Max Memory :                                 308 MB
+    Average Memory :                             284.00 MB
+    Total Requested Memory :                     20000.00 MB
+    Delta Memory :                               19692.00 MB
+    Max Swap :                                   -
+    Max Processes :                              3
+    Max Threads :                                5
+    Run time :                                   6 sec.
+    Turnaround time :                            26 sec.
+
+The output (if any) follows:
+
+usage: fairseq-train [-h] [--no-progress-bar] [--log-interval LOG_INTERVAL]
+                     [--log-format {json,none,simple,tqdm}]
+                     [--log-file LOG_FILE]
+                     [--tensorboard-logdir TENSORBOARD_LOGDIR]
+                     [--wandb-project WANDB_PROJECT] [--azureml-logging]
+                     [--seed SEED] [--cpu] [--tpu] [--bf16]
+                     [--memory-efficient-bf16] [--fp16]
+                     [--memory-efficient-fp16] [--fp16-no-flatten-grads]
+                     [--fp16-init-scale FP16_INIT_SCALE]
+                     [--fp16-scale-window FP16_SCALE_WINDOW]
+                     [--fp16-scale-tolerance FP16_SCALE_TOLERANCE]
+                     [--on-cpu-convert-precision]
+                     [--min-loss-scale MIN_LOSS_SCALE]
+                     [--threshold-loss-scale THRESHOLD_LOSS_SCALE] [--amp]
+                     [--amp-batch-retries AMP_BATCH_RETRIES]
+                     [--amp-init-scale AMP_INIT_SCALE]
+                     [--amp-scale-window AMP_SCALE_WINDOW]
+                     [--user-dir USER_DIR]
+                     [--empty-cache-freq EMPTY_CACHE_FREQ]
+                     [--all-gather-list-size ALL_GATHER_LIST_SIZE]
+                     [--model-parallel-size MODEL_PARALLEL_SIZE]
+                     [--quantization-config-path QUANTIZATION_CONFIG_PATH]
+                     [--profile] [--reset-logging] [--suppress-crashes]
+                     [--use-plasma-view] [--plasma-path PLASMA_PATH]
+                     [--criterion {adaptive_loss,add_delta_smoothing,composite_loss,cross_entropy,ctc,fastspeech2,good_turing_smoothing,hubert,jelinek_mercer_smoothing,katz_smoothing,kneser_ney_smoothing,label_smoothed_KL,label_smoothed_cross_entropy,latency_augmented_label_smoothed_cross_entropy,label_smoothed_cross_entropy_with_alignment,label_smoothed_test,legacy_masked_lm_loss,masked_lm,model,nat_loss,sentence_prediction,sentence_ranking,tacotron2,wav2vec,vocab_parallel_cross_entropy}]
+                     [--tokenizer {moses,nltk,space}]
+                     [--bpe {byte_bpe,bytes,characters,fastbpe,gpt2,bert,hf_byte_bpe,sentencepiece,subword_nmt}]
+                     [--optimizer {adadelta,adafactor,adagrad,adam,adamax,composite,cpu_adam,lamb,nag,sgd}]
+                     [--lr-scheduler {cosine,fixed,inverse_sqrt,manual,pass_through,polynomial_decay,reduce_lr_on_plateau,step,tri_stage,triangular}]
+                     [--scoring {sacrebleu,bleu,chrf,wer}] [--task TASK]
+                     [--num-workers NUM_WORKERS]
+                     [--skip-invalid-size-inputs-valid-test]
+                     [--max-tokens MAX_TOKENS] [--batch-size BATCH_SIZE]
+                     [--required-batch-size-multiple REQUIRED_BATCH_SIZE_MULTIPLE]
+                     [--required-seq-len-multiple REQUIRED_SEQ_LEN_MULTIPLE]
+                     [--dataset-impl {raw,lazy,cached,mmap,fasta,huffman}]
+                     [--data-buffer-size DATA_BUFFER_SIZE]
+                     [--train-subset TRAIN_SUBSET]
+                     [--valid-subset VALID_SUBSET] [--combine-valid-subsets]
+                     [--ignore-unused-valid-subsets]
+                     [--validate-interval VALIDATE_INTERVAL]
+                     [--validate-interval-updates VALIDATE_INTERVAL_UPDATES]
+                     [--validate-after-updates VALIDATE_AFTER_UPDATES]
+                     [--fixed-validation-seed FIXED_VALIDATION_SEED]
+                     [--disable-validation]
+                     [--max-tokens-valid MAX_TOKENS_VALID]
+                     [--batch-size-valid BATCH_SIZE_VALID]
+                     [--max-valid-steps MAX_VALID_STEPS]
+                     [--curriculum CURRICULUM] [--gen-subset GEN_SUBSET]
+                     [--num-shards NUM_SHARDS] [--shard-id SHARD_ID]
+                     [--distributed-world-size DISTRIBUTED_WORLD_SIZE]
+                     [--distributed-num-procs DISTRIBUTED_NUM_PROCS]
+                     [--distributed-rank DISTRIBUTED_RANK]
+                     [--distributed-backend DISTRIBUTED_BACKEND]
+                     [--distributed-init-method DISTRIBUTED_INIT_METHOD]
+                     [--distributed-port DISTRIBUTED_PORT]
+                     [--device-id DEVICE_ID] [--distributed-no-spawn]
+                     [--ddp-backend {c10d,fully_sharded,legacy_ddp,no_c10d,pytorch_ddp,slow_mo}]
+                     [--ddp-comm-hook {none,fp16}]
+                     [--bucket-cap-mb BUCKET_CAP_MB] [--fix-batches-to-gpus]
+                     [--find-unused-parameters] [--gradient-as-bucket-view]
+                     [--fast-stat-sync]
+                     [--heartbeat-timeout HEARTBEAT_TIMEOUT]
+                     [--broadcast-buffers] [--slowmo-momentum SLOWMO_MOMENTUM]
+                     [--slowmo-algorithm SLOWMO_ALGORITHM]
+                     [--localsgd-frequency LOCALSGD_FREQUENCY]
+                     [--nprocs-per-node NPROCS_PER_NODE]
+                     [--pipeline-model-parallel]
+                     [--pipeline-balance PIPELINE_BALANCE]
+                     [--pipeline-devices PIPELINE_DEVICES]
+                     [--pipeline-chunks PIPELINE_CHUNKS]
+                     [--pipeline-encoder-balance PIPELINE_ENCODER_BALANCE]
+                     [--pipeline-encoder-devices PIPELINE_ENCODER_DEVICES]
+                     [--pipeline-decoder-balance PIPELINE_DECODER_BALANCE]
+                     [--pipeline-decoder-devices PIPELINE_DECODER_DEVICES]
+                     [--pipeline-checkpoint {always,never,except_last}]
+                     [--zero-sharding {none,os}] [--no-reshard-after-forward]
+                     [--fp32-reduce-scatter] [--cpu-offload]
+                     [--use-sharded-state] [--arch ARCH]
+                     [--max-epoch MAX_EPOCH] [--max-update MAX_UPDATE]
+                     [--stop-time-hours STOP_TIME_HOURS]
+                     [--clip-norm CLIP_NORM] [--sentence-avg]
+                     [--update-freq UPDATE_FREQ] [--lr LR]
+                     [--stop-min-lr STOP_MIN_LR] [--use-bmuf]
+                     [--save-dir SAVE_DIR] [--restore-file RESTORE_FILE]
+                     [--finetune-from-model FINETUNE_FROM_MODEL]
+                     [--reset-dataloader] [--reset-lr-scheduler]
+                     [--reset-meters] [--reset-optimizer]
+                     [--optimizer-overrides OPTIMIZER_OVERRIDES]
+                     [--save-interval SAVE_INTERVAL]
+                     [--save-interval-updates SAVE_INTERVAL_UPDATES]
+                     [--keep-interval-updates KEEP_INTERVAL_UPDATES]
+                     [--keep-interval-updates-pattern KEEP_INTERVAL_UPDATES_PATTERN]
+                     [--keep-last-epochs KEEP_LAST_EPOCHS]
+                     [--keep-best-checkpoints KEEP_BEST_CHECKPOINTS]
+                     [--no-save] [--no-epoch-checkpoints]
+                     [--no-last-checkpoints] [--no-save-optimizer-state]
+                     [--best-checkpoint-metric BEST_CHECKPOINT_METRIC]
+                     [--maximize-best-checkpoint-metric] [--patience PATIENCE]
+                     [--checkpoint-suffix CHECKPOINT_SUFFIX]
+                     [--checkpoint-shard-count CHECKPOINT_SHARD_COUNT]
+                     [--load-checkpoint-on-all-dp-ranks]
+                     [--write-checkpoints-asynchronously] [--store-ema]
+                     [--ema-decay EMA_DECAY]
+                     [--ema-start-update EMA_START_UPDATE]
+                     [--ema-seed-model EMA_SEED_MODEL]
+                     [--ema-update-freq EMA_UPDATE_FREQ] [--ema-fp32]
+fairseq-train: error: argument --max-update: invalid int value: '50000bsub'

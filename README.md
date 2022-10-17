@@ -6,6 +6,8 @@ The smoothing code can be found in `fairseq/criterions/`.
 
 In addition to below `fairseq` installation please run `pip install -r requirements.txt` in the root directory.
 
+You may run into an error with `scipy`, in which case just run `pip install scipy`.
+
 To obtain data download and extract [this](https://drive.google.com/file/d/1WwFmdVvUiTCd89VCerx4A-OG_LhymSVB/view?usp=sharing) in the root directory.
 
 If running on the  [redacted cluster]() use these commands to load in dependencies

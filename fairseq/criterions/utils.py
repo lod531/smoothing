@@ -94,7 +94,7 @@ def lambda_loss(crit, model, net_output, sample, reduce=True):
 def tokenize(crit, dataset, n):
     assert(n>0)
     res = []
-    BOS = crit.task.dictionary.bos()
+    BOS = crit.dict.bos()
     for sentence in dataset:
         sentence = sentence.tolist()
         for end in range(len(sentence)):
@@ -114,7 +114,7 @@ def tokenize(crit, dataset, n):
 def get_ngram_stats(crit, dataset, n):
     assert(n>0)
     res = defaultdict(lambda: defaultdict(float))
-    BOS = crit.task.dictionary.bos()
+    BOS = crit.dict.bos()
     print()
     print("gathering stats for n=" + str(n))
     for sentence in tqdm(dataset):
@@ -146,7 +146,7 @@ def get_ngram_stats(crit, dataset, n):
 def tokenize_tensor(crit, tens, n):
     assert(n>0)
     res = []
-    BOS = crit.task.dictionary.bos()
+    BOS = crit.dict.bos()
     for end in range(len(tens)):
         start = end-(n-1)
         # +1 because I want slices to include

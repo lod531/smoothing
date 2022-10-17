@@ -46,9 +46,14 @@ class JelinekMercerSmoothingCriterion(FairseqCriterion):
         assert sum(self.alphas) == 1
         self.sentence_avg = sentence_avg
         self.dataset = crit_utils.get_dataset_from_task(task)
-        self.dict_size = len(task.dictionary)
+        if isinstance(task, TranslationTask):
+            self.dict = task.tgt_dict
+        elif isinstance(task, LanguageModelingTask): 
+            self.dict = task.dictionary
+        self.dict_size = len(self.dict)
         self.ignored_indices = [self.padding_idx]
         self.fqs, self.N = crit_utils.get_fqs(self)
+        self.scc = crit_utils.get_scc(self.fqs)
         self.unigram = self.get_empirical()
         self.uniform = torch.ones(size=[self.dict_size], device=torch.device("cuda"), dtype=torch.float)
         self.uniform = self.uniform/torch.sum(self.uniform)

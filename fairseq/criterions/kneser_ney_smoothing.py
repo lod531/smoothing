@@ -44,7 +44,11 @@ class KneserNeySmoothingCriterion(FairseqCriterion):
         self.n = kneser_n
         self.sentence_avg = sentence_avg
         self.dataset = crit_utils.get_dataset_from_task(task)
-        self.dict_size = len(task.dictionary)
+        if isinstance(task, TranslationTask):
+            self.dict = task.tgt_dict
+        elif isinstance(task, LanguageModelingTask): 
+            self.dict = task.dictionary
+        self.dict_size = len(self.dict)
         self.ignored_indices = [self.padding_idx]
         self.fqs, self.N = crit_utils.get_fqs(self)
         self.empirical = self.get_empirical()

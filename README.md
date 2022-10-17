@@ -1,3 +1,85 @@
+This `fairseq` fork contains an implementation of a number of Good-Turing, Katz, Jelinek--Mercer and Kneser--Ney smoothing methods for use with neural language models.
+
+The smoothing code can be found in `fairseq/criterions/`.
+
+# Requirements and Installation
+
+In addition to below `fairseq` installation please run `pip install -r requirements.txt` in the root directory.
+
+To obtain data download and extract [this](https://drive.google.com/file/d/1WwFmdVvUiTCd89VCerx4A-OG_LhymSVB/view?usp=sharing) in the root directory.
+
+If running on the  [redacted cluster]() use these commands to load in dependencies
+
+	module load python_gpu/3.8.5
+	module load hdf5
+	module load cmake/3.20.3 
+
+Here is a sample command for an LM task:
+
+	fairseq-train --task language_modeling \
+	data-bin/wikitext-103-cleaned-bpe-size0.0625 \
+	--save-dir /cluster/scratch/snip/checkpoints/wikitext-103-cleaned-bpe-size0.0625_kneser_n2_d0.16_dropout_0.35_#1 \
+	--arch transformer_lm --share-decoder-input-output-embed \
+	--dropout 0.35 \
+	--criterion kneser_ney_smoothing --kneser-d 0.16 --kneser-n 2 \
+	--optimizer adam --adam-betas '(0.9, 0.98)' --weight-decay 0.01 --clip-norm 0.0 \
+	--lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 \
+	--tokens-per-sample 512 --sample-break-mode none \
+	--max-tokens 2048 --update-freq 32 \
+	--seed 66575611 \
+	--fp16 \
+	--no-epoch-checkpoints  \
+	--patience 3 \
+	--max-update 50000
+
+Evaluation:
+
+	fairseq-eval-lm data-bin/ru \
+	--path /cluster/scratch/snip/checkpoints/ru_kneser_n2_d0.9_dropout_0.3_#1/checkpoint_best.pt \
+	--max-sentences 2 \
+	--tokens-per-sample 512 \
+	--context-window 511
+
+and an MT task:
+
+	fairseq-train \
+	data-bin/iwslt14.tokenized.de-en \
+	--save-dir /cluster/scratch/snip/checkpoints/iwslt14_de_en_dropout_0.3_jelinek_0.3375_0.0125_0.65_#4 \
+	--arch transformer_iwslt_de_en --share-decoder-input-output-embed \
+	--optimizer adam --adam-betas '(0.9, 0.98)' --clip-norm 0.0 \
+	--lr 5e-4 --lr-scheduler inverse_sqrt --warmup-updates 4000 \
+	--dropout 0.3 --weight-decay 0.0001 \
+	--criterion jelinek_mercer_smoothing  --jelinek-n 2 --alphas '(0.3375,0.0125,0.65)' \
+	--max-tokens 32768 \
+	--eval-bleu \
+	--eval-bleu-args '{"beam": 5, "max_len_a": 1.2, "max_len_b": 10}' \
+	--eval-bleu-detok moses \
+	--eval-bleu-remove-bpe \
+	--eval-bleu-print-samples \
+	--fp16 \
+	--no-epoch-checkpoints \
+	--patience 3 \
+	--seed 66575614 \
+	--best-checkpoint-metric bleu --maximize-best-checkpoint-metric
+
+Evaluation:
+
+	fairseq-generate data-bin/iwslt14.tokenized.de-en \
+	--path /cluster/scratch/snip/checkpoints/iwslt14_de_en_dropout_0.3_kneser_n2_d0.95_#4/checkpoint_best.pt \
+	--batch-size 128 --beam 5 --remove-bpe
+
+In order to use $n$-gram smoothing methods simply change the `criterion` and supply the appropriate parameters, e.g.
+
+	--criterion good_turing_smoothing --good-turing-n 1
+	--criterion katz_smoothing --katz-k 5 --katz-n 2 
+	--criterion jelinek_mercer_smoothing --jelinek-n 2 --alphas '(0.0,0.1,0.9)' 
+	--criterion kneser_ney_smoothing --kneser-d 0.9 --kneser-n 2
+	
+$n$ parameters specify what order $n$-gram smoothing is to be used.
+
+
+
+
 <p align="center">
   <img src="docs/fairseq_logo.png" width="150">
   <br />

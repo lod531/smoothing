@@ -1,727 +1,0 @@
-Sender: LSF System <lsfadmin@eu-g3-061>
-Subject: Job 207919538: <w2_cleaned_bpe_jelinek_0.03_0.03_0.94> in cluster <euler> Exited
-
-Job <w2_cleaned_bpe_jelinek_0.03_0.03_0.94> was submitted from host <eu-login-02> by user <andriusb> in cluster <euler> at Fri Mar 11 10:26:16 2022
-Job was executed on host(s) <eu-g3-061>, in queue <gpuhe.24h>, as user <andriusb> in cluster <euler> at Fri Mar 11 10:26:24 2022
-</cluster/home/andriusb> was used as the home directory.
-</cluster/home/andriusb/fq/fairseq> was used as the working directory.
-Started at Fri Mar 11 10:26:24 2022
-Terminated at Fri Mar 11 10:26:39 2022
-Results reported at Fri Mar 11 10:26:39 2022
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-CUDA_VISIBLE_DEVICES=0 fairseq-train --task language_modeling data-bin/wikitext-2-cleaned-bpe-full --save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94 --arch transformer_lm --share-decoder-input-output-embed --dropout 0.3 --criterion jelinek_mercer_smoothing --jelinek-n 2 --alphas "(0.03, 0.03, 0.94)" --optimizer adam --adam-betas "(0.9, 0.98)" --weight-decay 0.01 --clip-norm 0.0 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 --tokens-per-sample 512 --sample-break-mode none --max-tokens 2048 --update-freq 32 --save-interval 40 --patience 3 --max-update 50000
-------------------------------------------------------------
-
-Exited with exit code 1.
-
-Resource usage summary:
-
-    CPU time :                                   11.05 sec.
-    Max Memory :                                 526 MB
-    Average Memory :                             320.00 MB
-    Total Requested Memory :                     20000.00 MB
-    Delta Memory :                               19474.00 MB
-    Max Swap :                                   -
-    Max Processes :                              3
-    Max Threads :                                5
-    Run time :                                   14 sec.
-    Turnaround time :                            23 sec.
-
-The output (if any) follows:
-
-2022-03-11 10:26:31 | INFO | fairseq_cli.train | {'_name': None, 'common': {'_name': None, 'no_progress_bar': False, 'log_interval': 100, 'log_format': None, 'log_file': None, 'tensorboard_logdir': None, 'wandb_project': None, 'azureml_logging': False, 'seed': 1, 'cpu': False, 'tpu': False, 'bf16': False, 'memory_efficient_bf16': False, 'fp16': False, 'memory_efficient_fp16': False, 'fp16_no_flatten_grads': False, 'fp16_init_scale': 128, 'fp16_scale_window': None, 'fp16_scale_tolerance': 0.0, 'on_cpu_convert_precision': False, 'min_loss_scale': 0.0001, 'threshold_loss_scale': None, 'amp': False, 'amp_batch_retries': 2, 'amp_init_scale': 128, 'amp_scale_window': None, 'user_dir': None, 'empty_cache_freq': 0, 'all_gather_list_size': 16384, 'model_parallel_size': 1, 'quantization_config_path': None, 'profile': False, 'reset_logging': False, 'suppress_crashes': False, 'use_plasma_view': False, 'plasma_path': '/tmp/plasma'}, 'common_eval': {'_name': None, 'path': None, 'post_process': None, 'quiet': False, 'model_overrides': '{}', 'results_path': None}, 'distributed_training': {'_name': None, 'distributed_world_size': 1, 'distributed_num_procs': 1, 'distributed_rank': 0, 'distributed_backend': 'nccl', 'distributed_init_method': None, 'distributed_port': -1, 'device_id': 0, 'distributed_no_spawn': False, 'ddp_backend': 'pytorch_ddp', 'ddp_comm_hook': 'none', 'bucket_cap_mb': 25, 'fix_batches_to_gpus': False, 'find_unused_parameters': False, 'gradient_as_bucket_view': False, 'fast_stat_sync': False, 'heartbeat_timeout': -1, 'broadcast_buffers': False, 'slowmo_momentum': None, 'slowmo_algorithm': 'LocalSGD', 'localsgd_frequency': 3, 'nprocs_per_node': 1, 'pipeline_model_parallel': False, 'pipeline_balance': None, 'pipeline_devices': None, 'pipeline_chunks': 0, 'pipeline_encoder_balance': None, 'pipeline_encoder_devices': None, 'pipeline_decoder_balance': None, 'pipeline_decoder_devices': None, 'pipeline_checkpoint': 'never', 'zero_sharding': 'none', 'fp16': False, 'memory_efficient_fp16': False, 'tpu': False, 'no_reshard_after_forward': False, 'fp32_reduce_scatter': False, 'cpu_offload': False, 'use_sharded_state': False}, 'dataset': {'_name': None, 'num_workers': 1, 'skip_invalid_size_inputs_valid_test': False, 'max_tokens': 2048, 'batch_size': None, 'required_batch_size_multiple': 8, 'required_seq_len_multiple': 1, 'dataset_impl': None, 'data_buffer_size': 10, 'train_subset': 'train', 'valid_subset': 'valid', 'combine_valid_subsets': None, 'ignore_unused_valid_subsets': False, 'validate_interval': 1, 'validate_interval_updates': 0, 'validate_after_updates': 0, 'fixed_validation_seed': None, 'disable_validation': False, 'max_tokens_valid': 2048, 'batch_size_valid': None, 'max_valid_steps': None, 'curriculum': 0, 'gen_subset': 'test', 'num_shards': 1, 'shard_id': 0}, 'optimization': {'_name': None, 'max_epoch': 0, 'max_update': 50000, 'stop_time_hours': 0.0, 'clip_norm': 0.0, 'sentence_avg': False, 'update_freq': [32], 'lr': [0.0005], 'stop_min_lr': -1.0, 'use_bmuf': False}, 'checkpoint': {'_name': None, 'save_dir': '/cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94', 'restore_file': 'checkpoint_last.pt', 'finetune_from_model': None, 'reset_dataloader': False, 'reset_lr_scheduler': False, 'reset_meters': False, 'reset_optimizer': False, 'optimizer_overrides': '{}', 'save_interval': 40, 'save_interval_updates': 0, 'keep_interval_updates': -1, 'keep_interval_updates_pattern': -1, 'keep_last_epochs': -1, 'keep_best_checkpoints': -1, 'no_save': False, 'no_epoch_checkpoints': False, 'no_last_checkpoints': False, 'no_save_optimizer_state': False, 'best_checkpoint_metric': 'loss', 'maximize_best_checkpoint_metric': False, 'patience': 3, 'checkpoint_suffix': '', 'checkpoint_shard_count': 1, 'load_checkpoint_on_all_dp_ranks': False, 'write_checkpoints_asynchronously': False, 'model_parallel_size': 1}, 'bmuf': {'_name': None, 'block_lr': 1.0, 'block_momentum': 0.875, 'global_sync_iter': 50, 'warmup_iterations': 500, 'use_nbm': False, 'average_sync': False, 'distributed_world_size': 1}, 'generation': {'_name': None, 'beam': 5, 'nbest': 1, 'max_len_a': 0.0, 'max_len_b': 200, 'min_len': 1, 'match_source_len': False, 'unnormalized': False, 'no_early_stop': False, 'no_beamable_mm': False, 'lenpen': 1.0, 'unkpen': 0.0, 'replace_unk': None, 'sacrebleu': False, 'score_reference': False, 'prefix_size': 0, 'no_repeat_ngram_size': 0, 'sampling': False, 'sampling_topk': -1, 'sampling_topp': -1.0, 'constraints': None, 'temperature': 1.0, 'diverse_beam_groups': -1, 'diverse_beam_strength': 0.5, 'diversity_rate': -1.0, 'print_alignment': None, 'print_step': False, 'lm_path': None, 'lm_weight': 0.0, 'iter_decode_eos_penalty': 0.0, 'iter_decode_max_iter': 10, 'iter_decode_force_max_iter': False, 'iter_decode_with_beam': 1, 'iter_decode_with_external_reranker': False, 'retain_iter_history': False, 'retain_dropout': False, 'retain_dropout_modules': None, 'decoding_format': None, 'no_seed_provided': False}, 'eval_lm': {'_name': None, 'output_word_probs': False, 'output_word_stats': False, 'context_window': 0, 'softmax_batch': 9223372036854775807}, 'interactive': {'_name': None, 'buffer_size': 0, 'input': '-'}, 'model': {'_name': 'transformer_lm', 'activation_fn': 'relu', 'dropout': 0.3, 'attention_dropout': 0.0, 'activation_dropout': 0.0, 'relu_dropout': 0.0, 'decoder_embed_dim': 512, 'decoder_output_dim': 512, 'decoder_input_dim': 512, 'decoder_ffn_embed_dim': 2048, 'decoder_layers': 6, 'decoder_attention_heads': 8, 'decoder_normalize_before': False, 'no_decoder_final_norm': False, 'adaptive_softmax_cutoff': None, 'adaptive_softmax_dropout': 0.0, 'adaptive_softmax_factor': 4.0, 'no_token_positional_embeddings': False, 'share_decoder_input_output_embed': True, 'character_embeddings': False, 'character_filters': '[(1, 64), (2, 128), (3, 192), (4, 256), (5, 256), (6, 256), (7, 256)]', 'character_embedding_dim': 4, 'char_embedder_highway_layers': 2, 'adaptive_input': False, 'adaptive_input_factor': 4.0, 'adaptive_input_cutoff': None, 'tie_adaptive_weights': False, 'tie_adaptive_proj': False, 'decoder_learned_pos': False, 'layernorm_embedding': False, 'no_scale_embedding': False, 'checkpoint_activations': False, 'offload_activations': False, 'decoder_layerdrop': 0.0, 'decoder_layers_to_keep': None, 'quant_noise_pq': 0.0, 'quant_noise_pq_block_size': 8, 'quant_noise_scalar': 0.0, 'min_params_to_wrap': 100000000, 'base_layers': 0, 'base_sublayers': 1, 'base_shuffle': 1, 'scale_fc': False, 'scale_attn': False, 'scale_heads': False, 'scale_resids': False, 'add_bos_token': False, 'tokens_per_sample': 512, 'max_target_positions': None, 'tpu': False}, 'task': {'_name': 'language_modeling', 'data': 'data-bin/wikitext-2-cleaned-bpe-full', 'sample_break_mode': 'none', 'tokens_per_sample': 512, 'output_dictionary_size': -1, 'self_target': False, 'future_target': False, 'past_target': False, 'add_bos_token': False, 'max_target_positions': None, 'shorten_method': 'none', 'shorten_data_split_list': '', 'pad_to_fixed_length': False, 'pad_to_fixed_bsz': False, 'seed': 1, 'batch_size': None, 'batch_size_valid': None, 'dataset_impl': None, 'data_buffer_size': 10, 'tpu': False, 'use_plasma_view': False, 'plasma_path': '/tmp/plasma'}, 'criterion': {'_name': 'jelinek_mercer_smoothing', 'alphas': '(0.03, 0.03, 0.94)', 'jelinek_n': 2, 'sentence_avg': False}, 'optimizer': {'_name': 'adam', 'adam_betas': '(0.9, 0.98)', 'adam_eps': 1e-08, 'weight_decay': 0.01, 'use_old_adam': False, 'fp16_adam_stats': False, 'tpu': False, 'lr': [0.0005]}, 'lr_scheduler': {'_name': 'inverse_sqrt', 'warmup_updates': 4000, 'warmup_init_lr': 1e-07, 'lr': [0.0005]}, 'scoring': {'_name': 'bleu', 'pad': 1, 'eos': 2, 'unk': 3}, 'bpe': None, 'tokenizer': None, 'ema': {'_name': None, 'store_ema': False, 'ema_decay': 0.9999, 'ema_start_update': 0, 'ema_seed_model': None, 'ema_update_freq': 1, 'ema_fp32': False}}
-2022-03-11 10:26:31 | INFO | fairseq.tasks.language_modeling | dictionary: 26336 types
-2022-03-11 10:26:32 | INFO | fairseq.data.data_utils | loaded 36,718 examples from: data-bin/wikitext-2-cleaned-bpe-full/train
-Calculating frequency stats:
-  0%|          | 0/36718 [00:00<?, ?it/s]  2%|▏         | 648/36718 [00:00<00:05, 6469.98it/s]  4%|▎         | 1295/36718 [00:00<00:06, 5702.63it/s]  5%|▌         | 1872/36718 [00:00<00:06, 5623.17it/s]  7%|▋         | 2438/36718 [00:00<00:06, 5491.87it/s]  9%|▊         | 3172/36718 [00:00<00:05, 6121.10it/s] 10%|█         | 3789/36718 [00:00<00:05, 5910.26it/s] 12%|█▏        | 4486/36718 [00:00<00:05, 6238.62it/s] 14%|█▍        | 5188/36718 [00:00<00:04, 6473.04it/s] 16%|█▌        | 5877/36718 [00:00<00:04, 6592.58it/s] 18%|█▊        | 6539/36718 [00:01<00:05, 5986.70it/s] 19%|█▉        | 7150/36718 [00:01<00:04, 5928.45it/s] 21%|██        | 7766/36718 [00:01<00:04, 5991.33it/s] 23%|██▎       | 8372/36718 [00:01<00:04, 5993.81it/s] 24%|██▍       | 8976/36718 [00:01<00:04, 5887.32it/s] 26%|██▌       | 9568/36718 [00:01<00:04, 5864.65it/s] 28%|██▊       | 10244/36718 [00:01<00:04, 6120.83it/s] 30%|██▉       | 10859/36718 [00:01<00:04, 5844.98it/s] 31%|███       | 11451/36718 [00:01<00:04, 5864.96it/s] 33%|███▎      | 12102/36718 [00:02<00:04, 6049.03it/s] 35%|███▍      | 12710/36718 [00:02<00:04, 5850.02it/s] 36%|███▋      | 13334/36718 [00:02<00:03, 5955.23it/s] 38%|███▊      | 13995/36718 [00:02<00:03, 6130.53it/s] 40%|███▉      | 14611/36718 [00:02<00:03, 6006.05it/s] 42%|████▏     | 15288/36718 [00:02<00:03, 6224.84it/s] 43%|████▎     | 15913/36718 [00:02<00:03, 5902.04it/s] 45%|████▍     | 16508/36718 [00:02<00:03, 5793.95it/s] 47%|████▋     | 17116/36718 [00:02<00:03, 5874.37it/s] 48%|████▊     | 17706/36718 [00:02<00:03, 5854.33it/s] 50%|████▉     | 18298/36718 [00:03<00:03, 5866.22it/s] 52%|█████▏    | 19014/36718 [00:03<00:02, 6242.48it/s] 54%|█████▎    | 19678/36718 [00:03<00:02, 6348.13it/s] 55%|█████▌    | 20315/36718 [00:03<00:02, 5975.81it/s] 57%|█████▋    | 20944/36718 [00:03<00:02, 6063.99it/s] 59%|█████▊    | 21555/36718 [00:03<00:02, 5758.36it/s] 60%|██████    | 22162/36718 [00:03<00:02, 5845.83it/s] 62%|██████▏   | 22847/36718 [00:03<00:02, 6129.88it/s] 64%|██████▍   | 23483/36718 [00:03<00:02, 6191.07it/s] 66%|██████▌   | 24216/36718 [00:04<00:01, 6524.40it/s] 68%|██████▊   | 24902/36718 [00:04<00:01, 6620.14it/s] 70%|██████▉   | 25576/36718 [00:04<00:01, 6645.99it/s] 71%|███████▏  | 26243/36718 [00:04<00:01, 6261.51it/s] 73%|███████▎  | 26875/36718 [00:04<00:01, 5954.00it/s] 75%|███████▍  | 27477/36718 [00:04<00:01, 5724.96it/s] 76%|███████▋  | 28087/36718 [00:04<00:01, 5828.21it/s] 78%|███████▊  | 28804/36718 [00:04<00:01, 6197.63it/s] 80%|████████  | 29429/36718 [00:04<00:01, 5862.22it/s] 82%|████████▏ | 30094/36718 [00:04<00:01, 6076.76it/s] 84%|████████▎ | 30708/36718 [00:05<00:01, 5718.57it/s] 85%|████████▌ | 31288/36718 [00:05<00:00, 5638.09it/s] 87%|████████▋ | 31870/36718 [00:05<00:00, 5687.93it/s] 88%|████████▊ | 32443/36718 [00:05<00:00, 5657.32it/s] 90%|████████▉ | 33012/36718 [00:05<00:00, 5580.34it/s] 91%|█████████▏| 33572/36718 [00:05<00:00, 5578.24it/s] 93%|█████████▎| 34157/36718 [00:05<00:00, 5649.00it/s] 95%|█████████▍| 34882/36718 [00:05<00:00, 6114.99it/s] 97%|█████████▋| 35496/36718 [00:05<00:00, 5831.90it/s] 98%|█████████▊| 36099/36718 [00:06<00:00, 5881.99it/s]100%|█████████▉| 36698/36718 [00:06<00:00, 5907.56it/s]100%|██████████| 36718/36718 [00:06<00:00, 5975.64it/s]
-> /cluster/home/andriusb/fq/fairseq/fairseq/criterions/jelinek_mercer.py(54)__init__()
--> self.unigram = self.get_empirical()
-(Pdb) 
-Traceback (most recent call last):
-  File "/cluster/home/andriusb/fq/env/bin/fairseq-train", line 33, in <module>
-    sys.exit(load_entry_point('fairseq', 'console_scripts', 'fairseq-train')())
-  File "/cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py", line 544, in cli_main
-    distributed_utils.call_main(cfg, main)
-  File "/cluster/home/andriusb/fq/fairseq/fairseq/distributed/utils.py", line 369, in call_main
-    main(cfg, **kwargs)
-  File "/cluster/home/andriusb/fq/fairseq/fairseq_cli/train.py", line 99, in main
-    criterion = task.build_criterion(cfg.criterion)
-  File "/cluster/home/andriusb/fq/fairseq/fairseq/tasks/fairseq_task.py", line 668, in build_criterion
-    return criterions.build_criterion(args, self)
-  File "/cluster/home/andriusb/fq/fairseq/fairseq/criterions/__init__.py", line 29, in build_criterion
-    return build_criterion_(cfg, task)
-  File "/cluster/home/andriusb/fq/fairseq/fairseq/registry.py", line 61, in build_x
-    return builder(cfg, *extra_args, **extra_kwargs)
-  File "/cluster/home/andriusb/fq/fairseq/fairseq/criterions/fairseq_criterion.py", line 60, in build_criterion
-    return cls(**init_args)
-  File "/cluster/home/andriusb/fq/fairseq/fairseq/criterions/jelinek_mercer.py", line 54, in __init__
-    self.unigram = self.get_empirical()
-  File "/cluster/home/andriusb/fq/fairseq/fairseq/criterions/jelinek_mercer.py", line 54, in __init__
-    self.unigram = self.get_empirical()
-  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/bdb.py", line 88, in trace_dispatch
-    return self.dispatch_line(frame)
-  File "/cluster/apps/nss/gcc-8.2.0/python/3.8.5/x86_64/lib64/python3.8/bdb.py", line 113, in dispatch_line
-    if self.quitting: raise BdbQuit
-bdb.BdbQuit
-Sender: LSF System <lsfadmin@eu-g3-063>
-Subject: Job 207919928: <w2_cleaned_bpe_jelinek_0.03_0.03_0.94> in cluster <euler> Done
-
-Job <w2_cleaned_bpe_jelinek_0.03_0.03_0.94> was submitted from host <eu-login-02> by user <andriusb> in cluster <euler> at Fri Mar 11 10:29:57 2022
-Job was executed on host(s) <eu-g3-063>, in queue <gpuhe.24h>, as user <andriusb> in cluster <euler> at Fri Mar 11 10:30:23 2022
-</cluster/home/andriusb> was used as the home directory.
-</cluster/home/andriusb/fq/fairseq> was used as the working directory.
-Started at Fri Mar 11 10:30:23 2022
-Terminated at Fri Mar 11 11:56:03 2022
-Results reported at Fri Mar 11 11:56:03 2022
-
-Your job looked like:
-
-------------------------------------------------------------
-# LSBATCH: User input
-CUDA_VISIBLE_DEVICES=0 fairseq-train --task language_modeling data-bin/wikitext-2-cleaned-bpe-full --save-dir /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94 --arch transformer_lm --share-decoder-input-output-embed --dropout 0.3 --criterion jelinek_mercer_smoothing --jelinek-n 2 --alphas "(0.03, 0.03, 0.94)" --optimizer adam --adam-betas "(0.9, 0.98)" --weight-decay 0.01 --clip-norm 0.0 --lr 0.0005 --lr-scheduler inverse_sqrt --warmup-updates 4000 --warmup-init-lr 1e-07 --tokens-per-sample 512 --sample-break-mode none --max-tokens 2048 --update-freq 32 --save-interval 40 --patience 3 --max-update 50000
-------------------------------------------------------------
-
-Successfully completed.
-
-Resource usage summary:
-
-    CPU time :                                   5131.64 sec.
-    Max Memory :                                 4154 MB
-    Average Memory :                             2956.49 MB
-    Total Requested Memory :                     20000.00 MB
-    Delta Memory :                               15846.00 MB
-    Max Swap :                                   -
-    Max Processes :                              4
-    Max Threads :                                15
-    Run time :                                   5139 sec.
-    Turnaround time :                            5166 sec.
-
-The output (if any) follows:
-
-2022-03-11 10:30:32 | INFO | fairseq_cli.train | {'_name': None, 'common': {'_name': None, 'no_progress_bar': False, 'log_interval': 100, 'log_format': None, 'log_file': None, 'tensorboard_logdir': None, 'wandb_project': None, 'azureml_logging': False, 'seed': 1, 'cpu': False, 'tpu': False, 'bf16': False, 'memory_efficient_bf16': False, 'fp16': False, 'memory_efficient_fp16': False, 'fp16_no_flatten_grads': False, 'fp16_init_scale': 128, 'fp16_scale_window': None, 'fp16_scale_tolerance': 0.0, 'on_cpu_convert_precision': False, 'min_loss_scale': 0.0001, 'threshold_loss_scale': None, 'amp': False, 'amp_batch_retries': 2, 'amp_init_scale': 128, 'amp_scale_window': None, 'user_dir': None, 'empty_cache_freq': 0, 'all_gather_list_size': 16384, 'model_parallel_size': 1, 'quantization_config_path': None, 'profile': False, 'reset_logging': False, 'suppress_crashes': False, 'use_plasma_view': False, 'plasma_path': '/tmp/plasma'}, 'common_eval': {'_name': None, 'path': None, 'post_process': None, 'quiet': False, 'model_overrides': '{}', 'results_path': None}, 'distributed_training': {'_name': None, 'distributed_world_size': 1, 'distributed_num_procs': 1, 'distributed_rank': 0, 'distributed_backend': 'nccl', 'distributed_init_method': None, 'distributed_port': -1, 'device_id': 0, 'distributed_no_spawn': False, 'ddp_backend': 'pytorch_ddp', 'ddp_comm_hook': 'none', 'bucket_cap_mb': 25, 'fix_batches_to_gpus': False, 'find_unused_parameters': False, 'gradient_as_bucket_view': False, 'fast_stat_sync': False, 'heartbeat_timeout': -1, 'broadcast_buffers': False, 'slowmo_momentum': None, 'slowmo_algorithm': 'LocalSGD', 'localsgd_frequency': 3, 'nprocs_per_node': 1, 'pipeline_model_parallel': False, 'pipeline_balance': None, 'pipeline_devices': None, 'pipeline_chunks': 0, 'pipeline_encoder_balance': None, 'pipeline_encoder_devices': None, 'pipeline_decoder_balance': None, 'pipeline_decoder_devices': None, 'pipeline_checkpoint': 'never', 'zero_sharding': 'none', 'fp16': False, 'memory_efficient_fp16': False, 'tpu': False, 'no_reshard_after_forward': False, 'fp32_reduce_scatter': False, 'cpu_offload': False, 'use_sharded_state': False}, 'dataset': {'_name': None, 'num_workers': 1, 'skip_invalid_size_inputs_valid_test': False, 'max_tokens': 2048, 'batch_size': None, 'required_batch_size_multiple': 8, 'required_seq_len_multiple': 1, 'dataset_impl': None, 'data_buffer_size': 10, 'train_subset': 'train', 'valid_subset': 'valid', 'combine_valid_subsets': None, 'ignore_unused_valid_subsets': False, 'validate_interval': 1, 'validate_interval_updates': 0, 'validate_after_updates': 0, 'fixed_validation_seed': None, 'disable_validation': False, 'max_tokens_valid': 2048, 'batch_size_valid': None, 'max_valid_steps': None, 'curriculum': 0, 'gen_subset': 'test', 'num_shards': 1, 'shard_id': 0}, 'optimization': {'_name': None, 'max_epoch': 0, 'max_update': 50000, 'stop_time_hours': 0.0, 'clip_norm': 0.0, 'sentence_avg': False, 'update_freq': [32], 'lr': [0.0005], 'stop_min_lr': -1.0, 'use_bmuf': False}, 'checkpoint': {'_name': None, 'save_dir': '/cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94', 'restore_file': 'checkpoint_last.pt', 'finetune_from_model': None, 'reset_dataloader': False, 'reset_lr_scheduler': False, 'reset_meters': False, 'reset_optimizer': False, 'optimizer_overrides': '{}', 'save_interval': 40, 'save_interval_updates': 0, 'keep_interval_updates': -1, 'keep_interval_updates_pattern': -1, 'keep_last_epochs': -1, 'keep_best_checkpoints': -1, 'no_save': False, 'no_epoch_checkpoints': False, 'no_last_checkpoints': False, 'no_save_optimizer_state': False, 'best_checkpoint_metric': 'loss', 'maximize_best_checkpoint_metric': False, 'patience': 3, 'checkpoint_suffix': '', 'checkpoint_shard_count': 1, 'load_checkpoint_on_all_dp_ranks': False, 'write_checkpoints_asynchronously': False, 'model_parallel_size': 1}, 'bmuf': {'_name': None, 'block_lr': 1.0, 'block_momentum': 0.875, 'global_sync_iter': 50, 'warmup_iterations': 500, 'use_nbm': False, 'average_sync': False, 'distributed_world_size': 1}, 'generation': {'_name': None, 'beam': 5, 'nbest': 1, 'max_len_a': 0.0, 'max_len_b': 200, 'min_len': 1, 'match_source_len': False, 'unnormalized': False, 'no_early_stop': False, 'no_beamable_mm': False, 'lenpen': 1.0, 'unkpen': 0.0, 'replace_unk': None, 'sacrebleu': False, 'score_reference': False, 'prefix_size': 0, 'no_repeat_ngram_size': 0, 'sampling': False, 'sampling_topk': -1, 'sampling_topp': -1.0, 'constraints': None, 'temperature': 1.0, 'diverse_beam_groups': -1, 'diverse_beam_strength': 0.5, 'diversity_rate': -1.0, 'print_alignment': None, 'print_step': False, 'lm_path': None, 'lm_weight': 0.0, 'iter_decode_eos_penalty': 0.0, 'iter_decode_max_iter': 10, 'iter_decode_force_max_iter': False, 'iter_decode_with_beam': 1, 'iter_decode_with_external_reranker': False, 'retain_iter_history': False, 'retain_dropout': False, 'retain_dropout_modules': None, 'decoding_format': None, 'no_seed_provided': False}, 'eval_lm': {'_name': None, 'output_word_probs': False, 'output_word_stats': False, 'context_window': 0, 'softmax_batch': 9223372036854775807}, 'interactive': {'_name': None, 'buffer_size': 0, 'input': '-'}, 'model': {'_name': 'transformer_lm', 'activation_fn': 'relu', 'dropout': 0.3, 'attention_dropout': 0.0, 'activation_dropout': 0.0, 'relu_dropout': 0.0, 'decoder_embed_dim': 512, 'decoder_output_dim': 512, 'decoder_input_dim': 512, 'decoder_ffn_embed_dim': 2048, 'decoder_layers': 6, 'decoder_attention_heads': 8, 'decoder_normalize_before': False, 'no_decoder_final_norm': False, 'adaptive_softmax_cutoff': None, 'adaptive_softmax_dropout': 0.0, 'adaptive_softmax_factor': 4.0, 'no_token_positional_embeddings': False, 'share_decoder_input_output_embed': True, 'character_embeddings': False, 'character_filters': '[(1, 64), (2, 128), (3, 192), (4, 256), (5, 256), (6, 256), (7, 256)]', 'character_embedding_dim': 4, 'char_embedder_highway_layers': 2, 'adaptive_input': False, 'adaptive_input_factor': 4.0, 'adaptive_input_cutoff': None, 'tie_adaptive_weights': False, 'tie_adaptive_proj': False, 'decoder_learned_pos': False, 'layernorm_embedding': False, 'no_scale_embedding': False, 'checkpoint_activations': False, 'offload_activations': False, 'decoder_layerdrop': 0.0, 'decoder_layers_to_keep': None, 'quant_noise_pq': 0.0, 'quant_noise_pq_block_size': 8, 'quant_noise_scalar': 0.0, 'min_params_to_wrap': 100000000, 'base_layers': 0, 'base_sublayers': 1, 'base_shuffle': 1, 'scale_fc': False, 'scale_attn': False, 'scale_heads': False, 'scale_resids': False, 'add_bos_token': False, 'tokens_per_sample': 512, 'max_target_positions': None, 'tpu': False}, 'task': {'_name': 'language_modeling', 'data': 'data-bin/wikitext-2-cleaned-bpe-full', 'sample_break_mode': 'none', 'tokens_per_sample': 512, 'output_dictionary_size': -1, 'self_target': False, 'future_target': False, 'past_target': False, 'add_bos_token': False, 'max_target_positions': None, 'shorten_method': 'none', 'shorten_data_split_list': '', 'pad_to_fixed_length': False, 'pad_to_fixed_bsz': False, 'seed': 1, 'batch_size': None, 'batch_size_valid': None, 'dataset_impl': None, 'data_buffer_size': 10, 'tpu': False, 'use_plasma_view': False, 'plasma_path': '/tmp/plasma'}, 'criterion': {'_name': 'jelinek_mercer_smoothing', 'alphas': '(0.03, 0.03, 0.94)', 'jelinek_n': 2, 'sentence_avg': False}, 'optimizer': {'_name': 'adam', 'adam_betas': '(0.9, 0.98)', 'adam_eps': 1e-08, 'weight_decay': 0.01, 'use_old_adam': False, 'fp16_adam_stats': False, 'tpu': False, 'lr': [0.0005]}, 'lr_scheduler': {'_name': 'inverse_sqrt', 'warmup_updates': 4000, 'warmup_init_lr': 1e-07, 'lr': [0.0005]}, 'scoring': {'_name': 'bleu', 'pad': 1, 'eos': 2, 'unk': 3}, 'bpe': None, 'tokenizer': None, 'ema': {'_name': None, 'store_ema': False, 'ema_decay': 0.9999, 'ema_start_update': 0, 'ema_seed_model': None, 'ema_update_freq': 1, 'ema_fp32': False}}
-2022-03-11 10:30:32 | INFO | fairseq.tasks.language_modeling | dictionary: 26336 types
-2022-03-11 10:30:32 | INFO | fairseq.data.data_utils | loaded 36,718 examples from: data-bin/wikitext-2-cleaned-bpe-full/train
-Calculating frequency stats:
-  0%|          | 0/36718 [00:00<?, ?it/s]  2%|▏         | 701/36718 [00:00<00:05, 7008.84it/s]  4%|▍         | 1402/36718 [00:00<00:05, 6323.86it/s]  6%|▌         | 2039/36718 [00:00<00:05, 5922.10it/s]  7%|▋         | 2699/36718 [00:00<00:05, 6161.55it/s]  9%|▉         | 3395/36718 [00:00<00:05, 6434.52it/s] 11%|█         | 4123/36718 [00:00<00:04, 6709.92it/s] 13%|█▎        | 4898/36718 [00:00<00:04, 7040.80it/s] 15%|█▌        | 5618/36718 [00:00<00:04, 7090.32it/s] 17%|█▋        | 6330/36718 [00:00<00:04, 7035.37it/s] 19%|█▉        | 7036/36718 [00:01<00:04, 6543.37it/s] 21%|██        | 7707/36718 [00:01<00:04, 6586.24it/s] 23%|██▎       | 8371/36718 [00:01<00:04, 6515.51it/s] 25%|██▍       | 9027/36718 [00:01<00:04, 6495.81it/s] 26%|██▋       | 9680/36718 [00:01<00:04, 6406.29it/s] 28%|██▊       | 10353/36718 [00:01<00:04, 6499.83it/s] 30%|██▉       | 11005/36718 [00:01<00:03, 6472.59it/s] 32%|███▏      | 11654/36718 [00:01<00:03, 6323.07it/s] 34%|███▎      | 12319/36718 [00:01<00:03, 6413.44it/s] 35%|███▌      | 12994/36718 [00:01<00:03, 6511.00it/s] 37%|███▋      | 13712/36718 [00:02<00:03, 6703.18it/s] 39%|███▉      | 14388/36718 [00:02<00:03, 6719.89it/s] 41%|████      | 15065/36718 [00:02<00:03, 6732.74it/s] 43%|████▎     | 15739/36718 [00:02<00:03, 6534.93it/s] 45%|████▍     | 16395/36718 [00:02<00:03, 6270.04it/s] 47%|████▋     | 17088/36718 [00:02<00:03, 6449.89it/s] 48%|████▊     | 17736/36718 [00:02<00:02, 6421.73it/s] 50%|█████     | 18392/36718 [00:02<00:02, 6459.39it/s] 52%|█████▏    | 19137/36718 [00:02<00:02, 6745.10it/s] 54%|█████▍    | 19850/36718 [00:03<00:02, 6854.46it/s] 56%|█████▌    | 20537/36718 [00:03<00:02, 6612.95it/s] 58%|█████▊    | 21201/36718 [00:03<00:02, 6563.80it/s] 60%|█████▉    | 21860/36718 [00:03<00:02, 6426.37it/s] 61%|██████▏   | 22533/36718 [00:03<00:02, 6510.04it/s] 63%|██████▎   | 23216/36718 [00:03<00:02, 6596.62it/s] 65%|██████▌   | 24001/36718 [00:03<00:01, 6959.13it/s] 68%|██████▊   | 24792/36718 [00:03<00:01, 7235.26it/s] 69%|██████▉   | 25517/36718 [00:03<00:01, 7135.78it/s] 71%|███████▏  | 26232/36718 [00:03<00:01, 6778.00it/s] 73%|███████▎  | 26914/36718 [00:04<00:01, 6477.54it/s] 75%|███████▌  | 27567/36718 [00:04<00:01, 6264.80it/s] 77%|███████▋  | 28257/36718 [00:04<00:01, 6438.73it/s] 79%|███████▉  | 28942/36718 [00:04<00:01, 6553.97it/s] 81%|████████  | 29601/36718 [00:04<00:01, 6501.72it/s] 82%|████████▏ | 30264/36718 [00:04<00:00, 6529.41it/s] 84%|████████▍ | 30919/36718 [00:04<00:00, 6249.36it/s] 86%|████████▌ | 31562/36718 [00:04<00:00, 6295.27it/s] 88%|████████▊ | 32194/36718 [00:04<00:00, 6084.36it/s] 90%|████████▉ | 32866/36718 [00:05<00:00, 6258.43it/s] 91%|█████████ | 33495/36718 [00:05<00:00, 6139.38it/s] 93%|█████████▎| 34143/36718 [00:05<00:00, 6226.36it/s] 95%|█████████▌| 34897/36718 [00:05<00:00, 6608.07it/s] 97%|█████████▋| 35561/36718 [00:05<00:00, 6334.71it/s] 99%|█████████▊| 36216/36718 [00:05<00:00, 6394.79it/s]100%|██████████| 36718/36718 [00:05<00:00, 6524.94it/s]
-
-gathering stats for n=1
-  0%|          | 0/36718 [00:00<?, ?it/s]  5%|▌         | 1936/36718 [00:00<00:01, 19354.43it/s] 11%|█         | 4040/36718 [00:00<00:01, 20344.30it/s] 17%|█▋        | 6328/36718 [00:00<00:01, 21500.47it/s] 23%|██▎       | 8479/36718 [00:00<00:01, 20506.17it/s] 29%|██▉       | 10585/36718 [00:00<00:01, 20695.23it/s] 35%|███▍      | 12670/36718 [00:00<00:01, 20734.97it/s] 40%|████      | 14862/36718 [00:00<00:01, 21110.86it/s] 46%|████▌     | 16976/36718 [00:00<00:00, 20630.04it/s] 52%|█████▏    | 19119/36718 [00:00<00:00, 20867.76it/s] 58%|█████▊    | 21209/36718 [00:01<00:00, 20805.45it/s] 63%|██████▎   | 23292/36718 [00:01<00:00, 20708.21it/s] 70%|██████▉   | 25625/36718 [00:01<00:00, 21490.25it/s] 76%|███████▌  | 27776/36718 [00:01<00:00, 20574.27it/s] 82%|████████▏ | 29962/36718 [00:01<00:00, 20946.52it/s] 87%|████████▋ | 32065/36718 [00:01<00:00, 20348.30it/s] 93%|█████████▎| 34108/36718 [00:01<00:00, 20263.54it/s] 99%|█████████▊| 36215/36718 [00:01<00:00, 20496.74it/s]100%|██████████| 36718/36718 [00:01<00:00, 20684.01it/s]
-
-transferring to GPU memory
-  0%|          | 0/1 [00:00<?, ?it/s]100%|██████████| 1/1 [00:00<00:00, 769.46it/s]2022-03-11 10:30:43 | INFO | fairseq_cli.train | TransformerLanguageModel(
-  (decoder): TransformerDecoder(
-    (dropout_module): FairseqDropout()
-    (embed_tokens): Embedding(26336, 512, padding_idx=1)
-    (embed_positions): SinusoidalPositionalEmbedding()
-    (layers): ModuleList(
-      (0): TransformerDecoderLayerBase(
-        (dropout_module): FairseqDropout()
-        (self_attn): MultiheadAttention(
-          (dropout_module): FairseqDropout()
-          (k_proj): Linear(in_features=512, out_features=512, bias=True)
-          (v_proj): Linear(in_features=512, out_features=512, bias=True)
-          (q_proj): Linear(in_features=512, out_features=512, bias=True)
-          (out_proj): Linear(in_features=512, out_features=512, bias=True)
-        )
-        (activation_dropout_module): FairseqDropout()
-        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (fc1): Linear(in_features=512, out_features=2048, bias=True)
-        (fc2): Linear(in_features=2048, out_features=512, bias=True)
-        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (1): TransformerDecoderLayerBase(
-        (dropout_module): FairseqDropout()
-        (self_attn): MultiheadAttention(
-          (dropout_module): FairseqDropout()
-          (k_proj): Linear(in_features=512, out_features=512, bias=True)
-          (v_proj): Linear(in_features=512, out_features=512, bias=True)
-          (q_proj): Linear(in_features=512, out_features=512, bias=True)
-          (out_proj): Linear(in_features=512, out_features=512, bias=True)
-        )
-        (activation_dropout_module): FairseqDropout()
-        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (fc1): Linear(in_features=512, out_features=2048, bias=True)
-        (fc2): Linear(in_features=2048, out_features=512, bias=True)
-        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (2): TransformerDecoderLayerBase(
-        (dropout_module): FairseqDropout()
-        (self_attn): MultiheadAttention(
-          (dropout_module): FairseqDropout()
-          (k_proj): Linear(in_features=512, out_features=512, bias=True)
-          (v_proj): Linear(in_features=512, out_features=512, bias=True)
-          (q_proj): Linear(in_features=512, out_features=512, bias=True)
-          (out_proj): Linear(in_features=512, out_features=512, bias=True)
-        )
-        (activation_dropout_module): FairseqDropout()
-        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (fc1): Linear(in_features=512, out_features=2048, bias=True)
-        (fc2): Linear(in_features=2048, out_features=512, bias=True)
-        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (3): TransformerDecoderLayerBase(
-        (dropout_module): FairseqDropout()
-        (self_attn): MultiheadAttention(
-          (dropout_module): FairseqDropout()
-          (k_proj): Linear(in_features=512, out_features=512, bias=True)
-          (v_proj): Linear(in_features=512, out_features=512, bias=True)
-          (q_proj): Linear(in_features=512, out_features=512, bias=True)
-          (out_proj): Linear(in_features=512, out_features=512, bias=True)
-        )
-        (activation_dropout_module): FairseqDropout()
-        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (fc1): Linear(in_features=512, out_features=2048, bias=True)
-        (fc2): Linear(in_features=2048, out_features=512, bias=True)
-        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (4): TransformerDecoderLayerBase(
-        (dropout_module): FairseqDropout()
-        (self_attn): MultiheadAttention(
-          (dropout_module): FairseqDropout()
-          (k_proj): Linear(in_features=512, out_features=512, bias=True)
-          (v_proj): Linear(in_features=512, out_features=512, bias=True)
-          (q_proj): Linear(in_features=512, out_features=512, bias=True)
-          (out_proj): Linear(in_features=512, out_features=512, bias=True)
-        )
-        (activation_dropout_module): FairseqDropout()
-        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (fc1): Linear(in_features=512, out_features=2048, bias=True)
-        (fc2): Linear(in_features=2048, out_features=512, bias=True)
-        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-      (5): TransformerDecoderLayerBase(
-        (dropout_module): FairseqDropout()
-        (self_attn): MultiheadAttention(
-          (dropout_module): FairseqDropout()
-          (k_proj): Linear(in_features=512, out_features=512, bias=True)
-          (v_proj): Linear(in_features=512, out_features=512, bias=True)
-          (q_proj): Linear(in_features=512, out_features=512, bias=True)
-          (out_proj): Linear(in_features=512, out_features=512, bias=True)
-        )
-        (activation_dropout_module): FairseqDropout()
-        (self_attn_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-        (fc1): Linear(in_features=512, out_features=2048, bias=True)
-        (fc2): Linear(in_features=2048, out_features=512, bias=True)
-        (final_layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
-      )
-    )
-    (output_projection): Linear(in_features=512, out_features=26336, bias=False)
-  )
-)
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | task: LanguageModelingTask
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | model: TransformerLanguageModel
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | criterion: JelinekMercerSmoothingCriterion
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | num. shared model params: 32,398,336 (num. trained: 32,398,336)
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | num. expert model params: 0 (num. trained: 0)
-2022-03-11 10:30:43 | INFO | fairseq.data.data_utils | loaded 3,760 examples from: data-bin/wikitext-2-cleaned-bpe-full/valid
-2022-03-11 10:30:43 | INFO | fairseq.trainer | detected shared parameter: decoder.embed_tokens.weight <- decoder.output_projection.weight
-2022-03-11 10:30:43 | INFO | fairseq.utils | ***********************CUDA enviroments for all 1 workers***********************
-2022-03-11 10:30:43 | INFO | fairseq.utils | rank   0: capabilities =  7.5  ; total memory = 23.653 GB ; name = Quadro RTX 6000                         
-2022-03-11 10:30:43 | INFO | fairseq.utils | ***********************CUDA enviroments for all 1 workers***********************
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | training on 1 devices (GPUs/TPUs)
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | max tokens per device = 2048 and max sentences per device = None
-2022-03-11 10:30:43 | INFO | fairseq.trainer | Preparing to load checkpoint /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint_last.pt
-2022-03-11 10:30:43 | INFO | fairseq.trainer | No existing checkpoint found /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint_last.pt
-2022-03-11 10:30:43 | INFO | fairseq.trainer | loading train data for epoch 1
-2022-03-11 10:30:43 | INFO | fairseq.data.data_utils | loaded 36,718 examples from: data-bin/wikitext-2-cleaned-bpe-full/train
-2022-03-11 10:30:43 | INFO | fairseq.trainer | NOTE: your device may support faster training with --fp16 or --amp
-2022-03-11 10:30:43 | INFO | fairseq.trainer | begin training epoch 1
-2022-03-11 10:30:43 | INFO | fairseq_cli.train | Start iterating over samples
-
-2022-03-11 10:31:58 | INFO | fairseq_cli.train | begin validation on "valid" subset
-/cluster/home/andriusb/fq/fairseq/fairseq/utils.py:372: UserWarning: amp_C fused kernels unavailable, disabling multi_tensor_l2norm; you may get better performance by installing NVIDIA's apex library
-  warnings.warn(
-2022-03-11 10:32:01 | INFO | valid | epoch 001 | valid on 'valid' subset | loss 14.223 | ppl 19128.6 | wps 60612.3 | wpb 2036.4 | bsz 4 | num_updates 34
-2022-03-11 10:32:01 | INFO | fairseq_cli.train | end of epoch 1 (average epoch stats below)
-2022-03-11 10:32:01 | INFO | train | epoch 001 | loss 14.952 | ppl 31702 | wps 28161.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 34 | lr 4.34915e-06 | gnorm 4.592 | train_wall 73 | gb_free 21.1 | wall 78
-KL Stats: Epoch 1 Divergences: Uniform: 0.5716468408681454 Unigram: 3.20211633758267
-2022-03-11 10:32:01 | INFO | fairseq.trainer | begin training epoch 2
-2022-03-11 10:32:01 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:33:15 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:33:19 | INFO | valid | epoch 002 | valid on 'valid' subset | loss 12.63 | ppl 6338.51 | wps 60609.8 | wpb 2036.4 | bsz 4 | num_updates 68
-2022-03-11 10:33:19 | INFO | fairseq_cli.train | end of epoch 2 (average epoch stats below)
-2022-03-11 10:33:19 | INFO | train | epoch 002 | loss 13.625 | ppl 12638.1 | wps 28003.3 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 68 | lr 8.5983e-06 | gnorm 2.673 | train_wall 72 | gb_free 21.1 | wall 156
-KL Stats: Epoch 2 Divergences: Uniform: 0.5612919184235401 Unigram: 2.2350831501535513
-2022-03-11 10:33:19 | INFO | fairseq.trainer | begin training epoch 3
-2022-03-11 10:33:19 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:34:30 | INFO | train_inner | epoch 003:     32 / 34 loss=13.774, ppl=14009.6, wps=28519.4, ups=0.44, wpb=64275.2, bsz=125.5, num_updates=100, lr=1.25975e-05, gnorm=2.956, train_wall=214, gb_free=21.1, wall=227
-2022-03-11 10:34:32 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:34:36 | INFO | valid | epoch 003 | valid on 'valid' subset | loss 11.979 | ppl 4037.98 | wps 60585.6 | wpb 2036.4 | bsz 4 | num_updates 102
-2022-03-11 10:34:36 | INFO | fairseq_cli.train | end of epoch 3 (average epoch stats below)
-2022-03-11 10:34:36 | INFO | train | epoch 003 | loss 12.703 | ppl 6666.84 | wps 28003.4 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 102 | lr 1.28475e-05 | gnorm 1.519 | train_wall 72 | gb_free 21.1 | wall 233
-KL Stats: Epoch 3 Divergences: Uniform: 0.5734042468585931 Unigram: 1.586443281924671
-2022-03-11 10:34:36 | INFO | fairseq.trainer | begin training epoch 4
-2022-03-11 10:34:36 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:35:50 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:35:53 | INFO | valid | epoch 004 | valid on 'valid' subset | loss 11.606 | ppl 3118.2 | wps 60655.3 | wpb 2036.4 | bsz 4 | num_updates 136
-2022-03-11 10:35:53 | INFO | fairseq_cli.train | end of epoch 4 (average epoch stats below)
-2022-03-11 10:35:53 | INFO | train | epoch 004 | loss 12.236 | ppl 4823.28 | wps 27988.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 136 | lr 1.70966e-05 | gnorm 1.206 | train_wall 72 | gb_free 21.1 | wall 310
-KL Stats: Epoch 4 Divergences: Uniform: 0.5680236014993896 Unigram: 1.2580337725182225
-2022-03-11 10:35:53 | INFO | fairseq.trainer | begin training epoch 5
-2022-03-11 10:35:53 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:37:07 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:37:11 | INFO | valid | epoch 005 | valid on 'valid' subset | loss 11.22 | ppl 2385.08 | wps 60813.5 | wpb 2036.4 | bsz 4 | num_updates 170
-2022-03-11 10:37:11 | INFO | fairseq_cli.train | end of epoch 5 (average epoch stats below)
-2022-03-11 10:37:11 | INFO | train | epoch 005 | loss 11.849 | ppl 3687.99 | wps 27999.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 170 | lr 2.13458e-05 | gnorm 1.065 | train_wall 72 | gb_free 21.1 | wall 388
-KL Stats: Epoch 5 Divergences: Uniform: 0.5645769330810014 Unigram: 0.9933179559456298
-2022-03-11 10:37:11 | INFO | fairseq.trainer | begin training epoch 6
-2022-03-11 10:37:11 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:38:17 | INFO | train_inner | epoch 006:     30 / 34 loss=11.864, ppl=3727.9, wps=27954.1, ups=0.44, wpb=63630.1, bsz=124.3, num_updates=200, lr=2.5095e-05, gnorm=1.073, train_wall=211, gb_free=21.1, wall=455
-2022-03-11 10:38:24 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:38:28 | INFO | valid | epoch 006 | valid on 'valid' subset | loss 10.807 | ppl 1791.87 | wps 60667.4 | wpb 2036.4 | bsz 4 | num_updates 204
-2022-03-11 10:38:28 | INFO | fairseq_cli.train | end of epoch 6 (average epoch stats below)
-2022-03-11 10:38:28 | INFO | train | epoch 006 | loss 11.431 | ppl 2761.52 | wps 27963.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 204 | lr 2.55949e-05 | gnorm 0.899 | train_wall 72 | gb_free 21.1 | wall 465
-KL Stats: Epoch 6 Divergences: Uniform: 0.6010722285653427 Unigram: 0.7584558394574904
-2022-03-11 10:38:28 | INFO | fairseq.trainer | begin training epoch 7
-2022-03-11 10:38:28 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:39:42 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:39:45 | INFO | valid | epoch 007 | valid on 'valid' subset | loss 10.456 | ppl 1404.81 | wps 60114.8 | wpb 2036.4 | bsz 4 | num_updates 238
-2022-03-11 10:39:45 | INFO | fairseq_cli.train | end of epoch 7 (average epoch stats below)
-2022-03-11 10:39:45 | INFO | train | epoch 007 | loss 11.012 | ppl 2064.71 | wps 27995.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 238 | lr 2.98441e-05 | gnorm 0.687 | train_wall 72 | gb_free 21.1 | wall 543
-KL Stats: Epoch 7 Divergences: Uniform: 0.6969308151227135 Unigram: 0.5764014746204341
-2022-03-11 10:39:45 | INFO | fairseq.trainer | begin training epoch 8
-2022-03-11 10:39:45 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:40:59 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:41:03 | INFO | valid | epoch 008 | valid on 'valid' subset | loss 10.204 | ppl 1179.13 | wps 60323 | wpb 2036.4 | bsz 4 | num_updates 272
-2022-03-11 10:41:03 | INFO | fairseq_cli.train | end of epoch 8 (average epoch stats below)
-2022-03-11 10:41:03 | INFO | train | epoch 008 | loss 10.7 | ppl 1663.59 | wps 27976.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 272 | lr 3.40932e-05 | gnorm 0.55 | train_wall 72 | gb_free 21.1 | wall 620
-KL Stats: Epoch 8 Divergences: Uniform: 0.8210881327775604 Unigram: 0.434188898776516
-2022-03-11 10:41:03 | INFO | fairseq.trainer | begin training epoch 9
-2022-03-11 10:41:03 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:42:05 | INFO | train_inner | epoch 009:     28 / 34 loss=10.761, ppl=1735.19, wps=27951.7, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=300, lr=3.75925e-05, gnorm=0.594, train_wall=211, gb_free=21.1, wall=682
-2022-03-11 10:42:16 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:42:20 | INFO | valid | epoch 009 | valid on 'valid' subset | loss 10.016 | ppl 1035.39 | wps 60295.1 | wpb 2036.4 | bsz 4 | num_updates 306
-2022-03-11 10:42:20 | INFO | fairseq_cli.train | end of epoch 9 (average epoch stats below)
-2022-03-11 10:42:20 | INFO | train | epoch 009 | loss 10.47 | ppl 1418.42 | wps 27969.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 306 | lr 3.83424e-05 | gnorm 0.508 | train_wall 72 | gb_free 21.1 | wall 697
-KL Stats: Epoch 9 Divergences: Uniform: 0.9657558516922716 Unigram: 0.3617851332369621
-2022-03-11 10:42:20 | INFO | fairseq.trainer | begin training epoch 10
-2022-03-11 10:42:20 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:43:34 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:43:38 | INFO | valid | epoch 010 | valid on 'valid' subset | loss 9.886 | ppl 946.08 | wps 60800.1 | wpb 2036.4 | bsz 4 | num_updates 340
-2022-03-11 10:43:38 | INFO | fairseq_cli.train | end of epoch 10 (average epoch stats below)
-2022-03-11 10:43:38 | INFO | train | epoch 010 | loss 10.309 | ppl 1268.41 | wps 27991.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 340 | lr 4.25915e-05 | gnorm 0.551 | train_wall 72 | gb_free 21.1 | wall 775
-KL Stats: Epoch 10 Divergences: Uniform: 1.1108571437331372 Unigram: 0.3609624178092332
-2022-03-11 10:43:38 | INFO | fairseq.trainer | begin training epoch 11
-2022-03-11 10:43:38 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:44:51 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:44:55 | INFO | valid | epoch 011 | valid on 'valid' subset | loss 9.807 | ppl 895.62 | wps 60801.2 | wpb 2036.4 | bsz 4 | num_updates 374
-2022-03-11 10:44:55 | INFO | fairseq_cli.train | end of epoch 11 (average epoch stats below)
-2022-03-11 10:44:55 | INFO | train | epoch 011 | loss 10.196 | ppl 1173.11 | wps 27974.3 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 374 | lr 4.68407e-05 | gnorm 0.487 | train_wall 72 | gb_free 21.1 | wall 852
-KL Stats: Epoch 11 Divergences: Uniform: 1.229239085565064 Unigram: 0.39759509036493473
-2022-03-11 10:44:55 | INFO | fairseq.trainer | begin training epoch 12
-2022-03-11 10:44:55 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:45:53 | INFO | train_inner | epoch 012:     26 / 34 loss=10.223, ppl=1195.05, wps=27949, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=400, lr=5.009e-05, gnorm=0.51, train_wall=211, gb_free=21.1, wall=910
-2022-03-11 10:46:09 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:46:12 | INFO | valid | epoch 012 | valid on 'valid' subset | loss 9.703 | ppl 833.23 | wps 60725.1 | wpb 2036.4 | bsz 4 | num_updates 408
-2022-03-11 10:46:12 | INFO | fairseq_cli.train | end of epoch 12 (average epoch stats below)
-2022-03-11 10:46:12 | INFO | train | epoch 012 | loss 10.108 | ppl 1103.85 | wps 27978.4 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 408 | lr 5.10898e-05 | gnorm 0.48 | train_wall 72 | gb_free 21.1 | wall 930
-KL Stats: Epoch 12 Divergences: Uniform: 1.315592554209701 Unigram: 0.4473555783324306
-2022-03-11 10:46:12 | INFO | fairseq.trainer | begin training epoch 13
-2022-03-11 10:46:12 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:47:26 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:47:30 | INFO | valid | epoch 013 | valid on 'valid' subset | loss 9.631 | ppl 792.87 | wps 60563.8 | wpb 2036.4 | bsz 4 | num_updates 442
-2022-03-11 10:47:30 | INFO | fairseq_cli.train | end of epoch 13 (average epoch stats below)
-2022-03-11 10:47:30 | INFO | train | epoch 013 | loss 10.026 | ppl 1042.5 | wps 27972.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 442 | lr 5.5339e-05 | gnorm 0.457 | train_wall 72 | gb_free 21.1 | wall 1007
-KL Stats: Epoch 13 Divergences: Uniform: 1.3796525997192925 Unigram: 0.5049291460435396
-2022-03-11 10:47:30 | INFO | fairseq.trainer | begin training epoch 14
-2022-03-11 10:47:30 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:48:43 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:48:47 | INFO | valid | epoch 014 | valid on 'valid' subset | loss 9.556 | ppl 752.84 | wps 60378.5 | wpb 2036.4 | bsz 4 | num_updates 476
-2022-03-11 10:48:47 | INFO | fairseq_cli.train | end of epoch 14 (average epoch stats below)
-2022-03-11 10:48:47 | INFO | train | epoch 014 | loss 9.942 | ppl 983.48 | wps 27962.8 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 476 | lr 5.95881e-05 | gnorm 0.446 | train_wall 72 | gb_free 21.1 | wall 1084
-KL Stats: Epoch 14 Divergences: Uniform: 1.4267106811520576 Unigram: 0.5656227471807005
-2022-03-11 10:48:47 | INFO | fairseq.trainer | begin training epoch 15
-2022-03-11 10:48:47 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:49:41 | INFO | train_inner | epoch 015:     24 / 34 loss=9.962, ppl=997.26, wps=27951.4, ups=0.44, wpb=63660.8, bsz=124.3, num_updates=500, lr=6.25875e-05, gnorm=0.467, train_wall=211, gb_free=21.1, wall=1138
-2022-03-11 10:50:01 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:50:05 | INFO | valid | epoch 015 | valid on 'valid' subset | loss 9.453 | ppl 700.97 | wps 60444.6 | wpb 2036.4 | bsz 4 | num_updates 510
-2022-03-11 10:50:05 | INFO | fairseq_cli.train | end of epoch 15 (average epoch stats below)
-2022-03-11 10:50:05 | INFO | train | epoch 015 | loss 9.856 | ppl 926.83 | wps 27991.7 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 510 | lr 6.38373e-05 | gnorm 0.502 | train_wall 72 | gb_free 21.1 | wall 1162
-KL Stats: Epoch 15 Divergences: Uniform: 1.4610644700007647 Unigram: 0.6317745159544371
-2022-03-11 10:50:05 | INFO | fairseq.trainer | begin training epoch 16
-2022-03-11 10:50:05 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:51:18 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:51:22 | INFO | valid | epoch 016 | valid on 'valid' subset | loss 9.383 | ppl 667.62 | wps 60229.3 | wpb 2036.4 | bsz 4 | num_updates 544
-2022-03-11 10:51:22 | INFO | fairseq_cli.train | end of epoch 16 (average epoch stats below)
-2022-03-11 10:51:22 | INFO | train | epoch 016 | loss 9.769 | ppl 872.59 | wps 27973 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 544 | lr 6.80864e-05 | gnorm 0.516 | train_wall 72 | gb_free 21.1 | wall 1239
-KL Stats: Epoch 16 Divergences: Uniform: 1.4904336785769499 Unigram: 0.6968126208618209
-2022-03-11 10:51:22 | INFO | fairseq.trainer | begin training epoch 17
-2022-03-11 10:51:22 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:52:36 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:52:39 | INFO | valid | epoch 017 | valid on 'valid' subset | loss 9.301 | ppl 630.6 | wps 60381.3 | wpb 2036.4 | bsz 4 | num_updates 578
-2022-03-11 10:52:39 | INFO | fairseq_cli.train | end of epoch 17 (average epoch stats below)
-2022-03-11 10:52:39 | INFO | train | epoch 017 | loss 9.684 | ppl 822.29 | wps 27988.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 578 | lr 7.23356e-05 | gnorm 0.551 | train_wall 72 | gb_free 21.1 | wall 1316
-KL Stats: Epoch 17 Divergences: Uniform: 1.519656500597697 Unigram: 0.7553725673780979
-2022-03-11 10:52:39 | INFO | fairseq.trainer | begin training epoch 18
-2022-03-11 10:52:39 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:53:28 | INFO | train_inner | epoch 018:     22 / 34 loss=9.71, ppl=837.39, wps=27947.1, ups=0.44, wpb=63645.9, bsz=124.3, num_updates=600, lr=7.5085e-05, gnorm=0.537, train_wall=211, gb_free=21.1, wall=1366
-2022-03-11 10:53:53 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:53:57 | INFO | valid | epoch 018 | valid on 'valid' subset | loss 9.215 | ppl 594.17 | wps 61065.2 | wpb 2036.4 | bsz 4 | num_updates 612
-2022-03-11 10:53:57 | INFO | fairseq_cli.train | end of epoch 18 (average epoch stats below)
-2022-03-11 10:53:57 | INFO | train | epoch 018 | loss 9.599 | ppl 775.6 | wps 27973.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 612 | lr 7.65847e-05 | gnorm 0.551 | train_wall 72 | gb_free 21.1 | wall 1394
-KL Stats: Epoch 18 Divergences: Uniform: 1.5519832482244975 Unigram: 0.8156951872010494
-2022-03-11 10:53:57 | INFO | fairseq.trainer | begin training epoch 19
-2022-03-11 10:53:57 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:55:10 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:55:14 | INFO | valid | epoch 019 | valid on 'valid' subset | loss 9.158 | ppl 571.34 | wps 61142.7 | wpb 2036.4 | bsz 4 | num_updates 646
-2022-03-11 10:55:14 | INFO | fairseq_cli.train | end of epoch 19 (average epoch stats below)
-2022-03-11 10:55:14 | INFO | train | epoch 019 | loss 9.517 | ppl 732.69 | wps 28027 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 646 | lr 8.08339e-05 | gnorm 0.526 | train_wall 72 | gb_free 21.1 | wall 1471
-KL Stats: Epoch 19 Divergences: Uniform: 1.5910784706253043 Unigram: 0.8690899783701107
-2022-03-11 10:55:14 | INFO | fairseq.trainer | begin training epoch 20
-2022-03-11 10:55:14 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:56:28 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:56:31 | INFO | valid | epoch 020 | valid on 'valid' subset | loss 9.067 | ppl 536.32 | wps 60759.5 | wpb 2036.4 | bsz 4 | num_updates 680
-2022-03-11 10:56:31 | INFO | fairseq_cli.train | end of epoch 20 (average epoch stats below)
-2022-03-11 10:56:31 | INFO | train | epoch 020 | loss 9.436 | ppl 692.51 | wps 27981.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 680 | lr 8.5083e-05 | gnorm 0.588 | train_wall 72 | gb_free 21.1 | wall 1549
-KL Stats: Epoch 20 Divergences: Uniform: 1.6271197616811326 Unigram: 0.917825607089228
-2022-03-11 10:56:31 | INFO | fairseq.trainer | begin training epoch 21
-2022-03-11 10:56:31 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:57:16 | INFO | train_inner | epoch 021:     20 / 34 loss=9.464, ppl=706.17, wps=27963.8, ups=0.44, wpb=63630.1, bsz=124.3, num_updates=700, lr=8.75825e-05, gnorm=0.547, train_wall=211, gb_free=21.1, wall=1593
-2022-03-11 10:57:45 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:57:49 | INFO | valid | epoch 021 | valid on 'valid' subset | loss 9.018 | ppl 518.52 | wps 60489 | wpb 2036.4 | bsz 4 | num_updates 714
-2022-03-11 10:57:49 | INFO | fairseq_cli.train | end of epoch 21 (average epoch stats below)
-2022-03-11 10:57:49 | INFO | train | epoch 021 | loss 9.35 | ppl 652.68 | wps 27966.8 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 714 | lr 8.93322e-05 | gnorm 0.523 | train_wall 72 | gb_free 21.1 | wall 1626
-KL Stats: Epoch 21 Divergences: Uniform: 1.6615346186621327 Unigram: 0.9677389161806942
-2022-03-11 10:57:49 | INFO | fairseq.trainer | begin training epoch 22
-2022-03-11 10:57:49 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 10:59:03 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 10:59:06 | INFO | valid | epoch 022 | valid on 'valid' subset | loss 8.954 | ppl 495.79 | wps 60613.4 | wpb 2036.4 | bsz 4 | num_updates 748
-2022-03-11 10:59:06 | INFO | fairseq_cli.train | end of epoch 22 (average epoch stats below)
-2022-03-11 10:59:06 | INFO | train | epoch 022 | loss 9.273 | ppl 618.75 | wps 27923.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 748 | lr 9.35813e-05 | gnorm 0.654 | train_wall 72 | gb_free 21.1 | wall 1703
-KL Stats: Epoch 22 Divergences: Uniform: 1.706079728449594 Unigram: 1.0198803063197082
-2022-03-11 10:59:06 | INFO | fairseq.trainer | begin training epoch 23
-2022-03-11 10:59:06 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:00:20 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:00:24 | INFO | valid | epoch 023 | valid on 'valid' subset | loss 8.891 | ppl 474.72 | wps 60562 | wpb 2036.4 | bsz 4 | num_updates 782
-2022-03-11 11:00:24 | INFO | fairseq_cli.train | end of epoch 23 (average epoch stats below)
-2022-03-11 11:00:24 | INFO | train | epoch 023 | loss 9.192 | ppl 585.01 | wps 27965.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 782 | lr 9.78305e-05 | gnorm 0.631 | train_wall 72 | gb_free 21.1 | wall 1781
-KL Stats: Epoch 23 Divergences: Uniform: 1.7444381502370956 Unigram: 1.0654120970926884
-2022-03-11 11:00:24 | INFO | fairseq.trainer | begin training epoch 24
-2022-03-11 11:00:24 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:01:04 | INFO | train_inner | epoch 024:     18 / 34 loss=9.228, ppl=599.6, wps=27923.1, ups=0.44, wpb=63660.8, bsz=124.3, num_updates=800, lr=0.00010008, gnorm=0.649, train_wall=212, gb_free=21.1, wall=1821
-2022-03-11 11:01:37 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:01:41 | INFO | valid | epoch 024 | valid on 'valid' subset | loss 8.81 | ppl 448.7 | wps 60470.1 | wpb 2036.4 | bsz 4 | num_updates 816
-2022-03-11 11:01:41 | INFO | fairseq_cli.train | end of epoch 24 (average epoch stats below)
-2022-03-11 11:01:41 | INFO | train | epoch 024 | loss 9.112 | ppl 553.35 | wps 27958.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 816 | lr 0.00010208 | gnorm 0.712 | train_wall 72 | gb_free 21.1 | wall 1858
-KL Stats: Epoch 24 Divergences: Uniform: 1.7949400622200502 Unigram: 1.1161450590544808
-2022-03-11 11:01:41 | INFO | fairseq.trainer | begin training epoch 25
-2022-03-11 11:01:41 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:02:55 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:02:59 | INFO | valid | epoch 025 | valid on 'valid' subset | loss 8.729 | ppl 424.46 | wps 60746.9 | wpb 2036.4 | bsz 4 | num_updates 850
-2022-03-11 11:02:59 | INFO | fairseq_cli.train | end of epoch 25 (average epoch stats below)
-2022-03-11 11:02:59 | INFO | train | epoch 025 | loss 9.032 | ppl 523.42 | wps 28003.8 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 850 | lr 0.000106329 | gnorm 0.704 | train_wall 72 | gb_free 21.1 | wall 1936
-KL Stats: Epoch 25 Divergences: Uniform: 1.850931613277209 Unigram: 1.1573372135485218
-2022-03-11 11:02:59 | INFO | fairseq.trainer | begin training epoch 26
-2022-03-11 11:02:59 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:04:12 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:04:16 | INFO | valid | epoch 026 | valid on 'valid' subset | loss 8.683 | ppl 410.92 | wps 60385.2 | wpb 2036.4 | bsz 4 | num_updates 884
-2022-03-11 11:04:16 | INFO | fairseq_cli.train | end of epoch 26 (average epoch stats below)
-2022-03-11 11:04:16 | INFO | train | epoch 026 | loss 8.952 | ppl 495.15 | wps 27984.3 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 884 | lr 0.000110578 | gnorm 0.567 | train_wall 72 | gb_free 21.1 | wall 2013
-KL Stats: Epoch 26 Divergences: Uniform: 1.896829724797146 Unigram: 1.2024863287598975
-2022-03-11 11:04:16 | INFO | fairseq.trainer | begin training epoch 27
-2022-03-11 11:04:16 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:04:51 | INFO | train_inner | epoch 027:     16 / 34 loss=8.989, ppl=508.12, wps=27962.7, ups=0.44, wpb=63630.1, bsz=124.3, num_updates=900, lr=0.000112578, gnorm=0.655, train_wall=211, gb_free=21.1, wall=2049
-2022-03-11 11:05:30 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:05:33 | INFO | valid | epoch 027 | valid on 'valid' subset | loss 8.629 | ppl 395.81 | wps 60476.6 | wpb 2036.4 | bsz 4 | num_updates 918
-2022-03-11 11:05:33 | INFO | fairseq_cli.train | end of epoch 27 (average epoch stats below)
-2022-03-11 11:05:33 | INFO | train | epoch 027 | loss 8.877 | ppl 470.28 | wps 27979.5 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 918 | lr 0.000114827 | gnorm 0.7 | train_wall 72 | gb_free 21.1 | wall 2090
-KL Stats: Epoch 27 Divergences: Uniform: 1.944326852255315 Unigram: 1.2505533772616308
-2022-03-11 11:05:33 | INFO | fairseq.trainer | begin training epoch 28
-2022-03-11 11:05:33 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:06:47 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:06:51 | INFO | valid | epoch 028 | valid on 'valid' subset | loss 8.561 | ppl 377.64 | wps 60452.6 | wpb 2036.4 | bsz 4 | num_updates 952
-2022-03-11 11:06:51 | INFO | fairseq_cli.train | end of epoch 28 (average epoch stats below)
-2022-03-11 11:06:51 | INFO | train | epoch 028 | loss 8.806 | ppl 447.68 | wps 27985.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 952 | lr 0.000119076 | gnorm 0.694 | train_wall 72 | gb_free 21.1 | wall 2168
-KL Stats: Epoch 28 Divergences: Uniform: 1.9958190497530588 Unigram: 1.2884069817567347
-2022-03-11 11:06:51 | INFO | fairseq.trainer | begin training epoch 29
-2022-03-11 11:06:51 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:08:04 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:08:08 | INFO | valid | epoch 029 | valid on 'valid' subset | loss 8.533 | ppl 370.33 | wps 60371.1 | wpb 2036.4 | bsz 4 | num_updates 986
-2022-03-11 11:08:08 | INFO | fairseq_cli.train | end of epoch 29 (average epoch stats below)
-2022-03-11 11:08:08 | INFO | train | epoch 029 | loss 8.733 | ppl 425.59 | wps 27930.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 986 | lr 0.000123325 | gnorm 0.667 | train_wall 72 | gb_free 21.1 | wall 2245
-KL Stats: Epoch 29 Divergences: Uniform: 2.029230308093375 Unigram: 1.32936189050513
-2022-03-11 11:08:08 | INFO | fairseq.trainer | begin training epoch 30
-2022-03-11 11:08:08 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:08:39 | INFO | train_inner | epoch 030:     14 / 34 loss=8.775, ppl=438.14, wps=27923.4, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=1000, lr=0.000125075, gnorm=0.711, train_wall=212, gb_free=21.1, wall=2277
-2022-03-11 11:09:22 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:09:26 | INFO | valid | epoch 030 | valid on 'valid' subset | loss 8.472 | ppl 355.17 | wps 60467.8 | wpb 2036.4 | bsz 4 | num_updates 1020
-2022-03-11 11:09:26 | INFO | fairseq_cli.train | end of epoch 30 (average epoch stats below)
-2022-03-11 11:09:26 | INFO | train | epoch 030 | loss 8.67 | ppl 407.37 | wps 27946 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1020 | lr 0.000127575 | gnorm 0.758 | train_wall 72 | gb_free 21.1 | wall 2323
-KL Stats: Epoch 30 Divergences: Uniform: 2.0719603135852966 Unigram: 1.3650819482347658
-2022-03-11 11:09:26 | INFO | fairseq.trainer | begin training epoch 31
-2022-03-11 11:09:26 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:10:39 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:10:43 | INFO | valid | epoch 031 | valid on 'valid' subset | loss 8.418 | ppl 342.12 | wps 60854.5 | wpb 2036.4 | bsz 4 | num_updates 1054
-2022-03-11 11:10:43 | INFO | fairseq_cli.train | end of epoch 31 (average epoch stats below)
-2022-03-11 11:10:43 | INFO | train | epoch 031 | loss 8.604 | ppl 389.19 | wps 27959.3 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1054 | lr 0.000131824 | gnorm 0.685 | train_wall 72 | gb_free 21.1 | wall 2400
-KL Stats: Epoch 31 Divergences: Uniform: 2.121010923273231 Unigram: 1.4032580269616755
-2022-03-11 11:10:43 | INFO | fairseq.trainer | begin training epoch 32
-2022-03-11 11:10:43 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:11:57 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:12:01 | INFO | valid | epoch 032 | valid on 'valid' subset | loss 8.382 | ppl 333.67 | wps 60325.1 | wpb 2036.4 | bsz 4 | num_updates 1088
-2022-03-11 11:12:01 | INFO | fairseq_cli.train | end of epoch 32 (average epoch stats below)
-2022-03-11 11:12:01 | INFO | train | epoch 032 | loss 8.542 | ppl 372.63 | wps 27962.7 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1088 | lr 0.000136073 | gnorm 0.676 | train_wall 72 | gb_free 21.1 | wall 2478
-KL Stats: Epoch 32 Divergences: Uniform: 2.153729668209173 Unigram: 1.438995220764868
-2022-03-11 11:12:01 | INFO | fairseq.trainer | begin training epoch 33
-2022-03-11 11:12:01 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:12:27 | INFO | train_inner | epoch 033:     12 / 34 loss=8.581, ppl=383.03, wps=27927.7, ups=0.44, wpb=63660.8, bsz=124.3, num_updates=1100, lr=0.000137573, gnorm=0.666, train_wall=212, gb_free=21.1, wall=2505
-2022-03-11 11:13:14 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:13:18 | INFO | valid | epoch 033 | valid on 'valid' subset | loss 8.329 | ppl 321.63 | wps 60652 | wpb 2036.4 | bsz 4 | num_updates 1122
-2022-03-11 11:13:18 | INFO | fairseq_cli.train | end of epoch 33 (average epoch stats below)
-2022-03-11 11:13:18 | INFO | train | epoch 033 | loss 8.482 | ppl 357.52 | wps 27924 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1122 | lr 0.000140322 | gnorm 0.623 | train_wall 72 | gb_free 21.1 | wall 2555
-KL Stats: Epoch 33 Divergences: Uniform: 2.1918694339014104 Unigram: 1.4683047202253128
-2022-03-11 11:13:18 | INFO | fairseq.trainer | begin training epoch 34
-2022-03-11 11:13:18 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:14:32 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:14:36 | INFO | valid | epoch 034 | valid on 'valid' subset | loss 8.306 | ppl 316.52 | wps 60626.6 | wpb 2036.4 | bsz 4 | num_updates 1156
-2022-03-11 11:14:36 | INFO | fairseq_cli.train | end of epoch 34 (average epoch stats below)
-2022-03-11 11:14:36 | INFO | train | epoch 034 | loss 8.425 | ppl 343.67 | wps 27905.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1156 | lr 0.000144571 | gnorm 0.721 | train_wall 72 | gb_free 21.1 | wall 2633
-KL Stats: Epoch 34 Divergences: Uniform: 2.2343711462219087 Unigram: 1.5086641410241577
-2022-03-11 11:14:36 | INFO | fairseq.trainer | begin training epoch 35
-2022-03-11 11:14:36 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:15:49 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:15:53 | INFO | valid | epoch 035 | valid on 'valid' subset | loss 8.27 | ppl 308.69 | wps 60956.1 | wpb 2036.4 | bsz 4 | num_updates 1190
-2022-03-11 11:15:53 | INFO | fairseq_cli.train | end of epoch 35 (average epoch stats below)
-2022-03-11 11:15:53 | INFO | train | epoch 035 | loss 8.367 | ppl 330.07 | wps 27906.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1190 | lr 0.00014882 | gnorm 0.713 | train_wall 72 | gb_free 21.1 | wall 2710
-KL Stats: Epoch 35 Divergences: Uniform: 2.27596169445789 Unigram: 1.5330462775037303
-2022-03-11 11:15:53 | INFO | fairseq.trainer | begin training epoch 36
-2022-03-11 11:15:53 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:16:16 | INFO | train_inner | epoch 036:     10 / 34 loss=8.405, ppl=338.92, wps=27882.1, ups=0.44, wpb=63645, bsz=124.3, num_updates=1200, lr=0.00015007, gnorm=0.701, train_wall=212, gb_free=21.1, wall=2733
-2022-03-11 11:17:07 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:17:11 | INFO | valid | epoch 036 | valid on 'valid' subset | loss 8.218 | ppl 297.66 | wps 60321.3 | wpb 2036.4 | bsz 4 | num_updates 1224
-2022-03-11 11:17:11 | INFO | fairseq_cli.train | end of epoch 36 (average epoch stats below)
-2022-03-11 11:17:11 | INFO | train | epoch 036 | loss 8.308 | ppl 316.89 | wps 27888.3 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1224 | lr 0.000153069 | gnorm 0.663 | train_wall 72 | gb_free 21.1 | wall 2788
-KL Stats: Epoch 36 Divergences: Uniform: 2.307074405050186 Unigram: 1.5652670614566644
-2022-03-11 11:17:11 | INFO | fairseq.trainer | begin training epoch 37
-2022-03-11 11:17:11 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:18:25 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:18:28 | INFO | valid | epoch 037 | valid on 'valid' subset | loss 8.193 | ppl 292.59 | wps 61194 | wpb 2036.4 | bsz 4 | num_updates 1258
-2022-03-11 11:18:28 | INFO | fairseq_cli.train | end of epoch 37 (average epoch stats below)
-2022-03-11 11:18:28 | INFO | train | epoch 037 | loss 8.251 | ppl 304.68 | wps 27913.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1258 | lr 0.000157319 | gnorm 0.697 | train_wall 72 | gb_free 21.1 | wall 2866
-KL Stats: Epoch 37 Divergences: Uniform: 2.3349657295755075 Unigram: 1.59644357892975
-2022-03-11 11:18:28 | INFO | fairseq.trainer | begin training epoch 38
-2022-03-11 11:18:28 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:19:42 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:19:46 | INFO | valid | epoch 038 | valid on 'valid' subset | loss 8.153 | ppl 284.6 | wps 60047.5 | wpb 2036.4 | bsz 4 | num_updates 1292
-2022-03-11 11:19:46 | INFO | fairseq_cli.train | end of epoch 38 (average epoch stats below)
-2022-03-11 11:19:46 | INFO | train | epoch 038 | loss 8.193 | ppl 292.62 | wps 27936.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1292 | lr 0.000161568 | gnorm 0.648 | train_wall 72 | gb_free 21.1 | wall 2943
-KL Stats: Epoch 38 Divergences: Uniform: 2.381875909317324 Unigram: 1.6261379747388705
-2022-03-11 11:19:46 | INFO | fairseq.trainer | begin training epoch 39
-2022-03-11 11:19:46 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:20:04 | INFO | train_inner | epoch 039:      8 / 34 loss=8.235, ppl=301.18, wps=27883.9, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=1300, lr=0.000162568, gnorm=0.672, train_wall=212, gb_free=21.1, wall=2961
-2022-03-11 11:21:00 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:21:03 | INFO | valid | epoch 039 | valid on 'valid' subset | loss 8.112 | ppl 276.72 | wps 60978.1 | wpb 2036.4 | bsz 4 | num_updates 1326
-2022-03-11 11:21:03 | INFO | fairseq_cli.train | end of epoch 39 (average epoch stats below)
-2022-03-11 11:21:03 | INFO | train | epoch 039 | loss 8.14 | ppl 282.11 | wps 27942.8 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1326 | lr 0.000165817 | gnorm 0.723 | train_wall 72 | gb_free 21.1 | wall 3021
-KL Stats: Epoch 39 Divergences: Uniform: 2.4147060251041834 Unigram: 1.648844189043088
-2022-03-11 11:21:03 | INFO | fairseq.trainer | begin training epoch 40
-2022-03-11 11:21:03 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:22:17 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:22:21 | INFO | valid | epoch 040 | valid on 'valid' subset | loss 8.091 | ppl 272.66 | wps 60516 | wpb 2036.4 | bsz 4 | num_updates 1360
-2022-03-11 11:22:21 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 40 @ 1360 updates
-2022-03-11 11:22:21 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint40.pt
-2022-03-11 11:22:22 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint40.pt
-2022-03-11 11:22:23 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint40.pt (epoch 40 @ 1360 updates, score 8.091) (writing took 2.39101693010889 seconds)
-2022-03-11 11:22:23 | INFO | fairseq_cli.train | end of epoch 40 (average epoch stats below)
-2022-03-11 11:22:23 | INFO | train | epoch 040 | loss 8.085 | ppl 271.56 | wps 27098.4 | ups 0.43 | wpb 63682.5 | bsz 124.4 | num_updates 1360 | lr 0.000170066 | gnorm 0.671 | train_wall 72 | gb_free 21.1 | wall 3100
-KL Stats: Epoch 40 Divergences: Uniform: 2.446919442908984 Unigram: 1.678098823239008
-2022-03-11 11:22:23 | INFO | fairseq.trainer | begin training epoch 41
-2022-03-11 11:22:23 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:23:37 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:23:41 | INFO | valid | epoch 041 | valid on 'valid' subset | loss 8.055 | ppl 265.98 | wps 60190.7 | wpb 2036.4 | bsz 4 | num_updates 1394 | best_loss 8.055
-2022-03-11 11:23:41 | INFO | fairseq_cli.train | end of epoch 41 (average epoch stats below)
-2022-03-11 11:23:41 | INFO | train | epoch 041 | loss 8.032 | ppl 261.83 | wps 27941.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1394 | lr 0.000174315 | gnorm 0.761 | train_wall 72 | gb_free 21.1 | wall 3178
-KL Stats: Epoch 41 Divergences: Uniform: 2.4838853809596997 Unigram: 1.7070717279523298
-2022-03-11 11:23:41 | INFO | fairseq.trainer | begin training epoch 42
-2022-03-11 11:23:41 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:23:54 | INFO | train_inner | epoch 042:      6 / 34 loss=8.075, ppl=269.61, wps=27621.9, ups=0.43, wpb=63645.9, bsz=124.3, num_updates=1400, lr=0.000175065, gnorm=0.717, train_wall=212, gb_free=21.1, wall=3191
-2022-03-11 11:24:55 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:24:58 | INFO | valid | epoch 042 | valid on 'valid' subset | loss 8.028 | ppl 261.02 | wps 60536 | wpb 2036.4 | bsz 4 | num_updates 1428 | best_loss 8.028
-2022-03-11 11:24:58 | INFO | fairseq_cli.train | end of epoch 42 (average epoch stats below)
-2022-03-11 11:24:58 | INFO | train | epoch 042 | loss 7.974 | ppl 251.51 | wps 27890.4 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1428 | lr 0.000178564 | gnorm 0.678 | train_wall 72 | gb_free 21.1 | wall 3256
-KL Stats: Epoch 42 Divergences: Uniform: 2.5315657078338583 Unigram: 1.7278422604083299
-2022-03-11 11:24:58 | INFO | fairseq.trainer | begin training epoch 43
-2022-03-11 11:24:58 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:26:12 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:26:16 | INFO | valid | epoch 043 | valid on 'valid' subset | loss 7.997 | ppl 255.44 | wps 60342.7 | wpb 2036.4 | bsz 4 | num_updates 1462 | best_loss 7.997
-2022-03-11 11:26:16 | INFO | fairseq_cli.train | end of epoch 43 (average epoch stats below)
-2022-03-11 11:26:16 | INFO | train | epoch 043 | loss 7.92 | ppl 242.21 | wps 27919.3 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1462 | lr 0.000182813 | gnorm 0.721 | train_wall 72 | gb_free 21.1 | wall 3333
-KL Stats: Epoch 43 Divergences: Uniform: 2.5642502286946565 Unigram: 1.7602814324335851
-2022-03-11 11:26:16 | INFO | fairseq.trainer | begin training epoch 44
-2022-03-11 11:26:16 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:27:30 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:27:34 | INFO | valid | epoch 044 | valid on 'valid' subset | loss 7.961 | ppl 249.21 | wps 60487.7 | wpb 2036.4 | bsz 4 | num_updates 1496 | best_loss 7.961
-2022-03-11 11:27:34 | INFO | fairseq_cli.train | end of epoch 44 (average epoch stats below)
-2022-03-11 11:27:34 | INFO | train | epoch 044 | loss 7.863 | ppl 232.8 | wps 27901.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1496 | lr 0.000187063 | gnorm 0.664 | train_wall 72 | gb_free 21.1 | wall 3411
-KL Stats: Epoch 44 Divergences: Uniform: 2.605295934691428 Unigram: 1.7886658489308216
-2022-03-11 11:27:34 | INFO | fairseq.trainer | begin training epoch 45
-2022-03-11 11:27:34 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:27:43 | INFO | train_inner | epoch 045:      4 / 34 loss=7.911, ppl=240.62, wps=27877, ups=0.44, wpb=63645, bsz=124.3, num_updates=1500, lr=0.000187563, gnorm=0.685, train_wall=212, gb_free=21.1, wall=3420
-2022-03-11 11:28:47 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:28:51 | INFO | valid | epoch 045 | valid on 'valid' subset | loss 7.954 | ppl 247.99 | wps 60227 | wpb 2036.4 | bsz 4 | num_updates 1530 | best_loss 7.954
-2022-03-11 11:28:51 | INFO | fairseq_cli.train | end of epoch 45 (average epoch stats below)
-2022-03-11 11:28:51 | INFO | train | epoch 045 | loss 7.811 | ppl 224.54 | wps 27908.8 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1530 | lr 0.000191312 | gnorm 0.737 | train_wall 72 | gb_free 21.1 | wall 3488
-KL Stats: Epoch 45 Divergences: Uniform: 2.6334227273212347 Unigram: 1.8077514636994225
-2022-03-11 11:28:51 | INFO | fairseq.trainer | begin training epoch 46
-2022-03-11 11:28:51 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:30:05 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:30:09 | INFO | valid | epoch 046 | valid on 'valid' subset | loss 7.915 | ppl 241.34 | wps 60542.8 | wpb 2036.4 | bsz 4 | num_updates 1564 | best_loss 7.915
-2022-03-11 11:30:09 | INFO | fairseq_cli.train | end of epoch 46 (average epoch stats below)
-2022-03-11 11:30:09 | INFO | train | epoch 046 | loss 7.759 | ppl 216.61 | wps 27921.4 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1564 | lr 0.000195561 | gnorm 0.75 | train_wall 72 | gb_free 21.1 | wall 3566
-KL Stats: Epoch 46 Divergences: Uniform: 2.6804133713155993 Unigram: 1.8406544255066
-2022-03-11 11:30:09 | INFO | fairseq.trainer | begin training epoch 47
-2022-03-11 11:30:09 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:31:23 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:31:26 | INFO | valid | epoch 047 | valid on 'valid' subset | loss 7.892 | ppl 237.55 | wps 60382.2 | wpb 2036.4 | bsz 4 | num_updates 1598 | best_loss 7.892
-2022-03-11 11:31:26 | INFO | fairseq_cli.train | end of epoch 47 (average epoch stats below)
-2022-03-11 11:31:26 | INFO | train | epoch 047 | loss 7.7 | ppl 207.9 | wps 27920.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1598 | lr 0.00019981 | gnorm 0.674 | train_wall 72 | gb_free 21.1 | wall 3643
-KL Stats: Epoch 47 Divergences: Uniform: 2.712201208074164 Unigram: 1.865306378739126
-2022-03-11 11:31:26 | INFO | fairseq.trainer | begin training epoch 48
-2022-03-11 11:31:26 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:31:31 | INFO | train_inner | epoch 048:      2 / 34 loss=7.752, ppl=215.58, wps=27885.6, ups=0.44, wpb=63645.9, bsz=124.3, num_updates=1600, lr=0.00020006, gnorm=0.724, train_wall=212, gb_free=21.1, wall=3648
-2022-03-11 11:32:40 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:32:44 | INFO | valid | epoch 048 | valid on 'valid' subset | loss 7.858 | ppl 231.94 | wps 59999.4 | wpb 2036.4 | bsz 4 | num_updates 1632 | best_loss 7.858
-2022-03-11 11:32:44 | INFO | fairseq_cli.train | end of epoch 48 (average epoch stats below)
-2022-03-11 11:32:44 | INFO | train | epoch 048 | loss 7.651 | ppl 200.97 | wps 27884.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1632 | lr 0.000204059 | gnorm 0.773 | train_wall 72 | gb_free 21.1 | wall 3721
-KL Stats: Epoch 48 Divergences: Uniform: 2.7481625431069783 Unigram: 1.8845689125073295
-2022-03-11 11:32:44 | INFO | fairseq.trainer | begin training epoch 49
-2022-03-11 11:32:44 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:33:58 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:34:01 | INFO | valid | epoch 049 | valid on 'valid' subset | loss 7.829 | ppl 227.46 | wps 60860.7 | wpb 2036.4 | bsz 4 | num_updates 1666 | best_loss 7.829
-2022-03-11 11:34:01 | INFO | fairseq_cli.train | end of epoch 49 (average epoch stats below)
-2022-03-11 11:34:01 | INFO | train | epoch 049 | loss 7.596 | ppl 193.54 | wps 27930.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1666 | lr 0.000208308 | gnorm 0.731 | train_wall 72 | gb_free 21.1 | wall 3799
-KL Stats: Epoch 49 Divergences: Uniform: 2.7831776587079826 Unigram: 1.9133546937066277
-2022-03-11 11:34:01 | INFO | fairseq.trainer | begin training epoch 50
-2022-03-11 11:34:01 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:35:15 | INFO | train_inner | epoch 050:     34 / 34 loss=7.595, ppl=193.31, wps=28355.7, ups=0.45, wpb=63645.5, bsz=124.3, num_updates=1700, lr=0.000212558, gnorm=0.729, train_wall=212, gb_free=21.1, wall=3872
-2022-03-11 11:35:15 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:35:19 | INFO | valid | epoch 050 | valid on 'valid' subset | loss 7.815 | ppl 225.2 | wps 60338.9 | wpb 2036.4 | bsz 4 | num_updates 1700 | best_loss 7.815
-2022-03-11 11:35:19 | INFO | fairseq_cli.train | end of epoch 50 (average epoch stats below)
-2022-03-11 11:35:19 | INFO | train | epoch 050 | loss 7.541 | ppl 186.26 | wps 27898 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1700 | lr 0.000212558 | gnorm 0.706 | train_wall 72 | gb_free 21.1 | wall 3876
-KL Stats: Epoch 50 Divergences: Uniform: 2.813213308950244 Unigram: 1.9357505820409016
-2022-03-11 11:35:19 | INFO | fairseq.trainer | begin training epoch 51
-2022-03-11 11:35:19 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:36:33 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:36:37 | INFO | valid | epoch 051 | valid on 'valid' subset | loss 7.768 | ppl 217.95 | wps 60732.4 | wpb 2036.4 | bsz 4 | num_updates 1734 | best_loss 7.768
-2022-03-11 11:36:37 | INFO | fairseq_cli.train | end of epoch 51 (average epoch stats below)
-2022-03-11 11:36:37 | INFO | train | epoch 051 | loss 7.49 | ppl 179.79 | wps 27932.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1734 | lr 0.000216807 | gnorm 0.706 | train_wall 72 | gb_free 21.1 | wall 3954
-KL Stats: Epoch 51 Divergences: Uniform: 2.859073499808711 Unigram: 1.9629413583229103
-2022-03-11 11:36:37 | INFO | fairseq.trainer | begin training epoch 52
-2022-03-11 11:36:37 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:37:50 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:37:54 | INFO | valid | epoch 052 | valid on 'valid' subset | loss 7.795 | ppl 222.1 | wps 60286.8 | wpb 2036.4 | bsz 4 | num_updates 1768 | best_loss 7.795
-2022-03-11 11:37:54 | INFO | fairseq_cli.train | end of epoch 52 (average epoch stats below)
-2022-03-11 11:37:54 | INFO | train | epoch 052 | loss 7.437 | ppl 173.31 | wps 27879.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1768 | lr 0.000221056 | gnorm 0.708 | train_wall 72 | gb_free 21.1 | wall 4031
-KL Stats: Epoch 52 Divergences: Uniform: 2.893193056120054 Unigram: 1.9822147930105212
-2022-03-11 11:37:54 | INFO | fairseq.trainer | begin training epoch 53
-2022-03-11 11:37:54 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:39:06 | INFO | train_inner | epoch 053:     32 / 34 loss=7.44, ppl=173.61, wps=27901.1, ups=0.43, wpb=64259.9, bsz=125.5, num_updates=1800, lr=0.000225055, gnorm=0.73, train_wall=214, gb_free=21.1, wall=4103
-2022-03-11 11:39:08 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:39:12 | INFO | valid | epoch 053 | valid on 'valid' subset | loss 7.739 | ppl 213.68 | wps 60309 | wpb 2036.4 | bsz 4 | num_updates 1802 | best_loss 7.739
-2022-03-11 11:39:12 | INFO | fairseq_cli.train | end of epoch 53 (average epoch stats below)
-2022-03-11 11:39:12 | INFO | train | epoch 053 | loss 7.391 | ppl 167.79 | wps 27927.1 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1802 | lr 0.000225305 | gnorm 0.796 | train_wall 72 | gb_free 21.1 | wall 4109
-KL Stats: Epoch 53 Divergences: Uniform: 2.9385266781670647 Unigram: 2.012289508752555
-2022-03-11 11:39:12 | INFO | fairseq.trainer | begin training epoch 54
-2022-03-11 11:39:12 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:40:26 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:40:29 | INFO | valid | epoch 054 | valid on 'valid' subset | loss 7.697 | ppl 207.46 | wps 60009.3 | wpb 2036.4 | bsz 4 | num_updates 1836 | best_loss 7.697
-2022-03-11 11:40:29 | INFO | fairseq_cli.train | end of epoch 54 (average epoch stats below)
-2022-03-11 11:40:29 | INFO | train | epoch 054 | loss 7.337 | ppl 161.65 | wps 27896.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1836 | lr 0.000229554 | gnorm 0.696 | train_wall 72 | gb_free 21.1 | wall 4187
-KL Stats: Epoch 54 Divergences: Uniform: 2.982651696410505 Unigram: 2.0293171426226655
-2022-03-11 11:40:29 | INFO | fairseq.trainer | begin training epoch 55
-2022-03-11 11:40:29 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:41:43 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:41:47 | INFO | valid | epoch 055 | valid on 'valid' subset | loss 7.683 | ppl 205.45 | wps 60216.6 | wpb 2036.4 | bsz 4 | num_updates 1870 | best_loss 7.683
-2022-03-11 11:41:47 | INFO | fairseq_cli.train | end of epoch 55 (average epoch stats below)
-2022-03-11 11:41:47 | INFO | train | epoch 055 | loss 7.284 | ppl 155.86 | wps 27905.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1870 | lr 0.000233803 | gnorm 0.678 | train_wall 72 | gb_free 21.1 | wall 4264
-KL Stats: Epoch 55 Divergences: Uniform: 3.018217002806532 Unigram: 2.0513649579414546
-2022-03-11 11:41:47 | INFO | fairseq.trainer | begin training epoch 56
-2022-03-11 11:41:47 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:42:54 | INFO | train_inner | epoch 056:     30 / 34 loss=7.29, ppl=156.46, wps=27869.2, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=1900, lr=0.000237553, gnorm=0.706, train_wall=212, gb_free=21.1, wall=4331
-2022-03-11 11:43:01 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:43:05 | INFO | valid | epoch 056 | valid on 'valid' subset | loss 7.672 | ppl 203.95 | wps 60684.7 | wpb 2036.4 | bsz 4 | num_updates 1904 | best_loss 7.672
-2022-03-11 11:43:05 | INFO | fairseq_cli.train | end of epoch 56 (average epoch stats below)
-2022-03-11 11:43:05 | INFO | train | epoch 056 | loss 7.237 | ppl 150.9 | wps 27899.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1904 | lr 0.000238052 | gnorm 0.732 | train_wall 72 | gb_free 21.1 | wall 4342
-KL Stats: Epoch 56 Divergences: Uniform: 3.059307516068188 Unigram: 2.0814409318817284
-2022-03-11 11:43:05 | INFO | fairseq.trainer | begin training epoch 57
-2022-03-11 11:43:05 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:44:18 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:44:22 | INFO | valid | epoch 057 | valid on 'valid' subset | loss 7.654 | ppl 201.37 | wps 60815.5 | wpb 2036.4 | bsz 4 | num_updates 1938 | best_loss 7.654
-2022-03-11 11:44:22 | INFO | fairseq_cli.train | end of epoch 57 (average epoch stats below)
-2022-03-11 11:44:22 | INFO | train | epoch 057 | loss 7.187 | ppl 145.71 | wps 27910.2 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1938 | lr 0.000242302 | gnorm 0.709 | train_wall 72 | gb_free 21.1 | wall 4419
-KL Stats: Epoch 57 Divergences: Uniform: 3.0998498317080134 Unigram: 2.106273583536207
-2022-03-11 11:44:22 | INFO | fairseq.trainer | begin training epoch 58
-2022-03-11 11:44:22 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:45:36 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:45:40 | INFO | valid | epoch 058 | valid on 'valid' subset | loss 7.646 | ppl 200.36 | wps 60249 | wpb 2036.4 | bsz 4 | num_updates 1972 | best_loss 7.646
-2022-03-11 11:45:40 | INFO | fairseq_cli.train | end of epoch 58 (average epoch stats below)
-2022-03-11 11:45:40 | INFO | train | epoch 058 | loss 7.138 | ppl 140.84 | wps 27866.6 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 1972 | lr 0.000246551 | gnorm 0.705 | train_wall 72 | gb_free 21.1 | wall 4497
-KL Stats: Epoch 58 Divergences: Uniform: 3.1328955657072948 Unigram: 2.1249472316899696
-2022-03-11 11:45:40 | INFO | fairseq.trainer | begin training epoch 59
-2022-03-11 11:45:40 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:46:42 | INFO | train_inner | epoch 059:     28 / 34 loss=7.147, ppl=141.76, wps=27872.5, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=2000, lr=0.00025005, gnorm=0.728, train_wall=212, gb_free=21.1, wall=4559
-2022-03-11 11:46:54 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:46:57 | INFO | valid | epoch 059 | valid on 'valid' subset | loss 7.596 | ppl 193.44 | wps 60551.6 | wpb 2036.4 | bsz 4 | num_updates 2006 | best_loss 7.596
-2022-03-11 11:46:57 | INFO | fairseq_cli.train | end of epoch 59 (average epoch stats below)
-2022-03-11 11:46:57 | INFO | train | epoch 059 | loss 7.099 | ppl 137.11 | wps 27937.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 2006 | lr 0.0002508 | gnorm 0.765 | train_wall 72 | gb_free 21.1 | wall 4575
-KL Stats: Epoch 59 Divergences: Uniform: 3.176725856645321 Unigram: 2.1488101184559705
-2022-03-11 11:46:57 | INFO | fairseq.trainer | begin training epoch 60
-2022-03-11 11:46:57 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:48:11 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:48:15 | INFO | valid | epoch 060 | valid on 'valid' subset | loss 7.607 | ppl 194.96 | wps 60184.5 | wpb 2036.4 | bsz 4 | num_updates 2040 | best_loss 7.607
-2022-03-11 11:48:15 | INFO | fairseq_cli.train | end of epoch 60 (average epoch stats below)
-2022-03-11 11:48:15 | INFO | train | epoch 060 | loss 7.045 | ppl 132.02 | wps 27924.7 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 2040 | lr 0.000255049 | gnorm 0.663 | train_wall 72 | gb_free 21.1 | wall 4652
-KL Stats: Epoch 60 Divergences: Uniform: 3.208951645702577 Unigram: 2.175756377123499
-2022-03-11 11:48:15 | INFO | fairseq.trainer | begin training epoch 61
-2022-03-11 11:48:15 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:49:29 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:49:33 | INFO | valid | epoch 061 | valid on 'valid' subset | loss 7.592 | ppl 193 | wps 60326.2 | wpb 2036.4 | bsz 4 | num_updates 2074 | best_loss 7.592
-2022-03-11 11:49:33 | INFO | fairseq_cli.train | end of epoch 61 (average epoch stats below)
-2022-03-11 11:49:33 | INFO | train | epoch 061 | loss 7.001 | ppl 128.1 | wps 27890.7 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 2074 | lr 0.000259298 | gnorm 0.708 | train_wall 72 | gb_free 21.1 | wall 4730
-KL Stats: Epoch 61 Divergences: Uniform: 3.2487428080021554 Unigram: 2.2016246949218954
-2022-03-11 11:49:33 | INFO | fairseq.trainer | begin training epoch 62
-2022-03-11 11:49:33 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:50:31 | INFO | train_inner | epoch 062:     26 / 34 loss=7.009, ppl=128.82, wps=27878.8, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=2100, lr=0.000262548, gnorm=0.693, train_wall=212, gb_free=21.1, wall=4788
-2022-03-11 11:50:46 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:50:50 | INFO | valid | epoch 062 | valid on 'valid' subset | loss 7.589 | ppl 192.6 | wps 60164.2 | wpb 2036.4 | bsz 4 | num_updates 2108 | best_loss 7.589
-2022-03-11 11:50:50 | INFO | fairseq_cli.train | end of epoch 62 (average epoch stats below)
-2022-03-11 11:50:50 | INFO | train | epoch 062 | loss 6.96 | ppl 124.5 | wps 27899.4 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 2108 | lr 0.000263547 | gnorm 0.72 | train_wall 72 | gb_free 21.1 | wall 4807
-KL Stats: Epoch 62 Divergences: Uniform: 3.3006528273419597 Unigram: 2.2229551631938933
-2022-03-11 11:50:50 | INFO | fairseq.trainer | begin training epoch 63
-2022-03-11 11:50:50 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:52:04 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:52:08 | INFO | valid | epoch 063 | valid on 'valid' subset | loss 7.537 | ppl 185.74 | wps 60112.7 | wpb 2036.4 | bsz 4 | num_updates 2142 | best_loss 7.537
-2022-03-11 11:52:08 | INFO | fairseq_cli.train | end of epoch 63 (average epoch stats below)
-2022-03-11 11:52:08 | INFO | train | epoch 063 | loss 6.914 | ppl 120.57 | wps 27933.3 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 2142 | lr 0.000267796 | gnorm 0.703 | train_wall 72 | gb_free 21.1 | wall 4885
-KL Stats: Epoch 63 Divergences: Uniform: 3.331456420506914 Unigram: 2.2396437325364187
-2022-03-11 11:52:08 | INFO | fairseq.trainer | begin training epoch 64
-2022-03-11 11:52:08 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:53:21 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:53:25 | INFO | valid | epoch 064 | valid on 'valid' subset | loss 7.546 | ppl 186.89 | wps 61001.8 | wpb 2036.4 | bsz 4 | num_updates 2176 | best_loss 7.546
-2022-03-11 11:53:25 | INFO | fairseq_cli.train | end of epoch 64 (average epoch stats below)
-2022-03-11 11:53:25 | INFO | train | epoch 064 | loss 6.873 | ppl 117.22 | wps 27920.8 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 2176 | lr 0.000272046 | gnorm 0.744 | train_wall 72 | gb_free 21.1 | wall 4962
-KL Stats: Epoch 64 Divergences: Uniform: 3.3701213456998422 Unigram: 2.2674043902447627
-2022-03-11 11:53:25 | INFO | fairseq.trainer | begin training epoch 65
-2022-03-11 11:53:25 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:54:19 | INFO | train_inner | epoch 065:     24 / 34 loss=6.881, ppl=117.9, wps=27901.5, ups=0.44, wpb=63645.5, bsz=124.3, num_updates=2200, lr=0.000275045, gnorm=0.72, train_wall=212, gb_free=21.1, wall=5016
-2022-03-11 11:54:39 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:54:43 | INFO | valid | epoch 065 | valid on 'valid' subset | loss 7.548 | ppl 187.15 | wps 60405.7 | wpb 2036.4 | bsz 4 | num_updates 2210 | best_loss 7.548
-2022-03-11 11:54:43 | INFO | fairseq_cli.train | end of epoch 65 (average epoch stats below)
-2022-03-11 11:54:43 | INFO | train | epoch 065 | loss 6.828 | ppl 113.64 | wps 27948.9 | ups 0.44 | wpb 63682.5 | bsz 124.4 | num_updates 2210 | lr 0.000276295 | gnorm 0.694 | train_wall 72 | gb_free 21.1 | wall 5040
-KL Stats: Epoch 65 Divergences: Uniform: 3.4177673873999455 Unigram: 2.2942652518421776
-2022-03-11 11:54:43 | INFO | fairseq.trainer | begin training epoch 66
-2022-03-11 11:54:43 | INFO | fairseq_cli.train | Start iterating over samples
-2022-03-11 11:55:56 | INFO | fairseq_cli.train | begin validation on "valid" subset
-2022-03-11 11:56:00 | INFO | valid | epoch 066 | valid on 'valid' subset | loss 7.546 | ppl 186.85 | wps 60688.1 | wpb 2036.4 | bsz 4 | num_updates 2244 | best_loss 7.546
-2022-03-11 11:56:00 | INFO | fairseq_cli.train | early stop since valid performance hasn't improved for last 3 runs
-2022-03-11 11:56:00 | INFO | fairseq.checkpoint_utils | Preparing to save checkpoint for epoch 66 @ 2244 updates
-2022-03-11 11:56:00 | INFO | fairseq.trainer | Saving checkpoint to /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint_best.pt
-2022-03-11 11:56:01 | INFO | fairseq.trainer | Finished saving checkpoint to /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint_best.pt
-2022-03-11 11:56:02 | INFO | fairseq.checkpoint_utils | Saved checkpoint /cluster/scratch/andriusb/checkpoints/w2_cleaned_bpe-jelinek_0.03_0.03_0.94/checkpoint_best.pt (epoch 66 @ 2244 updates, score 7.546) (writing took 1.5586748628411442 seconds)
-2022-03-11 11:56:02 | INFO | fairseq_cli.train | end of epoch 66 (average epoch stats below)
-2022-03-11 11:56:02 | INFO | train | epoch 066 | loss 6.79 | ppl 110.64 | wps 27367.7 | ups 0.43 | wpb 63682.5 | bsz 124.4 | num_updates 2244 | lr 0.000280544 | gnorm 0.735 | train_wall 72 | gb_free 21.1 | wall 5119
-2022-03-11 11:56:02 | INFO | fairseq_cli.train | done training in 5118.9 seconds
